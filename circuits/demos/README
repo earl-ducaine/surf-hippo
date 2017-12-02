@@ -1,0 +1,73 @@
+colorized-n120.lisp
+
+;; Cell model n120 is full ~3000 compartment reconstruction of a hippocampal pyramidal cell (see Borg-Graham, 1998), supplied by
+;; Dennis Turner (Southampton University). Somatic channels are taken from the Working Model. Input includes a current pulse at
+;; the soma, and random activity of an excitatory synapse in the dendritic tree. This simulation automatically presents a
+;; colorized animation of the cell.
+
+
+
+file-hippo.lisp
+
+;; A sample neuron file including a soma/short-cable geometry, with HH channels. This file should be CIRCUIT-LOADed to setup the circuit.
+
+
+
+hh-demo.lisp
+
+;; A cell type CORTICAL is defined and added to the cell type library. A cell of this type is then created, consisting of a 35
+;; micron diameter soma, with a 1200 micron apical dendrite (12 micron diameter, 5 segments) and a a 500 micron basal dendrite (6
+;; micron diameter, 3 segments). Hodgkin-Huxley squid axon Na+ and K+ channels are added to the soma, and there is a current
+;; source at the soma, driven by a 0.5 nA pulse from 10 to 20 ms. Simulation time is set to 50 milliseconds. The voltages of the
+;; soma and all segments, and the current and conductance of the two channels are plotted.
+
+
+
+light-hippo.lisp
+
+;; A sample passive neuron file, with a moving bar light input. This file should be CIRCUIT-LOADed to setup the circuit.
+
+
+
+lots-of-hippos.lisp
+
+;; A bunch of passive hippos on an XZ grid, with some scatter in the Y dimension. This file should be CIRCUIT-LOADed into Surf-Hippo.
+
+
+
+parameter-loop.lisp
+
+;; Example of a simple loop script for comparing parameter values.
+
+
+
+rallpack-3-cc-demo.lisp
+
+;; Example code for running a Rallpack 3 defined axon current clamp simulation of repetitive firing.
+
+
+
+rallpack-3-vc-demo.lisp
+
+;; Example code for running a Rallpack 3 defined axon voltage clamp simulation.
+
+
+
+star-amacrine-functions.lisp
+
+;; Functions using Cholinergic rabbit retina starburst amacrine cell described in src/rabbit/star-amacrine.lisp. This circuit demonstrates the model for
+;; retinal directional selectivity.  
+
+
+
+three-hippos.lisp
+
+;; This demonstrates a toy network with three spiking hippocampal pyramidal cells, connected with various synaptic types. The initial stimulus is provided
+;; by a current source to the soma of one cell.
+
+
+
+working-hpc.lisp
+
+This file includes the Working model of an hippocampal pyramidal cell, and defines the functions WORKING-HPC, which defines the cell, and WORKING-HPC-TEST, which adds some
+simulation parameters and a current source.

@@ -1,0 +1,9 @@
+A convenient place for putting Lisp files of model circuits. Default directory for the
+*CIRCUIT-DIRECTORY* variable.  This directory contains scripts of LISP code for later reference.
+These can be particularly useful when running a series of simulations directly from LISP (i.e. via
+the LISP interpreter).
+
+The files in this directory should be loadable directly into LISP, or contain forms which are
+loadable.
+
+Check also the examples in the demos subdirectory.

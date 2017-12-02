@@ -1,0 +1,32 @@
+ASCII version of CA1 cell C12861 received 14-APR-89 from D. Amaral.
+Edited 17-APR-89 by JCW: changed soma outline point types to match 
+NTS 3.0 convention; deleted axon and contours of vetricular surface 
+and hippocampal fissure.
+
+No. points   1269
+No. trees       9
+Text  File sent from PDP-11                                                                                                   
+ 
+ Point  Type  Tag      X       Y       Z  Thick   Name    Attachment
+ 
+   859  MTO    1     1.0   -14.5    10.0    .3  ------  ------     0
+   860   CP    1     -.5   -23.5     6.5    .3  
+   861   CP    1    -1.0   -28.0     5.0    .3  
+   862   CP    1    -3.5   -35.5     8.0    .3  
+   863   CP    1    -5.0   -40.0     9.0    .3  
+   864   CP    1     -.5   -49.0     5.0    .3  
+   865   CP    1    -2.0   -68.0     2.0    .3  
+   866   CP    1    -3.0  -100.5     1.0    .3  
+   867   CP    1    -2.0  -127.5      .5    .3  
+   868   CP    1    -2.5  -140.0    -2.5    .3  
+   869   CP    1     3.0  -155.0    -7.0    .3  
+   870   CP    1     8.5  -167.5   -10.0    .3  
+   871   CP    1    11.0  -183.0   -19.0    .3  
+   872   CP    1    12.0  -202.0   -26.0    .3  
+   873   CP    1    12.0  -210.0   -31.0    .3  
+   874   CP    1     2.5  -215.5   -31.0    .3  
+   875   NE    1    -1.0  -215.5   -31.0    .3  
+  1250  SOS    1     1.0    -1.0      .0    .3  ------  ------     0
+  1251  SCP    1     1.0     1.0      .5    .3  
+  1252  SCP    1    -1.0     1.0     1.5    .3  
+  1260  SOE    1    -1.0    -1.0     3.0    .3  

@@ -1,0 +1,46 @@
+#|
+Return-Path: <turne008@mc.duke.edu>
+From: turne008@mc.duke.edu
+Date: Mon, 18 Dec 1995 08:52 -0500 (EST)
+Subject: Re: Thanks!!
+To: lyle@cogni.iaf.cnrs-gif.fr
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN
+Content-Transfer-Encoding: 7BIT
+
+          hello (again)
+
+          all of the L* files are CA3 in vivo cells from the J Comp
+          Neurol article with Buzsaki this summer.  the n12? files are
+          in vitro CA1.  i have lots more if you are interested but we
+          are not quite ready to release the CA1 in vivo (still works
+          in progress) cells.
+
+          dennis
+
+
+
+Return-Path: <turne008@mc.duke.edu>
+From: turne008@mc.duke.edu
+Date: Mon, 18 Dec 1995 08:50 -0500 (EST)
+Subject: Re: another question
+To: lyle@cogni.iaf.cnrs-gif.fr
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN
+Content-Transfer-Encoding: 7BIT
+
+          hello
+
+          the *.asc files and *.3dn files are uncorrected and you
+          would need to correct them for shrinkage.
+
+          best wishes
+
+          dennis
+
+|#
+
+;;
+;; From Truner et. al., J. Comp. Neuro. 356:580-594, use -
+;;
+(warp-cell *cell* :x-factor 1.33 :y-factor 1.33 :z-factor 2.5)

@@ -1,0 +1,213 @@
+****************************************************************************************************
+****************************************************************************************************
+
+
+				      More Installation Notes
+
+
+****************************************************************************************************
+****************************************************************************************************
+
+
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+					 Table of Contents
+
+1. Installing New Source
+2. Image Saving Notes
+3. GARNET Notes
+4. UNIX Environment Variables Notes
+5. Other Customizations
+6. Source Tar File Procedure
+ 
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+
+In this text, it is assumed that csh is the Unix shell.
+
+
+****************************************************************************************************
+
+				       Installing New Source
+
+****************************************************************************************************
+
+
+For updating the entire source code to a new version, download the compressed tar file that will be
+named something like:
+
+	surf-hippo.2.7c.tar.Z
+
+Put this file in the surf-hippo home directory, for example:
+
+        unix-prompt> mv surf-hippo.2.7c.tar.Z /usr/local/surf-hippo/
+        unix-prompt> cd /usr/local/surf-hippo/
+        unix-prompt> uncompress surf-hippo.2.7c.tar.Z
+        unix-prompt> tar -xvf surf-hippo.2.7c.tar
+
+These steps will update all subdirectories. You can now delete the original tar file:
+
+        unix-prompt> rm *.tar
+
+Edit the surf-hippo executable file in the surf-hippo directory to point to the proper lisp
+executable (in the surf-hippo/cmucl directory).
+
+To recompile the system, start up Surf-Hippo, and enter the following into the Lisp:
+
+  lisp-prompt> (setq user::*force-all-compile* t)
+
+Now compile and make an image as described in the following section.
+
+
+****************************************************************************************************
+
+					 Image Saving Notes
+
+****************************************************************************************************
+
+If you want to save a new image from lisp, use the command
+
+  lisp-prompt> (opal:make-image "full-image-pathname")
+
+If you want to use the surf-hippo/surf-hippo command to run the image (as is usually the case if you
+have set up things to run from Emacs with M-x surf-hippo), then the image filename should be
+"/home/foo/surf-hippo/imagename", according to what the Surf-Hippo home directory is, and
+"imagename" is used in the surf-hippo executable script file, for example:
+
+  cd $SURFHOME
+  exec $CMUCLLIB/../bin/lisp "$@" -core $SURFHOME/image -eval '(load "messages/initial-message.lisp" :verbose nil) 
+
+The supplied version of the surf-hippo executable script assumes that the image file is in
+$SURFHOME/image.
+
+The simplest way to recompile all changed files and make a new image is to simply load:
+
+	$SURHOME/misc/loaders/image-maker
+
+For example, with "C-z l /usr/local/surf-hippo/misc/loaders/image-maker" from the Ilisp
+(*surf-hippo*) buffer. Note that this will store (overwrite) the resulting image as the file
+"image": make sure that the read permissions are set correctly for the new file.
+
+If an image for a complete new source is compiled and loaded on top of a previous Surf-Hippo image,
+then the updated image will be about 10MB larger than before. Until I can figure out how to recover
+space allocated to redifined symbols in the static heap, the only way to avoid this is to make
+updated source images using a Garnet image to start with. Several versions of these are available at
+the Surf-Hippo ftp site.
+
+
+****************************************************************************************************
+
+					    GARNET Notes
+
+****************************************************************************************************
+
+If you are going to install Garnet separately (not necessary for using Surf-Hippo), use the
+following settings for the load variables (edit the garnet-prepare-compile.lisp and/or
+garnet-loader.lisp file as explained in garnetx.x_README file):
+
+     (unless (boundp '*Garnet-Going-To-Compile*)
+       (defvar load-utils-p T)
+       (defvar load-kr-p T)
+       (defvar load-opal-p T)
+       (defvar load-inter-p T)
+       (defvar load-multifont-p NIL)
+       (defvar load-gesture-p NIL)
+       (defvar load-ps-p T)
+       (defvar load-aggregadgets-p T)
+       (defvar load-aggregraphs-p NIL)
+       (defvar load-debug-p #+garnet-debug T #-garnet-debug NIL)
+       (defvar load-gadgets-p t)
+       (defvar load-demos-p NIL)
+       (defvar load-lapidary-p NIL)
+       (defvar load-gilt-p NIL)
+       (defvar load-c32-p NIL))
+
+
+****************************************************************************************************
+
+				  UNIX Environment Variables Notes
+
+****************************************************************************************************
+
+For running LISP and GARNET explicitely (not necessary for using
+Surf-Hippo), set the CMUCLLIB and GARNETHOME environment variables in
+your .cshrc file, for example:
+
+	setenv CMUCLLIB /home/lisp/cmu-19a/lib/
+
+	setenv GARNETHOME ~lyle/systems/garnet/
+
+
+****************************************************************************************************
+
+					Other Customizations
+
+****************************************************************************************************
+
+Editing Startup Functions
+
+In the file $SURFHOME/misc/loaders/surf-hippo-loader.lisp the startup functions START (which leaves
+you talking to the Lisp interpreter) and SURF (which starts the menus) call INIT-SURF-DIRECTORIES
+which sets the program directories according to the environment variables SURFHOME, possibly
+SURFUSERHOME, and as a last resort, by HOME. If you want the Surf-Hippo code and your data (input
+and output) files to reside on different directories, edit the following lines (marked with a "->")
+in surf-hippo-loader.lisp:
+
+
+     (defun init-surf-directories ()
+       (in-package "SURF")
+       (setq *Surfdir*
+	     (if (assoc :SURFHOME lisp::*environment-list*)
+		 (cdr (assoc :SURFHOME lisp::*environment-list*))
+		 (concatenate 'string (cdr (assoc :HOME lisp::*environment-list*)) "/surf-hippo")))
+       (surf::create-path *surfdir*)
+       (setq *Surf-user-dir*
+	     (if (assoc :SURFUSERHOME lisp::*environment-list*)
+		 (concatenate 'string (cdr (assoc :SURFUSERHOME lisp::*environment-list*)) "/")
+		 *Surfdir*))  
+       (surf::create-path *surf-user-dir*)
+->     (setq surf::*circuit-directory* (concatenate 'string *Surf-User-Dir* "circuits/"))
+       (wh::create-path surf::*circuit-directory*)
+->     (setq surf::*data-directory* (concatenate 'string *Surf-User-Dir* "data/"))
+       (wh::create-path surf::*data-directory*)
+->     (setq wh::*plot-directory* (concatenate 'string *Surf-User-Dir* "plot/"))
+       (wh::create-path wh::*plot-directory*)
+       (setq surf::*use-gc-announce-window* t) ; problems with save-image version.
+       )	
+
+
+For example, you could change
+
+    (setq surf::*circuit-directory* (concatenate 'string *Surfdir* "circuits/"))
+
+to
+
+    (setq surf::*circuit-directory* "/home/jobobo/surf-hippo-input/my-circuits")
+
+
+
+Editing Loader Files for System Compilation
+
+Each directory in $SURFHOME/src contains a loader file that is referenced during system compilation, e.g.
+$SURFHOME/src/sys/sys-loader.lisp. The source filenames in these files must be of the form *.lisp, and cannot
+contain any periods (".") other than that of the file extension.
+
+
+****************************************************************************************************
+
+				     Source Tar File Procedure
+
+****************************************************************************************************
+
+Full source file updates are made with the following procedure, assuming SURFHOME is set correctly,
+where "x.x" refers to the version number.
+
+        unix-prompt> cd somewhere
+        unix-prompt> source $SURFHOME/misc/shell-scripts/cp-source (or) unix-prompt> source $SURFHOME/misc/shell-scripts/cp-source-and-image
+        unix-prompt> tar -cvf ../surf-hippo.x.x.tar .
+        unix-prompt> gzip ../surf-hippo.x.x.tar
+
+Note that $SURFHOME/misc/shell-scripts/cp-source will remove all files recursively from the pwd
+(here the directory "somewhere"). In this example, the compressed tar file will be written on the
+parent directory of "somewhere".
+

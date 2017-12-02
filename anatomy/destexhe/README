@@ -1,0 +1,78 @@
+
+
+The following notes are taken from the anatomy files in this
+directory, kindly supplied by Alain Destexhe <alain@fmed.ulaval.ca>,
+Universite Laval, Quebec, Canada.
+
+
+=============================================================================
+=============================================================================
+
+
+51-2-A-LVIPyr-Cssctx  translated Thu Oct  9 12:05:46 1997 by ntscable %I%
+source file syntax: Eutectic
+output file syntax: NEURON
+soma: diameter = 9.77502 um  length = 17.5192 um  area = 537.999 um2
+      12 three-D points; 12 outline points numbered 1-12
+      outline diameter = 13.5288 um
+5 primary neurites
+44 branches totaling 7576.54 um in length, 21512.3 um2 in area
+2204 tree points translated to 45 segments (1 requested)
+Neurites divided into segments of equal dx over each entire branch.
+Segment length constrained to be < 7576.54 um.
+
+No. points   2216
+No. trees       6
+Text  Cell 51/2A - Cat SS cortex, layer 6, pyr.  A. Destexhe, Salk Institute
+
+Alain Destexhe, June 1996: added reduction of the diameter of the dendrites
+(diamred), based on Larkmann, U.  J Comp Neurol 306:307, 1991: the diameters
+of this cell are significantly larger than the normal, probably due to the
+histological procedure (?).  A correction factor of diamred=0.7 (same as the
+Layer 5 cell traced in the same slice) restores it to normal, with an area of
+about 21564 um2 (soma unchanged).
+
+Reference: 
+
+Contreras, D., Destexhe, A. and Steriade, M.  Intracellular
+and computational characterization of the intracortical inhibitory control of
+synchronized thalamic inputs in vivo.  
+Journal of Neurophysiology 78: 335-350, 1997.
+
+Please cite this reference when using this geometry
+
+=============================================================================
+=============================================================================
+
+51-2-B-LVPyr-Cssctx  translated Thu Oct  9 12:05:25 1997 by ntscable %I%
+source file syntax: Eutectic
+output file syntax: NEURON
+soma: diameter = 23.3456 um  length = 43.5231 um  area = 3192.09 um2
+      38 three-D points; 54 outline points numbered 1-54
+      outline diameter = 27.9459 um
+9 primary neurites
+88 branches totaling 22173.1 um in length, 89036.6 um2 in area
+3741 tree points translated to 89 segments (1 requested)
+Neurites divided into segments of equal dx over each entire branch.
+Segment length constrained to be < 22173.1 um.
+No. points   3795
+No. trees      10
+Text  Cell 51-2-B, Cat SS cortex, Lay 5 Pyr, A. Destexhe, December 1993                                                       
+ 
+Alain Destexhe, June 1996: added reduction of the diameter of the dendrites
+(diamred), based on Larkmann, U.  J Comp Neurol 306:307, 1991: the diameters
+of this cell are significantly larger than the normal, probably due to the
+histological procedure (?).  The total area of the cell (about 120000 um2!) is
+much larger that the average area of thick layer 5 cells.  A correction factor
+of diamred=0.7 restores it to normal, with an area of about 91620 um2 (soma
+unchanged)
+ 
+Reference: 
+
+Contreras, D., Destexhe, A. and Steriade, M.  Intracellular
+and computational characterization of the intracortical inhibitory control of
+synchronized thalamic inputs in vivo.  
+Journal of Neurophysiology 78: 335-350, 1997.
+
+Please cite this reference when using this geometry
+ 

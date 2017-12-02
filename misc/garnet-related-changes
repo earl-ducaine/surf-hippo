@@ -1,0 +1,54 @@
+debug/debug-compiler.lisp:40:;; LG 29.08.21016  add load file since compile-file doesn't load!
+opal/defs.lisp:341:      	    ;; LG Change March 8, 2002
+opal/defs.lisp:352:   ;; LG Change March 8, 2002
+
+
+src/garnet-fixes/x.lisp					; Fixing mouse wheel bug, courtesy of Edi Weitz. Add *debug-x-event-handler* code.  20.02.2017
+
+
+changed font info
+
+opal/create-instances.lisp
+
+;; LG Change the default fonts
+(setf (gethash ;; '(:fixed :roman :medium)
+       '(:sans-serif :roman :medium)
+       *font-hash-table*)
+  (create-instance 'opal::default-font-from-file opal:font-from-file
+    (:font-name (o-formula (gem:make-font-name
+                            (gv DEVICE-INFO :current-device)
+			    ;; '(:fixed :roman :medium)
+			    '(:sans-serif :roman :medium)
+			    )))))
+
+;; LG Change the default fonts. Changed back because scrolling gadget needs fixed font
+(setf (gethash  '(:fixed :roman :medium)
+       ;; '(:sans-serif :roman :medium)
+       *font-hash-table*)
+  (create-instance 'opal::default-font-from-file opal:font-from-file
+    (:font-name (o-formula (gem:make-font-name
+                            (gv DEVICE-INFO :current-device)
+			    '(:fixed :roman :medium)
+			    ;; '(:sans-serif :roman :medium)
+			    )))))
+
+;; LG Change the default fonts. Changed back because scrolling gadget needs fixed font
+(create-instance 'opal:FONT opal:graphic-quality
+  :declare ((:type (font-family :family)
+		   (font-face :face)
+		   (font-size :size))
+	    (:maybe-constant :family :face :size))
+  (:ps-font-name (o-formula (ps-font-name (gvl :family) (gvl :face))))
+  (:ps-font-size (o-formula (ps-font-size (gvl :size))))
+  (:family
+   :fixed
+   ;; :sans-serif
+   )
+  (:face :roman)
+  (:size :medium)
+...)
+
+
+NOTE:
+
+Fonts for MOTIF-SCROLLING-LABELED-BOX, SCROLLING-INPUT-STRING, SCROLLING-LABELED-BOX must be of fixed width.

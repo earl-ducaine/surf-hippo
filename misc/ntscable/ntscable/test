@@ -1,0 +1,112 @@
+# %W% %C%
+# J.C. Wathey  
+#
+# c-shell script for testing new versions of ntscable.  
+# Creates translations of all files listed on the command
+# line (or in ../Input if none are listed on the command
+# line) in both CABLE and NEURON syntax.  The first 3 lines
+# of each output file are deleted.  Output files are given 
+# the same names as the input, with the addition of one of 
+# the following extensions, depending on the translation
+# options used:
+#
+#	file extension		translation options
+#
+#	.cable0			-x cable -a 0
+#	.cable1			-x cable -a 1
+#	.neuron			-x neuron
+#
+# The translated files are placed in the directory $test_dir,
+# which this program creates if $test_dir is nonexistent on entry.
+# After translation, each output file is compared with the file
+# of the same name under the directory $standard_dir, if this
+# directory exists.  If it does not exist, then this script
+# creates it and moves the output files into it.  The comparison
+# is done with 'cmp', unless the user types -d as the first command
+# line option, in which case 'diff' will be used.  All files
+# under $standard_dir are left in compressed form.
+
+set compare = "cmp"
+set standard_dir = "Output"
+set test_dir = "Test"
+set input_dir = ""
+set inputs = ""
+
+if ($#argv) then
+    if  $argv[1] == "-d"  then
+        set compare = "diff"
+        shift
+    endif
+endif
+
+if (! $#argv) then
+    # No arguments given; use ../input/* for inputs
+    set input_dir = "Input/"
+    if (-d $input_dir ) then
+        set inputs = `ls $input_dir`
+    else
+	echo "directory "$input_dir " not found"
+    endif
+    if (! $#inputs) then
+        echo ""
+        echo "USAGE:"
+        echo ""
+	echo  "    % %M% [-d] filename[s]"
+        echo ""
+        echo "or, if source files are in "$input_dir
+        echo ""
+	echo  "    % %M% [-d]"
+        echo ""
+    endif
+else
+    # Arguments given; use them for inputs
+    set inputs = $argv
+endif
+
+if ($#inputs) then
+
+    if (-d $test_dir) rm -rf $test_dir
+    mkdir $test_dir
+
+    echo ""
+    echo "translating:"
+    foreach i ($inputs)
+        if (-e $input_dir$i) then
+	    
+	    echo "    "$i
+	    set nseg = "350"
+
+	    ./ntscable -a 0 -n $nseg -x cable  $input_dir$i | tail +4 > $test_dir/$i.cable0
+	    ./ntscable -a 1 -n $nseg -x cable  $input_dir$i | tail +4> $test_dir/$i.cable1
+	    ./ntscable -n $nseg -x neuron $input_dir$i | tail +4> $test_dir/$i.neuron
+
+        else
+	    echo $input_dir$i": not found"
+        endif
+    end
+
+    if (-d $standard_dir) then
+	echo ""
+	echo "comparing files..."
+	uncompress $standard_dir/*.Z
+	if  $compare == "diff" then
+	    diff $test_dir $standard_dir
+	else
+	    foreach i ($inputs) 
+		if (-e $input_dir$i) then
+		    $compare $test_dir/$i.cable0 $standard_dir/$i.cable0
+		    $compare $test_dir/$i.cable1 $standard_dir/$i.cable1
+		    $compare $test_dir/$i.neuron $standard_dir/$i.neuron
+		endif
+	    end
+	endif
+	compress $standard_dir/*
+    else
+	echo ""
+	echo "creating directory "$standard_dir
+	mv $test_dir $standard_dir
+	compress $standard_dir/*
+    endif
+
+
+endif

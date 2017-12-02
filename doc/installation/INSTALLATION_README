@@ -1,0 +1,11 @@
+This directory contains information on installing Surf-Hippo. For most
+users, the information in surf-hippo/quick-start.txt should be sufficient,
+otherwise, consult installation.doc.txt in this directory. 
+
+Surf-Hippo requires that certain Unix environment variables be
+set. This may be done in the appropriate shell initialization file,
+and examples are given in the .bashrc and .cshrc files.
+
+If Surf-Hippo is to be run out of Emacs using SLIME, there are
+initializations that should be included in your .emacs initialization
+file - see the .emacs file in this directory.

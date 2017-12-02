@@ -1,0 +1,111 @@
+************************************************************
+************************************************************
+
+	Histology Windows Mouse and Keyboard Actions
+
+************************************************************
+************************************************************  
+
+LEFT, RIGHT, and MIDDLE refer to the mouse buttons.
+
+			    HELP
+h, H, CONTROL-h or CONTROL-H will create a information
+window with this file in it.
+
+If a window is not responsive, first verify that the CAPS LOCK 
+is not ON. Otherwise, try executing the function (UNSTICK-WINDOWS).
+
+			    MENU
+CONTROL-m will create a menu for revising various parameters
+of the window.
+
+			  DESTROY
+CONTROL-d will destroy the selected window or all histology
+windows (after prompting for verification).
+
+CONTROL-D will destroy the selected window immediately.
+
+Avoid destroying any Surf-Hippo window with the X window
+manager.
+
+			   PRINT
+CONTROL-p will prompt for printing the selected window (and
+the other output windows).
+
+		       CHOOSE ELEMENT
+LEFT will pick the closest soma or segment and print the
+name and xy coordinates in the upper left hand corner. For
+segments, this will identify the segment whose distal node
+is closest to the mouse.
+
+RIGHT will pick the closest soma and print its name and xy
+coordinates in the upper left hand corner. This may be
+convenient when a soma is surrounded by a lot of segments.
+
+CONTROL-SHIFT-LEFT will give a menu for various
+manipulations and examinations of the last soma or segment
+chosen by the LEFT mouse action, if there was one. This menu
+allows enabling/disabling plotting for all the plottable
+variables associated with the chosen circuit node,
+adding/removing various components, such as channels,
+sources, and synapses, and output of element and node
+parameters. Depending on the simulation, other options may
+also be available.
+
+			    ZOOM
+CONTROL-LEFT will give a resizable rectangle for zooming to
+a new window.
+
+CONTROL-f will remove the oldest marker (zoom-rectangle or
+cross-hair) that is visible.
+
+CONTROL-l will remove the latest marker (zoom-rectangle or
+cross-hair) that is visible.
+
+CONTROL-A will remove all the markers (zoom-rectangle or
+cross-hair).
+
+		   CROSS HAIR and MARKER
+MIDDLE will put a cross hair on the window which can then be
+moved around - When the middle mouse button is released the
+xy coordinates of the last location of the cross hair is
+displayed in microns. If there was a previous point so
+delineated, or if a cell node was pointed out (mouse LEFT),
+then the length in microns between the current and last
+points is shown. If the window has been resized, the cross
+hair result will not be correct until the window has been
+redrawn.
+
+CONTROL-MIDDLE will prompt for placing a small cross marker,
+with optional label, at the last point that was selected
+with the cross hairs. This menu also allows for other
+editing options, such as removing the cross if you just want
+the text. These markers may be removed, or their fonts
+changed, via the main drawing menu (CONTROL-m), "Edit
+element graphics" option. The labels may also be edited
+directly by clicking the left mouse button on the text.
+
+			   ABORT
+CONTROL-g is the generic abort command. For example, when
+zooming or locating a cross hair, keyboard keys that invoked
+the command may be released while moving the mouse as long
+as the mouse button is pressed. Hitting CONTROL-g *before*
+releasing the mouse button will abort the operation.
+
+			  COMMENT
+CONTROL-t will prompt for a single line comment in that is
+printed in the lower right corner of the window. This can
+also be used to erase any comment that is in either the
+lower or upper right corner of the selected window.
+
+CONTROL-e will erase any comment in the upper right hand
+corner (e.g. cross-hair coordinates).
+
+			 ALIGNMENT
+CONTROL-a will allow alignment of other windows to the
+selected window.
+
+		       MISCELLANEOUS
+If menus are buried under other windows, hitting CONTROL-q
+over any info, plot or histology window will deiconify and
+raise any active menus.

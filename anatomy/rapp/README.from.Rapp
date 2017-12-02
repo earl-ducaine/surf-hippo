@@ -1,0 +1,48 @@
+Data here is public domain - distributed by M. Rapp
+
+
+        ------  RECONSTRUCTED PURKINJE CELLS  ------
+
+Three Purkinje cells from guinea-pig cerebellar slices were physiologically
+characterized using intracellular techniques.  The neurons were fully
+reconstructed, following physiological measurements and staining with
+horseradish peroxidase.  Reconstructions of the neurons were made using
+'Neuron tracing system' (Eutectic Inc.). Using this combined software and
+hardware system, the neuron is represented by a set of points where each
+point has the following attributes: type, x, y, z, coordinates and a
+diameter.  The Purkinje cells images are built of 1400-2100 points and give
+an accurate description of the neurons morphology.  Note, however, that
+dendritic spines are not included in the morphological description; they
+were added globally into the model utilizing the method of Rapp et al.
+(1992).
+
+The morphological description of these 3 Purkinje cells (in Eutectic
+format) is now available and can be fetched from the following WWW site:
+
+http://www.ls.huji.ac.il/~rapp
+
+For physiological and modeling details see:
+
+Rapp M., Yarom Y. and Segev I. (1992) "The impact of parallel fibers
+background activity on the cable properties of cerebellar Purkinje cells".
+Neural Computation 4, 518-533
+
+Rapp, M., Segev, I. and Yarom. Y. (1994) "Physiology, morphology and
+detailed passive models of guinea-pig cerebellar Purkinje cells".
+Journal of Physiology 474.1, 101-118
+
+Please cite the above paper when using these files.
+
+
+Neurons were reconstructed using 'Neuron tracing systea' (Eutectic Inc.)
+Each neuron is represented by a list of points. Each point contains
+its type, x,y,z coordinates and its diameter.
+
+Types of points:
+SOS - soma outline start
+SOE - soma outline end
+MTO - beginning of a dendrite
+CP - continuous point
+BP - branch point
+NE - natural ending
+

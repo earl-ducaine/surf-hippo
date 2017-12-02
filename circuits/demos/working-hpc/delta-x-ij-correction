@@ -1,0 +1,10 @@
+In Section 9.7.1:
+
+  In the present version, $\Delta x_{ij}$ is taken to be one cm (to
+  match the units of the diffusion coefficient), whereas the true
+  diffusional distances are on the order of one micron.
+
+should be:
+
+  In the present version, $\Delta x_{ij}$ is taken to be 10 microns,
+  whereas the true diffusional distances are on the order of one micron.

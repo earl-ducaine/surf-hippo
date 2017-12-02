@@ -1,0 +1,38 @@
+(loop for pathname-value in Surf-Hippo-Pathnames do
+      ;; Normally, the installed tar file should make all the right directories, but this is for
+      ;; those who just install bits and pieces.
+      (unix:unix-mkdir (ext:unix-namestring (symbol-value pathname-value) nil) #o777))
+
+
+
+
+;; Loading #P"/home/lyle/surf-hippo/bin/parameters/working-hpc.fasl".
+
+Error in KERNEL::UNDEFINED-SYMBOL-ERROR-HANDLER:  the function WINDOWS-HACK::COMPILE-OR-EXTRACT-FUNCTION-OR-NUMBER is undefined.
+   [Condition of type UNDEFINED-FUNCTION]
+
+
+in ~/surf-hippo/src/gui/sequences.lisp
+;; (defun sequence-to-array (sequence) (coerce sequence 'simple-array))
+(defun sequence-to-array (sequence) (coerce sequence 'vector))
+
+
+
+iin /usr/local/garnet/garnet-3.0/src/opal/x.lisp
+
+(defun lineage-of-drawable (drawable)
+  ;; Certain versions of Allegro CL/CLX give an error when you
+  ;; call xlib:query-tree.  These versions seem to be
+  ;; characterised by the feature :clx-cl-error.
+  #-clx-cl-error
+  (multiple-value-bind (children parent root)
+      (xlib:query-tree drawable)
+    (declare (ignore children))
+    (if (eq parent root)
+      (list drawable root)
+      (cons drawable (lineage-of-drawable parent))))
+  #+clx-cl-error
+  (list drawable opal::*default-x-root*))
+
+to avoid error here   (push :clx-cl-error *features*)
+

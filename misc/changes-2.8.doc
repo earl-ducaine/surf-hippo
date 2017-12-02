@@ -1,0 +1,122 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+This file contains only non-backward compatible changes.
+
+
+;;;;;;;;;;;;;;;;;;
+
+8/25/98
+
+The following functions:
+(defun set-*conc-int-init-value-list* () ... )
+(defun set-*init-value-list* () ... )
+
+have been replaced by:
+
+(defun set-*conc-int-initializations* () ... )
+(defun set-*node-voltage-initializations* () ... )
+
+;;;;;;;;;;;;;;;;;;
+
+
+The following variables:
+
+(defvar *use-init-value-list* nil "Use *INIT-VALUE-LIST* for setting node voltages.")
+
+(defvar *init-value-list* '() "A list of dotted pairs, the car's are nodes, the cdr's
+  are the initial value to set that node to.")
+
+(defvar *use-conc-int-init-value-list* nil "Use *conc-int-init-value-list* to set initial concentrations.")
+(defvar *use-buffer-init-value-list* nil "Use *buffer-init-value-list* to set initial buffer states.")
+(defvar *use-pump-init-value-list* nil "Use *pump-init-value-list* to set initial pump states.")
+
+(defvar *conc-int-init-value-list* '() "A list of dotted pairs, the car's are concentration
+integrators, the cdr's are lists of compartment initial concentrations to set that integrator to.") 
+
+(defvar *buffer-init-value-list* '() "A list of dotted pairs, the car's are buffers, the cdr's are
+lists of initial concentrations to set that buffer to.")
+
+(defvar *pump-init-value-list* '() "A list of dotted pairs, the car's are pumps, the cdr's are lists
+of initial concentrations to set that pump to.") 
+
+;;;;;;;;;;;;;;;;;
+
+have been replaced by:
+
+(defvar *use-node-voltage-initializations* nil "Use *NODE-VOLTAGE-INITIALIZATIONS* for setting node voltages.")
+
+(defvar *node-voltage-initializations* '() "A list of dotted pairs, the car's are nodes, the cdr's
+  are the initial value to set that node to.")
+
+(defvar *use-conc-int-initializations* nil "Use *conc-int-initializations* to set initial concentrations.")
+(defvar *use-buffer-initializations* nil "Use *buffer-initializations* to set initial buffer states.")
+(defvar *use-pump-initializations* nil "Use *pump-initializations* to set initial pump states.")
+
+(defvar *conc-int-initializations* '() "A list of dotted pairs, the car's are concentration
+integrators, the cdr's are lists of compartment initial concentrations to set that integrator to.") 
+
+(defvar *buffer-initializations* '() "A list of dotted pairs, the car's are buffers, the cdr's are
+lists of initial concentrations to set that buffer to.")
+
+(defvar *pump-initializations* '() "A list of dotted pairs, the car's are pumps, the cdr's are lists
+of initial concentrations to set that pump to.") 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+9/28/98
+
+More globals with "*foo" notation have been changed to "*foo*",
+including:
+
+     *convert-light-response-to-events-for-each-synapse*
+     *enable-light* *enable-light-auto-event-update*
+     *constant-light-input-from-negative-infinity*
+     *compute-all-light-inputs*
+     *fast-rf-bar* *fast-full-field-spot*
+     *light-input-offset-distance* *light-input-offset-angle* *light-input-delay* *light-origin-array*
+     *light-theta* *light-speed*
+     *light-start-position-y* *light-start-position-x*
+     *bar-width* *bar-length*
+     *grating-spatial-period*
+     *use-aperture* *aperture-radius* *aperture-center-x* *aperture-center-y*
+     *bar-a-width* *bar-a-length*
+     *bar-a-intensity* *bar-a-start-time* *bar-a-stop-time*
+     *bar-a-position-x* *bar-a-position-y*
+     *bar-b-width* *bar-b-length*
+     *bar-b-intensity* *bar-b-start-time* *bar-b-stop-time*
+     *bar-b-position-x* *bar-b-position-y*
+     *syn-rf-normalized-amp* *light-input-waveform*
+     *first-non-zero-element-light-input-waveform*
+     *last-non-zero-element-light-input-waveform*
+     *synapse-g-leak-ratio*
+     *light-stimulus-start-time* *light-stimulus-stop-time*
+     *light-stimulus-strength* *light-background*
+     *light-stimulus-plane* *light-stimulus-types* *light-stimulus*
+     *spot-outside-diameter* *spot-inside-diameter*
+	     
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+1/20/99
+
+GRAB-AND-STORE-PLOT-DATA now has all keyword arguments (previous
+version used optional args)
+
+PRINT-CIRCUIT now has only one optional DESCRIPTION-LEVEL argument.
+
+1/25/99
+
+The global var *integral-base is now *integral-base*.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+1/27/99
+
+CREATE-SOMA now has keyword arguments instead of optional args.
+
+The WAVEFORM-SPEC argument for the ADD-WAVEFORM function now accepts
+either a number sequence of a function specification (lambda list).
+There is no longer a WAVEFORM-ARGS argument.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

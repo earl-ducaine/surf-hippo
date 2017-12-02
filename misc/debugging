@@ -1,0 +1,331 @@
+17.08.2016
+
+(defun add-event-to-syn-transformed-events (syn transformed-event-time event-breakpoints-mrt)
+  (declare (optimize (safety 0) (speed 3) (space 0) (debug 0)))
+  ;; This is used by EVAL-VOLTAGE-SYNAPSE whenever a new event is detected.
+  ;;
+  ;; :TRANSFORMED-EVENTS = (1stevt 2ndevt 3rdevt ...)  NG, 3/11/97 rajoute la declaration fixnum apres list.  -
+  ;; remplace le NCONC par un RPLACD plus efficace : conse deux fois moins, et est 20% plus rapide - rappel: la
+  ;; forme 'list' alloue effectivement une nouvelle liste.
+  (let ((listified-delayed-transformed-event-time
+	 (list (the fn (+ (synapse-fixnum-delay syn) (the fn transformed-event-time))))))
+    (if (synapse-transformed-events syn)
+      (rplacd (last (synapse-transformed-events syn)) listified-delayed-transformed-event-time)
+      (setf (synapse-transformed-events syn) listified-delayed-transformed-event-time)))
+  (when event-breakpoints-mrt
+    (let ((delay-mrt (kernel::sf-sb32-truncate (/ (synapse-delay syn) *mrt*))))
+      (loop for event-breakpoint-mrt in event-breakpoints-mrt do
+	    (insert-event-mrt-breakpoint (+ delay-mrt (the fn event-breakpoint-mrt)))))))
+
+
+Running cmucl 18d gets this error
+
+Error in KERNEL::UNDEFINED-SYMBOL-ERROR-HANDLER:  the function KERNEL::SF-SB32-TRUNCATE is undefined
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Works for 18d, 18e, 19f
+;; 20a needs cmucl-fixes/garnet-x-fix.lisp, AND control m (etc) is read as :CONTROL-LATIN_SMALL_LETTER_M (see also :CONTROL-LATIN_CAPITAL_LETTER_M)
+(progn
+  (create-instance 'my-win inter:interactor-window (:left 800) (:top 100))
+  (opal:update my-win)
+  (create-instance 'window-menu-Interactor inter:button-Interactor (:continuous nil) (:start-where t)
+		;   (:start-event :control-\m)
+		   (:start-event :CONTROL-LATIN_SMALL_LETTER_M))
+
+  (defun window-menu-inter-function (interactor final-obj-over)
+    (declare (ignore final-obj-over interactor))
+    (break)
+    (format t "Hello!"))
+  (setq *menu-interactor* (create-instance nil window-menu-Interactor (:Window my-win) (:final-function #'window-menu-inter-function))))
+
+
+
+
+(gd::print-inter-details *menu-interactor*)
+(interactors:trace-inter)
+(interactors:trace-inter *menu-interactor*)
+(gd:ident)
+
+
+20d bug
+* (just-draw)
+
+#k<KR-DEBUG:HISTOLOGY-WINDOW-24374>
+* 
+
+Invalid number of arguments: 3
+   [Condition of type KERNEL:SIMPLE-PROGRAM-ERROR]
+
+Restarts:
+  0: [ABORT] Return to Top-Level.
+
+Debug  (type H for help)
+
+(NTH 3 0 (196.99997 1139.0))[:EXTERNAL]
+Source: Error finding source: 
+Error in function DEBUG::GET-FILE-TOP-LEVEL-FORM:  Source file no longer exists:
+  target:code/list.lisp.
+0] d
+(HISTOLOGY-COORDS-POINTER-RESULT-CORE
+    #k<KR-DEBUG:WINDOW-COORDS-POINTER-24407>
+    (136 335 136 335)
+    T)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(progn (compile-file "/usr/local/surf-hippo/src/cmucl-fixes/garnet-x-fix.lisp")
+       (load "/usr/local/surf-hippo/src/cmucl-fixes/garnet-x-fix.lisp"))
+
+
+#|
+
+;; /cmucl-18d-garnet-3.0-image ok
+.................................................................................
+
+lyle@lyle-Precision-M4400:/usr/local/cmucl$ /usr/local/cmucl-18e/bin/lisp -core /usr/local/cmucl-18e/lib/cmucl/lib/garnet-image
+bash: /usr/local/cmucl-18e/bin/lisp: No such file or directory
+lyle@lyle-Precision-M4400:/usr/local/cmucl$ /usr/local/cmucl/cmucl-18e/bin/lisp -core /usr/local/cmucl/cmucl-18e/lib/cmucl/lib/garnet-image
+CMU Common Lisp 18e, running on lyle-Precision-M4400
+With core: /usr/local/cmucl/cmucl-18e/lib/cmucl/lib/garnet-image
+Dumped on: Thu, 2016-06-23 13:16:19+02:00 on lyle-Precision-M4400
+See <http://www.cons.org/cmucl/> for support information.
+Loaded subsystems:
+    Python 1.1, target Intel x86
+    CLOS 18e (based on PCL September 16 92 PCL (f))
+    CLX X Library MIT R5.02
+*** Restarting Garnet 3.0 image created with opal:make-image ***
+*** Image creation date: Jun 23, 2016, 1:16 PM ***
+* (create-instance 'my-win inter:interactor-window
+		 (:left 800) (:top 100))
+(opal:update my-win)
+
+
+Object MY-WIN
+#k<MY-WIN>
+* 
+
+File-error in function OPEN:
+   Error opening #p"/usr/local/garnet-3.0/lib/bitmaps/garnet.cursor", No such file or directory.
+
+Restarts:
+  0: [CONTINUE] Return NIL.
+  1: [ABORT   ] Return to Top-Level.
+
+Debug  (type H for help)
+
+(OPEN #p"/usr/local/garnet-3.0/lib/bitmaps/garnet.cursor"
+      :DIRECTION
+      :INPUT
+      :ELEMENT-TYPE
+      ...)
+Source: Error finding source: 
+Error in function DEBUG::GET-FILE-TOP-LEVEL-FORM:  Source file no longer exists:
+  target:code/fd-stream.lisp.
+
+
+.................................................................................
+
+lyle@lyle-Precision-M4400:/usr/local/cmucl$ /usr/local/cmucl/cmucl-20c/bin/lisp -core /usr/local/cmucl/cmucl-20c/lib/cmucl-20c-garnet-3.0-image
+CMU Common Lisp 20c release-20c (20C Unicode), running on lyle-Precision-M4400
+With core: /usr/local/cmucl/cmucl-20c/lib/cmucl-20c-garnet-3.0-image
+Dumped on: Mon, 2016-07-04 17:17:23+02:00 on lyle-Precision-M4400
+See <http://www.cons.org/cmucl/> for support information.
+Loaded subsystems:
+    Unicode 1.28 with Unicode version 6.0.0
+    Python 1.1, target Intel x86/sse2
+    CLOS based on Gerd's PCL 2010/03/19 15:19:03
+    CLX X Library Telent CLX 0.7.3 + CMUCL mods, based on MIT R5.02
+*** Restarting Garnet 3.0 image created with opal:make-image ***
+*** Image creation date: Jul 4, 2016, 5:17 PM ***
+* (create-instance 'my-win inter:interactor-window
+		 (:left 800) (:top 100))
+(opal:update my-win)
+
+Object MY-WIN
+#k<MY-WIN>
+* 
+NIL
+* 
+Type-error in KERNEL::OBJECT-NOT-TYPE-ERROR-HANDLER:
+   NIL is not of type XLIB:WINDOW
+   [Condition of type TYPE-ERROR]
+
+Restarts:
+  0: [ABORT] Return to Top-Level.
+
+Debug  (type H for help)
+
+(XLIB:QUERY-TREE 1 NIL)[:EXTERNAL]
+0] 
+
+Works ok after
+(compile-file "/usr/local/surf-hippo/src/cmucl-fixes/garnet-x-fix.lisp")
+(load "/usr/local/surf-hippo/src/cmucl-fixes/garnet-x-fix.lisp")
+
+(compile-file "/usr/local/surf-hippo/src/cmucl-fixes/fd-stream-read-n-bytes.lisp")
+(load "/usr/local/surf-hippo/src/cmucl-fixes/fd-stream-read-n-bytes.lisp")
+.................................................................................
+
+|#
+
+
+
+
+(create-instance 'basic-graphics-window
+		 inter:interactor-window
+		 (:icon-title (o-formula (gvl :title)))
+		 (:visible nil)
+		 (:double-buffered-p t)
+		 (:min-width 100) (:min-height 100)
+		 ;; (:comment-font (o-formula *comment-font*))
+		 (:font (opal:get-standard-font :serif :roman ; :bold-italic
+						:medium))
+		 (:theta 0.0) (:phi 0.0) ; radians
+
+		 ;; Convenient variables for graphing routines
+		 (:cos-phi (o-formula (cos (gvl :phi))))
+		 (:sin-phi (o-formula (sin (gvl :phi))))
+		 (:cos-theta (o-formula (cos (gvl :theta))))
+		 (:sin-theta (o-formula (sin (gvl :theta))))
+		 (:sin-phi*sin-theta (o-formula (* (gvl :sin-phi) (gvl :sin-theta))))
+		 (:cos-phi*sin-theta (o-formula (* (gvl :cos-phi) (gvl :sin-theta))))
+
+		 ;; These functions transform x and y values in window data units to window pixels.
+		 (:x-graphics-win-function nil) (:y-graphics-win-function nil)
+
+		 ;; (:background-color (symbol-to-opal-color *default-graphics-window-background-color*))
+
+	;;	 (:feedback-object-line-style ;(o-formula
+					; (if (eql opal::black (gvl :background-color))
+					; white-feedback-object-line-style
+					; black-feedback-object-line-style))
+					; (create-instance nil feedback-object-line-style)
+					; (o-formula (create-instance nil dashed-line (:foreground-color  (gvl :window :default-graphics-color))))
+	;;	  dashed-line
+	;;	  )
+		 (:default-graphics-color (o-formula (if (eql opal::black (gvl :background-color)) opal::white opal::black)))
+		 (:default-line-style (o-formula (create-instance nil opal:default-line-style (:constant nil)
+								  (:foreground-color (or (gvl :default-graphics-color) opal::black)))))
+		 (:default-graphics-background (o-formula (if (eql opal::black (gvl :background-color)) opal::black-fill opal::white-fill)))
+		 (:default-graphics-filling-style (o-formula (if (eql opal::black (gvl :background-color)) opal::white-fill opal::black-fill))))
+
+(setq *test-win-1* (create-instance nil basic-graphics-window))
+
+(s-value *test-win-1* :visible t)
+
+(defun print-window-inter-function (interactor final-obj-over)
+  (declare (ignore final-obj-over))
+  (let ((window (first-interactor-window interactor)))
+      (break)))
+
+(create-instance 'print-window-Interactor inter:button-Interactor
+		 (:continuous nil) (:start-where t) (:start-event :control-\p)
+		 (:final-function #'print-window-inter-function))
+
+
+
+(create-instance nil print-window-Interactor  (:Window *test-win-1*))
+	
+
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+9.9.2016
+
+With (GARNET-DEBUG:IDENT T), hitting a window with a key gets this error:
+
+Error in KERNEL::UNDEFINED-SYMBOL-ERROR-HANDLER:  the function INTERACTORS::TRANSLATE-CHARACTER is undefined.
+   [Condition of type UNDEFINED-FUNCTION]
+
+Restarts:
+ 0: [RETRY] Retry SLIME REPL evaluation request.
+ 1: [ABORT] Return to sldb level 1.
+ 2: [RETRY] Retry SLIME REPL evaluation request.
+ 3: [*ABORT] Return to SLIME's top level.
+ 4: [ABORT] Return to Top-Level.
+
+Backtrace:
+  0: ("assembly routine: X86::UNDEFINED-TRAMP")
+  1: (GARNET-DEBUG:IDENT T)
+      Locals:
+        XLIB::.ABORTED.#1 = T
+        LOC-X = 205
+        LOC-Y = 163
+        OBJ = NIL
+        SUSPEND-PROCESS = NIL
+        VERBOSE = T
+        WINDOW = #k<KR-DEBUG:HISTOLOGY-WINDOW-17688>
+
+13.9.2016
+
+(< distance min-distance) always returns NIL:
+
+(defun closest-cell-element-in-window (x y window just-somas)
+  ;; (declare (optimize (safety 1) (speed 3) (space 1)))
+  (let* ((cells (graphics-window-cells window))
+	 (candidates (if just-somas (somas cells) (cell-elements cells)))
+	 (min-distance 0.0)
+	 nearest-element)
+    (declare (single-float x y min-distance))
+    (loop for element in candidates
+	  do (let* ((loc (element-absolute-location element))
+		    (distance (cartesian-distance-float (get-win-view-plane-x loc window) (get-win-view-plane-y loc window) x y)))
+	       ;; (format t "min-distance ~A, distance ~A (> distance min-distance): ~A ~%~%" min-distance distance (> distance min-distance))
+	       (when (or (not nearest-element) 
+			 (negative-p (- distance min-distance))
+			  ; (< distance min-distance)
+			 )
+		 (setq min-distance distance nearest-element element)))
+	  finally (return nearest-element))))
+
+19.09.2016
+
+:GENERAL class conc int needs debugging, matrix-system-solver.lisp not loaded??
+;;;
+
+(progn (profile::unprofile) (profile::profile make-v-agg virtual-agg-finishing) (just-draw)  (profile:report-time)  (profile::unprofile))
+(progn (profile::unprofile) (profile::profile clean-up-*output-windows*
+					; drawing-menu 
+					load-window-with-cells
+					draw-cells
+
+					process-circuit-structure 
+					set-histology-window-angle-scale-parameters
+					; resize-histology-window
+					min-max-xy-coordinates-in-win
+					are-there-light-synapses
+					is-light-moving
+					; min-max-xy-cell-element-in-win
+					; cell-elements
+					all-cell-elements
+					where
+					cell-element-absolute-location-fast
+					get-win-view-plane-x
+					get-win-view-plane-y
+
+					reset-histology-xfrm
+					      ) (just-draw)  (profile:report-time))
+
+
+(progn (profile::unprofile) (profile::profile element-collector) (just-draw)  (profile:report-time))
+
+
+14.01.2017
+
+erase-electrode doesn't work
+
+
+Plot grids disappear during zooming or replotting
+
+
+
+03.02.2017
+
+(defvar *accomodate-all-overlays* t) ;; shadow *accomodate-overlays*
+(defvar *overlay-all-plots* nil) ;; shadow *overlay-plots*
+
+
+

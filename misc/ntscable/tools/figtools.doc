@@ -1,0 +1,530 @@
+/*--------------------------------- GLOBAL DEFINITIONS --------------*/
+
+						     /* line styles */
+#define SOLID_LINE	0
+#define DASHED_LINE	1
+#define DOTTED_LINE	2
+#define LAST_STYLE	DOTTED_LINE
+
+				/* tic and label positions for axes */
+#define	CLOSER_SIDE	0
+#define	LEFT	       -1
+#define	RIGHT		1
+#define	BELOW	       -1
+#define	ABOVE		1
+					      /* text justification */
+#define LEFT_JUSTIFY	0
+#define CENTER		1
+#define RIGHT_JUSTIFY	2
+
+                    /* The fonts currently recognized by f2ps are:
+			0  default (Helvetica)
+			1  Times-Roman
+			2  Times-Bold
+			3  Times-Italic
+			4  Helvetica
+			5  Courier	*/
+
+#define TIMES_ROMAN	1
+#define TIMES_BOLD	2
+#define TIMES_ITALIC	3
+#define HELVETICA	4
+#define COURIER		5
+#define	MAXFONT		5
+							/* in pitch */
+
+/*-------------------------------- GLOBAL DECLARATIONS --------------*/
+
+void 	window(),
+     	viewport(),
+     	axes(),
+     	x_axis(),
+     	y_axis(),
+     	write_comment(),
+     	start_compound(),
+     	end_compound(),
+	set_font(),
+     	set_charsize_in_pitch(),
+     	set_charsize_in_x(),
+     	set_charsize_in_y(),
+     	set_linewidth_in_x(),
+     	set_linewidth_in_y(),
+     	set_line_style(),
+     	line_style_key(),
+     	draw_line_style_key(),
+	legend(),
+     	set_dash_in_x(),
+     	set_dash_in_y(),
+     	move(),
+     	draw(),
+     	rdraw(),
+     	rmove(),
+     	write_text();
+
+int  	open_fig_file(),
+     	close_fig_file();
+
+double	char_width_in_x(),
+    	char_width_in_y(),
+        nice_interval();
+
+/*-----------------------------------------------------------------*/
+void window( xmin_arg, xmax_arg, ymin_arg, ymax_arg )
+
+        /* Determines what rectangle of data space will	be mapped 
+        onto the viewport rectangle for graphing.  Generates error 
+        message and sets extern flag "error" if either the horizontal 
+        or vertical interval has 0 length; otherwise it stores the 
+        window limits and calculates the scale factors relating data 
+        space to fig space. */
+
+    double xmin_arg, xmax_arg, ymin_arg, ymax_arg;
+
+/*-------------------------------------------------------------------*/
+void viewport( xmin_arg, xmax_arg, ymin_arg, ymax_arg )
+
+	/* Determines what rectangular region of the fig screen or plot
+	page (in inches) will contain the graph drawn by subsequent 
+	draw commands.  Generates error message and sets error flag
+	if either the horizontal or vertical interval has 0  length.
+	Program stores the viewport limits and calculates the scale 
+	factors relating data space to fig space.  */
+
+    double xmin_arg, xmax_arg, ymin_arg, ymax_arg;
+
+/*-------------------------------------------------------------------*/
+void move(x, y)
+
+	/* Absolute move to position specified by arguments in data 
+        space.  See "move_or_draw" for description of clipping.  */
+
+    double	x,
+		y;
+
+/*-------------------------------------------------------------------*/
+void draw( x, y )
+
+	/* Absolute draw to position specified by arguments in data 
+        space.  See "move_or_draw" for description of clipping.  */
+
+    double	x,
+		y;
+
+/*-------------------------------------------------------------------*/
+void rmove(deltaX, deltaY)
+
+	/* Relative move to position specified by arguments in data 
+        space.  See "move_or_draw" for description of clipping.  */
+
+    double	deltaX,
+		deltaY;
+
+/*-----------------------------------------------------------------*/
+void rdraw(deltaX, deltaY)
+
+	/* Relative draw to position specified by arguments in data 
+        space.  See "move_or_draw" for description of clipping.  */
+
+    double	deltaX,
+		deltaY;
+
+/*-------------------------------------------------------------------*/
+void write_comment(comment_str)
+
+	/* Writes comment_str to the fig file if comment_str is 
+	nonempty.  Sets extern "error" and writes msg if i/o error
+	occurs.  Does nothing if extern "error" is set on entry. */
+
+    char *comment_str;
+
+/*-------------------------------------------------------------------*/
+double char_width_in_x()
+
+	/* Returns the approximate width of a character in X data 
+	units. */
+
+/*-------------------------------------------------------------------*/
+double char_width_in_y()
+
+	/* Returns the approximate width of a character in Y data 
+	units. */
+
+/*-------------------------------------------------------------------*/
+void set_charsize_in_y( charsize )
+
+	/* Converts charsize from Y-axis data units to pitch units
+	and stores the result in the extern font_size.  If the result
+	is too small to read, SMALLEST_READABLE_FONT is used instead.
+	Does nothing if extern "error" is set on entry. */
+
+    double charsize;
+
+/*-------------------------------------------------------------------*/
+void set_charsize_in_x( charsize )
+
+	/* Converts charsize from X-axis data units to pitch units
+	and stores the result in the extern font_size.  If the result
+	is too small to read, SMALLEST_READABLE_FONT is used instead.
+	Does nothing if extern "error" is set on entry. */
+
+    double charsize;
+
+/*-------------------------------------------------------------------*/
+void set_charsize_in_pitch( charsize )
+
+	/* Stores charsize in pitch units in the extern font_size.  If
+	charsize is too small to read, SMALLEST_READABLE_FONT is used
+	instead.  Does nothing if extern "error" is set on entry. */
+
+    double charsize;
+
+/*-------------------------------------------------------------------*/
+void set_linewidth_in_y( linewidth_arg )
+
+	/* Converts linewidth_arg from Y-axis data units to fig pixels
+	and stores the result in the extern line_width.  Does
+	nothing if extern "error" is set on entry. */
+
+    double linewidth_arg;
+
+/*-------------------------------------------------------------------*/
+void set_linewidth_in_x( linewidth_arg )
+
+	/* Converts linewidth_arg from X-axis data units to fig pixels
+	and stores the result in the extern line_width.  Does
+	nothing if extern "error" is set on entry. */
+
+    double linewidth_arg;
+
+/*-------------------------------------------------------------------*/
+void set_line_style( style )
+
+	/* Checks style for validity and stores it in extern 
+	line_style.  Does nothing if extern "error" is set on entry. */
+
+    int style;
+
+/*-------------------------------------------------------------------*/
+void set_dash_in_y( dash_length )
+
+	/* Converts dash_length from Y-axis data units to fig pixels
+	and stores the result in the extern dash_or_dot_interval.  Does
+	nothing if extern "error" is set on entry. */
+
+    double dash_length;
+
+/*-------------------------------------------------------------------*/
+void set_dash_in_x( dash_length )
+
+	/* Converts dash_length from X-axis data units to fig pixels
+	and stores the result in the extern dash_or_dot_interval.  Does
+	nothing if extern "error" is set on entry. */
+
+    double dash_length;
+
+/*-------------------------------------------------------------------*/
+void write_text( text_str )
+
+        /* Creates a fig text object from text_str, and from the 
+        current	values of the text-related extern variables, and writes 
+        it to the fig file.  The text must contain no newlines.  Sets 
+        global flag "error" and writes error message if i/o error 
+        occurs.  Preserves leading spaces (by adjusting the fig x, y 
+        coordinates) if text_angle_in_radians is 0.  Future versions 
+        will preserve leading spaces for any text angle and will handle 
+        newlines in text_str. */
+
+    char *text_str;
+
+/*-------------------------------------------------------------------*/
+int  open_fig_file( filename_arg, comment_arg )
+
+	/* Opens a new fig file using the argument "filename_arg" for 
+        the file name.  If filename_arg is NULL or empty on entry, 
+        default_filename is used instead.  The file name is written 
+        into the file as a comment immediately following fig_preamble.  
+        If it is nonempty, the string argument "comment_arg" is 
+        appended to this comment line (this string must NOT contain
+	any newlines).  If on entry the fig file is already open 
+	(i.e., fp is nonzero), then the routine just gives a warning 
+	message and returns FALSE.  Reinitializes most global 
+	variables if the global flag "error" is TRUE on entry.  Writes 
+	error message, sets error TRUE and returns TRUE if open fails 
+	or if i/o error occurs. */
+     
+    char * filename_arg,
+	 * comment_arg;
+
+/*-------------------------------------------------------------------*/
+int  close_fig_file()
+
+	/* Closes the fig file specified by the extern variables fp
+	and filename.  Gives warning message and completes any 
+	incomplete compound objects.  Writes line style key and legend
+	(if nonempty) below the data window.  Gives warning and returns 
+	FALSE if file is not open on entry.  Gives warning and deletes 
+	the file if no objects have been written to it; otherwise 
+	writes num_objects into the file as a comment (each compound 
+	object counts as a single object even if it has multiple 
+	compound objects nested within it).  The routine then closes 
+	the file, frees the dynamic memory used by filename, and clears 
+	the extern variables fp and filename.  Returns TRUE if error is 
+	TRUE on entry or if closing is not successful; otherwise 
+	returns FALSE. */
+
+/*-------------------------------------------------------------------*/
+void legend( new_legend, font_arg, fontsize_as_fraction_of_yrange)
+
+	/* If new_legend points to text on entry, this routine stores 
+	that text in dynamic memory, sets legend_text to point to
+	the stored text and copies last 2 args to legend_font and
+	legend_fontsize_as_fraction_of_yrange.  If new_legend is NULL
+	or empty on entry, any previously stored legend is deleted and
+	legend font and legend_fontsize_.. are set to defaults.  Does 
+	nothing if extern variable 'error' is TRUE on entry. */
+
+    char      * new_legend;
+    int 	font_arg;
+    double	fontsize_as_fraction_of_yrange;
+
+/*-------------------------------------------------------------------*/
+void start_compound(comment_arg)
+
+	/* Starts a new compound object.  The extern variables 
+	num_objects, num_obj_offset, xmin, xmax, ymin, ymax,
+	and box_offset are all saved on the compound_stack, and depth 
+	is incremented.  The compound preamble is written with blank
+	spaces where the bounding box coordinates will ultimately
+	go.  The location in the file of this blank space is saved in
+	box_offset, so that end_compound will know where to write the
+	bounding box coordinates.  The same is done for num_objects
+	using num_obj_offset.  If nonempty on entry, comment_arg
+	is written into the file as a comment after the preamble and
+	before num_objects.  This routine does nothing if the extern
+	flag error is TRUE on entry. */
+
+    char      * comment_arg;
+
+/*-------------------------------------------------------------------*/
+void end_compound()
+
+	/* Ends the current compound object.  The number of objects
+	included in this compound object (num_objects) is written into
+	the file at num_obj_offset.  The bounding box coordinates are
+	adjusted if necessary and are then written to the file at
+	box_offset.  The extern variables num_objects, num_obj_offset,
+	xmin, xmax, ymin, ymax, and box_offset are then restored from
+	the compound_stack, and depth is decremented.  This routine 
+	does nothing if the extern flag error is TRUE on entry. */
+
+/*-------------------------------------------------------------------*/
+double nice_interval( FullScale, NumDivisions )
+
+	/* This function calculates an interval in data space to be 
+	used as spacing between tics on an axis.  The returned
+	interval is of the form 1, 2, or 5 times an integral power 
+	of ten, selected so as to divide the plot's full scale 
+	length (argument FullScale) into approximately the specified 
+	number of divisions (argument NumDivisions).  Returns -1.0
+	if NumDivisions is negative or 0 on entry. */
+
+    double	FullScale;
+    int		NumDivisions;
+
+/*-------------------------------------------------------------------*/
+void axes( x_num_divisions, x_description, x_units,
+           y_num_divisions, y_description, y_units,
+	   tic_label_fontsize, description_fontsize )
+
+	/* Draws x and y axes for the current data window.  The x-axis
+	is drawn at y=0 if that lies within the window; otherwise it 
+	is drawn on the bottom edge of the widow.  The y-axis is drawn 
+	at x=0 if that lies within the window; otherwise it is drawn 
+	on the left edge of the widow.  The number of divisions 
+	(separated by tic marks) is specified for the x and y axes by 
+	x_num_divisions and y_num_divisions, respectively.  If either 
+	of these is zero, then tic marks for that axis are suppressed; 
+	if negative, then a default number of divisions is used.  The 
+	number of divisions actually drawn on each axis is adjusted so 
+	that the spacing between tics is 1, 2, or 5 times an integral 
+	power of ten.  The tics are labeled with numerals having the 
+	size specified by tic_label_fontsize.  If tic_label_fontsize
+	is 0, labels are suppressed; if negative, a default fontsize 
+	is used.  The [xy]_descriptions and [xy]_units arguments are 
+	strings to be written along the axes; description_fontsize 
+	specifies their size.  If description_fontsize is 0, printing 
+	of description and units is suppressed; if negative, a default 
+	fontsize is used.  Both fontsize arguments specify font size
+	as a fraction of the entire y-axis range.  Note that the tic 
+	marks, tic labels and description strings will normally be 
+	outside of the current viewport.  */
+
+    int   	x_num_divisions,
+		y_num_divisions;
+    double      tic_label_fontsize,
+		description_fontsize;
+    char      * x_description, 
+	      * x_units,
+	      * y_description,
+	      * y_units;
+    
+
+/*-------------------------------------------------------------------*/
+void x_axis( y_coordinate, 
+	     text_side, 
+	     num_divisions, 
+	     tic_length,
+	     description, 
+	     units,
+	     tic_label_fontsize, 
+	     description_fontsize,
+	     description_placement,
+	     num_axis_crossings,
+	     axis_cross_points)
+
+	/* Draws an x-axis for the current data window.  The axis
+	is drawn at y=y_coordinate if that lies within the window;
+	otherwise it is drawn along the bottom edge of the widow.  The 
+	number of divisions (separated by tic marks) is specified by 
+	num_divisions.  If this is zero, tic marks are suppressed; 
+	if negative, then a default number of divisions is used.  The 
+	number of divisions actually drawn on the axis is adjusted so 
+	that the spacing between tics is 1, 2, or 5 times an integral 
+	power of ten.  The length of the tic marks (in y data units)
+	is specified by tic_length.  If 0, tics are suppressed; if 
+	negative, a default tic length is used.  The tics are labeled 
+	with numerals having the size specified by tic_label_fontsize.
+	If tic_label_fontsize is 0, labels are suppressed; if negative,
+	a default fontsize is used.  The descriptions and units  
+	arguments are strings to be written along the axis; 
+	description_fontsize specifies their size.  If 
+	description_fontsize is 0, printing of description 
+	and units is suppressed; if negative, a default fontsize is 
+	used.  The argument text_side specifies the location of tics, 
+	labels and description text with respect to the axis; its 
+	value may be BELOW, ABOVE or CLOSER_SIDE.  If CLOSER_SIDE,
+	the routine places tics and text below the axis if the axis 
+	is closer to the bottom of the window; otherwise it places 
+	tics and text above the axis.  Note that tic marks, tic 
+	labels and description strings may extend beyond the current 
+	viewport.  The arguments num_axis_crossings and 
+	axis_cross_points specify the number of other axes which
+	cross this one and the locations of the intersections.  At
+	present these are not used; future versions may use them to
+	suppress tic labels which would otherwise overlap another 
+	axis.  description_placement specifies whether the description
+	will be left-justified, centered, or right-justified. */
+
+    int   	text_side,
+    		num_divisions,
+		description_placement,
+		num_axis_crossings;
+    double	axis_cross_points[],
+                y_coordinate,
+		tic_length,
+		tic_label_fontsize,
+		description_fontsize;
+    char      * description, 
+	      * units;
+    
+
+/*-------------------------------------------------------------------*/
+void y_axis( x_coordinate, 
+	     text_side, 
+	     num_divisions, 
+	     tic_length,
+	     description, 
+	     units,
+	     tic_label_fontsize, 
+	     description_fontsize,
+	     description_placement,
+	     num_axis_crossings,
+	     axis_cross_points)
+
+	/* Draws a y-axis for the current data window.  The axis is 
+	drawn at x=x_coordinate if that lies within the window;
+	otherwise it is drawn along the left edge of the widow.  The 
+	number of divisions (separated by tic marks) is specified by 
+	num_divisions.  If this is zero, tic marks are suppressed; 
+	if negative, then a default number of divisions is used.  The 
+	number of divisions actually drawn on the axis is adjusted so 
+	that the spacing between tics is 1, 2, or 5 times an integral 
+	power of ten.  The length of the tic marks (in x data units)
+	is specified by tic_length.  If 0, tics are suppressed; if 
+	negative, a default tic length is used.  The tics are labeled 
+	with numerals having the size specified by tic_label_fontsize.
+	If tic_label_fontsize is 0, labels are suppressed; if negative,
+	a default fontsize is used.  The descriptions and units  
+	arguments are strings to be written along the axis; 
+	description_fontsize specifies their size.  If 
+	description_fontsize is 0, printing of description 
+	and units is suppressed; if negative, a default fontsize is 
+	used.  The argument text_side specifies the location of tics, 
+	labels and description text with respect to the axis; its 
+	value may be LEFT, RIGHT or CLOSER_SIDE.  If CLOSER_SIDE, 
+	the routine places tics and text at the left of the axis if 
+	the axis is closer to the left edge of the window; otherwise 
+	it places tics and text at the right of the axis.  Note that 
+	tic marks, tic labels and description strings may extend 
+	beyond the current viewport.  The arguments num_axis_crossings
+	and axis_cross_points specify the number of other axes which
+	cross this one and the locations of the intersections.  At
+	present these are not used; future versions may use them to
+	suppress tic labels which would otherwise overlap another 
+	axis.  description_placement specifies whether the description
+	will be left-justified, centered, or right-justified. */
+
+    int   	text_side,
+    		num_divisions,
+		description_placement,
+		num_axis_crossings;
+    double      axis_cross_points[],
+		x_coordinate,
+		tic_length,
+		tic_label_fontsize,
+		description_fontsize;
+    char      * description, 
+	      * units;
+    
+
+/*-------------------------------------------------------------------*/
+void line_style_key( description )
+
+	/* Appends a record to line_style_record_list using the 
+	current line style variables and description.  Does nothing
+	if description is empty or NULL on entry. */
+
+    char      * description;
+
+/*-------------------------------------------------------------------*/
+void draw_line_style_key(x_upper_left,
+			 y_upper_left,
+			 length_as_fraction_of_xrange,
+			 font_arg,
+			 fontsize_as_fraction_of_yrange)
+
+	/* Draws line style key at the location specified by the first
+	two arguments (in x,y data space units).  If this point lies 
+	outside the window, then the key will be drawn at the default
+	location below and at the left edge of the window.  The other
+	arguments specify the length of lines in the key and the font 
+	and fontsize used for writing the descriptions.  Any of these 
+	may be -1, in which case a default value is used.  If length 
+	or fontsize is 0, the routine does nothing. */
+
+    double	x_upper_left,
+    		y_upper_left,
+    		length_as_fraction_of_xrange,
+    		fontsize_as_fraction_of_yrange;
+    int		font_arg;
+
+
+/*-------------------------------------------------------------------*/
+void set_font( new_font )
+
+	/* Changes extern variable font to new_font if the latter is
+	a valid font number on entry; otherwise sets font to DEF_FONT.
+	Does nothing if extern "error" is set on entry. */
+
+    int new_font;
+

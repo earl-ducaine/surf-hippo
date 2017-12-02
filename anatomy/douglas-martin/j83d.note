@@ -1,0 +1,51 @@
+We got the following error for the original j83 file:
+
+  lyle@cogni>ntscable/ntscable/ntscable -x n anatomy/j83d anatomy/j83d.lisp
+  anatomy/j83d: invalid point type ne  in line 2996
+
+
+So in the j83d.mod file, we have just removed this line. We still get
+the following message:
+
+  lyle@cogni>ntscable/ntscable/ntscable -x n anatomy/j83d.mod anatomy/j83d.lisp
+  ntscable: WARNING: not enough soma points
+
+and the resulting soma is misplaced with respect to the dendritic tree.
+We have not had a chance to look at this more carefully.
+
+
+**** 12/26/94 ****
+ 
+replaced last line of original j83d.mod file with:
+
+	mae           116       -269        -35          3
+
+presumably the original ntscable error mentioned above was because
+there was an "ne" entry instead of "mae", the latter which should
+indicate the end of a soma outline. However, this gives a funny large
+slice in the soma.
+
+
+changed:
+	scp          233       -279        -25          3
+to:
+	scp          133       -279        -25          3
+
+which did not seem to change much in the lisp file
+
+changed:
+scp           67       -374        -48          3
+to:
+scp           67       -374        -42          3
+
+(didn't work)
+
+so changed:
+scp           67       -374        -42          3
+back to:
+scp           67       -374        -48          3
+
+
+
+Finally, edited two lines in the j83d.lisp that contain soma
+coordinates. This seems to generate a nice soma shape. 

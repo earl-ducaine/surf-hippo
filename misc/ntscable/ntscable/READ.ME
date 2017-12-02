@@ -1,0 +1,15 @@
+To compile:
+
+cd ../tools
+make
+
+cd ../ntscable
+make
+
+The directory "Input" contains samples of morphology files
+in all of the formats recognized by ntscable.  The directory
+"Output" contains translations of these.  The shell script
+"test" tests the most recently compiled version of ntscable by
+duplicating in the directory "Test" the translations contained 
+in "Output"; it compares the standard translations in Output
+with those in Test via the cmp command.

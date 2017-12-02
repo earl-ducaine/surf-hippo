@@ -1,0 +1,3 @@
+The Slime buffer can get stuck, with the message "Text is read-only" when trying to type into the buffer.
+
+To restore the normal state, select the region in question (or C-xh for the entire buffer), and run M-x set-region-writeable to remove the read-only text properties.

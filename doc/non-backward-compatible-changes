@@ -1,0 +1,128 @@
+Surf-Hippo Version 3.5 10/12/03
+
+The function CELL-ELEMENTS previously took two optional arguments, ELEMENT and  MODEL-TYPE, and now only takes a single optional ELEMENT argument.
+Previously, this function returned a list of all somas and segments associated with the cell or cells associated with ELEMENT. Now
+it returns a list of all somas and segments associated with ELEMENT, equivalent to the all cell elements returned by both SOMAS and SEGMENTS as applied to
+ELEMENT. Note that for a segment ELEMENT, the segment or soma attached to the proximal node of this segment will also be returned. 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Surf-Hippo Version 3.2 03/05/03
+
+The TYPE argument for CREATE-ISOURCE is now a keyword, with default 'AUTONOMOUS.
+
+The argument order for ELECTROTONIC-LENGTH has changed. The form is now
+
+	(ELECTROTONIC-LENGTH (LENGTH DIAMETER RI RM &OPTIONAL (RI-COEFFICIENT 1.0))
+
+
+The function DISTAL-SEGMENTS previously returned a list of all the segments directly attached to the distal node of segment associated with ELEMENT, or the
+trunk segments if ELEMENT is associated with the soma. Now, trunk segments are not returned in the case of a soma, but only segmets directly attached to
+the soma.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+09/22/02
+
+DATA-EXTREME now returns as values NIL and MIN-TIME if no extreme value is found.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+After and including Version 3.0:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+04/08/02
+
+The global variable *INITIALIZE-ON-CIRCUIT-LOAD* replaces *INITIALIZE-BEFORE-NEXT-CIRCUIT*.
+
+Arguments to LIBRARY-CATALOG are now (reference &key only-in-circuit synapse-control verbose ionic-type)
+
+All arguments to PRINT-WINDOWS are key args, including the WINDOWS argument, which was previously required (now, default :ALL).
+
+The key arg WINS to ARRANGE-WINDOWS has been changed to WINDOWS.
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+00/06/02
+
+Replace the variables *GROUP-PLOT-DATA-BY-CELL* and *GROUP-PLOT-DATA-BY-CELL-TYPE* by PLOT-DATA-GROUPING*.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+04/01/02
+
+CELL-ORIGIN keyword in CREATE-CELL (and other functions) changed to :ORIGIN.
+
+The 'RI-COEFF element parameter keyword is replaced by 'RI-COEFFICIENT.
+
+The :AUTONOMOUS control synapse types are now called :EVENT
+
+ELEMENT-TYPE-PARAM removed (use IV-TYPE-PARAMETER)
+
+All :ENABLED and :BLOCK structure slots changed to :BLOCKED
+
+
+;;;;;;;;;;;;;;;;;
+12/31/01
+
+Keyword argument :REFERENCE-TIME-LIST for COLLECT-EXTRACTED-EVENTS (plot.lisp) changed to
+:TIME-BASE.
+
+-----
+Changed argument format for functions in conc-particle-type :ALPHA-FUNCTION, :BETA-FUNCTION,
+:TAU-FUNCTION and :SS-FUNCTION slots. These functions were previously constrained to accept three
+arguments:
+
+ CONCENTRATION VOLTAGE TYPE
+
+Now they are constrained to take two arguments:
+
+ CONC-ARG VOLTAGE
+
+Where CONC-ARG is the value returned by 
+
+  (CONC-PARTICLE-CONCENTRATION-ARG CONCENTRATION TYPE)
+
+Thus, {CONCENTRATION-COEFFICIENT * Th(CONCENTRATION - BASE-CONCENTRATION)}^CONC-POWER
+
+See conc-part.lisp
+
+;;;;;;;;;;;;;;;;;
+12/0/01
+
+:ELEMENT-TYPE keyword changed to :MODEL-TYPE in ELEMENT-AMPLITUDE, ELEMENT-EXTREME,
+ELEMENT-10-90-RISE-TIME, ELEMENT-10-90-SLOPE, ELEMENT-MAX-SLOPE, ELEMENT-MIN-SLOPE, ELEMENT-MAX (waveforms.lisp)
+
+
+The time reference keyword arguments (typically :REFERENCE-TIME-LIST) to the ELEMENT-DATA-DTED function
+family (see element_functions-2.lisp and waveforms.lisp) are now :TIME-BASE.
+
+PLOT-TIMED-DATA no longer has the keyword argument :DELTA-T, replaced by the optional argument TIME-BASE (3rd
+arg, default 1.0), which now can take a single number instead of NIL or a numeric sequence.
+
+
+In CREATE-TREE, the GLOBAL-EXTRAS-LIST keyword arg has been removed. 
+
+
+The functions ADD-ISOURCE and ADD-VSOURCE now take key arguments, instead of optional args. The
+target element arg though is still an optional arg.
+
+  (defun add-isource (&optional (element *soma*) &key name pulse-list (type :autonomous)) ...)
+  (defun add-vsource (&optional (element *soma*) &key name pulse-list (type :autonomous)) ...)
+
+
+After but not including Version 2.9p:
+
+CREATE-AXON no longer takes a :TARGET-SYNAPSE key argument. Instead there is a :TARGET key argument
+which is soley used for computing the axon length. Note that this dependence will be superseded if
+subsequently a synapse is created with the axon as its controlling element.
+
+
+
+The global variable *ISOURCE*NODES* has been eliminated. For directing the output of a given current
+source to more than one circuit node, use either the :TARGETS key argument of CREATE-ISOURCE, or set
+this parameter explicitely with ELEMENT-PARAMETER, for example,
+
+     (element-parameters *isource* 'targets (segments))
+

@@ -1,0 +1,14 @@
+#!/bin/sh 
+
+rm  $SURFHOME/bin/cmucl-fixes/*
+rm $SURFHOME/bin/development/*
+rm $SURFHOME/bin/roylance-clmath/*
+rm  $SURFHOME/bin/garnet-fixes/*
+rm  $SURFHOME/bin/gui/*
+rm $SURFHOME/bin/hippocampus/*
+rm  $SURFHOME/bin/sys/*
+rm  $SURFHOME/bin/parameters/*
+rm $SURFHOME/bin/turtle/*
+rm $SURFHOME/bin/retina/*
+rm $SURFHOME/bin/visual/*
+

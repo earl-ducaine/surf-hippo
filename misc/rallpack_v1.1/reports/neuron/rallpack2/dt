@@ -1,0 +1,19 @@
+#!/bin/csh -f
+
+foreach dt ($argv)
+    set run = b-$dt
+    set hoc = $run.hoc
+    set t = $run.t
+    set zero = $run.0
+    set x = $run.x
+
+    echo "running $hoc : time in $t, zero in $zero, x in $x"
+
+    (time neuron $hoc) > $t
+
+    awk '{print $1,$2}' < branch.out > $zero
+    awk '{print $1,$3}' < branch.out > $x
+    rm -f branch.out
+
+    dorms $dt
+end

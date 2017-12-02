@@ -1,0 +1,19 @@
+#!/bin/csh
+
+foreach i (*.hoc)
+echo $i >> run.log
+time /cit/neuron/bin/neuron $i >> run.log
+echo done $i
+end
+
+echo "doing analysis"
+echo "doing analysis" >> run.log
+
+foreach i (*.out)
+echo $i >> run.log
+../../../comparison/filesplit $i
+../../../comparison/srms {$i}0 ref_axon.0.neuron >> run.log
+../../../comparison/srms {$i}x ref_axon.x.neuron >> run.log
+end
+
+echo "all done"

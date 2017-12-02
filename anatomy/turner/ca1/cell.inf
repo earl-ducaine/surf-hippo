@@ -1,0 +1,51 @@
+revised 8/29/94
+
+Eight CA1 cells are now included: N120-N125 (from Brain Res. 652:279-290, 1994;
+Figure 3, in order) and also N160 and N161.  The *.nrn files were derived
+from a filter from the original 3D data files, which are in a binary
+Neurolucida format. The soma was reconstructed as a part of the apical dendrite
+and this is outlined in the Neuron files.  The other parameters are noted in
+the Brain Res. paper.  I have also included a 3D format (*.3DN files) for each
+of these cells.  This format is a simple listing of X-Y-Z coordinates with the
+diameter at the end, and an ID# at the start.  The ID#'s are linked by a listing
+at the end, including all branch points.  The second column after ID# is
+type, which is listed as 1 for soma, 0 for continuing dendrite and -1 for
+dendritic terminal.  This file preserves the full 3D format with vector
+endpoints and is given in microns.  In N160 the soma is the first 12 segments
+of the apical dendrite (to branch l=2.72 and d=3.8) and is a series of
+cylinders, with area = 411 um2.  In N161 the soma is the first major branch
+(apical0) and apical1 is the true apical dendrite. The soma area for this cell
+is 323 um2.  The inclusion of the soma in this fashion in all of the Neuron
+files will require renumbering the branches and the array sizes for neuron
+input.	We added the soma in this way to give true surface area as approximated
+by a series of cylinders.
+
+Also to be available in the future (biocytin-filled and 3D reconstructed):
+
+6 nl CA1 rat in vitro		}   included here
+6 post-lesion CA1 rat in vitro	}   Brain Res 652:279-290, 1994
+
+18 CA3 a/b/c neurons in vivo rat } in review J Comp Neurol, pending revisions
+
+12 CA1 nl in vitro rat		  }
+12 CA1 aged in vitro rat	  } Neuroscience abstract 1994, to be
+				    submitted to Neurobiol Aging
+
+old cells with camera lucida drawings and measurements:
+
+4 CA3 in vitro guinea pig HRP
+4 CA1 in vitro guinea pig HRP } Biophys. J., 1984
+4 DG in vitro guinea pig HRP
+
+5 CA1 aged in vitro rat HRP (Neurobiol. Aging, 1991)
+
+please send on your address for a copy of the Brain Res. CA1 article.
+please inquire if there are any corrections needed or comments.
+
+dennis turner
+turne008@mc.duke.edu
+Box 3807, Neurosurgery
+Duke University Medical Center
+Durham, NC 27710
+(919)-684-6706
+FAX (919)-681-8068

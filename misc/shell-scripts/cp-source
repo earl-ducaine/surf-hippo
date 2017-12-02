@@ -1,0 +1,108 @@
+echo 'Removing all files in current directory...'
+alias rm rm
+rm -fr *
+alias rm rm -i
+
+echo 'Copying the source files...'
+
+cp -p $SURFHOME/READ.ME.FIRST .
+cp -p $SURFHOME/FAQ .
+cp -p $SURFHOME/Surf-Hippo.README .
+
+cp -pr $SURFHOME/anatomy .
+echo 'bin...'
+mkdir bin
+mkdir bin/debug
+mkdir bin/garnet-fixes
+mkdir bin/cmucl-fixes
+mkdir bin/gui
+mkdir bin/hippocampus
+mkdir bin/parameters
+mkdir bin/retina
+mkdir bin/roylance-clmath
+mkdir bin/sys
+
+echo 'circuits...'
+mkdir circuits
+cp -p  $SURFHOME/circuits/README circuits/
+cp -pr  $SURFHOME/circuits/demos circuits/
+
+cp -pr $SURFHOME/cmucl .
+cp -p  $SURFHOME/customs.lisp .
+
+mkdir data
+
+echo 'doc...'
+mkdir doc
+cp -p $SURFHOME/doc/README doc/
+cp -p $SURFHOME/doc/*.ps* doc/
+cp -p $SURFHOME/doc/*.pdf* doc/
+cp -p $SURFHOME/doc/non-backward-compatible-changes doc/
+cp -p $SURFHOME/doc/non-obvious-backward-compatible-changes doc/
+cp -pr $SURFHOME/doc/outside_docs doc/
+cp -pr $SURFHOME/doc/installation doc/
+cp -pr $SURFHOME/doc/window-help doc/
+
+mkdir lib
+cp -p $SURFHOME/lib/README lib/
+cp -p $SURFHOME/lib/SNAIL-MAIL lib/
+cp -p $SURFHOME/lib/URL lib/
+cp -pr $SURFHOME/lib/bitmaps lib/
+cp -pr $SURFHOME/lib/c32 lib/
+cp -pr $SURFHOME/lib/data lib/
+cp -p $SURFHOME/lib/email-addresses lib/
+cp -pr $SURFHOME/lib/gesture lib/
+cp -pr $SURFHOME/lib/gilt lib/
+cp -p $SURFHOME/lib/patches.lisp lib/
+cp -pr $SURFHOME/lib/pix lib/
+cp -pr $SURFHOME/lib/pixmaps lib/
+cp -p $SURFHOME/lib/random-state lib/
+cp -p $SURFHOME/lib/surf-hippo-version.lisp lib/
+
+mkdir logs
+
+echo 'misc...'
+mkdir misc
+mkdir misc/shell-scripts
+cp -pr $SURFHOME/misc/rallpack_v1.1 misc/
+cp -pr $SURFHOME/misc/ntscable misc/
+echo 'Make sure not to copy the compiled ilisp files.'
+cp -pr $SURFHOME/misc/ilisp misc/ilisp
+cp -p  $SURFHOME/misc/ilisp-notes misc/ilisp-notes
+cp -pr $SURFHOME/misc/loaders misc/
+cp -p  $SURFHOME/misc/changes* misc/
+cp -p  $SURFHOME/misc/shell-scripts/cp-source misc/shell-scripts/cp-source
+cp -p  $SURFHOME/misc/shell-scripts/rm-fluff misc/shell-scripts/rm-fluff 
+
+mkdir plot
+
+echo 'src...'
+mkdir src
+mkdir src/debug
+mkdir src/garnet-fixes
+cp -p  $SURFHOME/src/garnet-fixes/*.lisp src/garnet-fixes
+mkdir src/cmucl-fixes
+cp -p  $SURFHOME/src/cmucl-fixes/*.lisp src/cmucl-fixes
+mkdir src/gui
+cp -p  $SURFHOME/src/gui/*.lisp  src/gui
+mkdir src/hippocampus
+cp -p  $SURFHOME/src/hippocampus/*.lisp src/hippocampus
+mkdir src/parameters
+cp -p  $SURFHOME/src/parameters/*.lisp  src/parameters
+mkdir src/retina
+cp -p  $SURFHOME/src/retina/*.lisp  src/retina
+mkdir src/roylance-clmath
+cp -p  $SURFHOME/src/roylance-clmath/*.lisp src/roylance-clmath
+cp -p  $SURFHOME/src/roylance-clmath/README src/roylance-clmath
+mkdir src/sys
+cp -p  $SURFHOME/src/sys/*.lisp  src/sys
+
+cp -p  $SURFHOME/surf-hippo .
+
+echo 'Removing ~ files...'
+source $SURFHOME/misc/shell-scripts/rm-fluff
+
+chmod 755 -R .
+alias rm rm -i
+
+

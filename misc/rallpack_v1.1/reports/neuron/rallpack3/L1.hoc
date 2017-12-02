@@ -1,0 +1,74 @@
+/*
+** Rallpak active cable benchmark
+*/
+
+print "PRE-MODEL MEMORY STATS\n"
+system("ps -v")
+
+entire_len = 1000
+dia = 1
+len = 1000
+incompts = entire_len / len
+runtime = 250
+
+
+create cable
+access cable
+nseg = incompts
+
+/*
+** Initialization routines
+*/
+
+cable {nseg=incompts L=entire_len diam=dia insert HH}
+	
+
+proc geometry() {
+	L = entire_len
+	diam = 1
+	Ra = 100
+}
+
+proc membrane() {
+	insert HH
+
+	ena = 50
+	ek = -77
+	el = -65
+	gnabar = .12
+	gkbar = .036
+	gl = 1 / 40000
+
+	cm = 1
+}
+
+/*
+** Simulation and output of data
+*/
+
+proc run() { local io
+	geometry()
+	membrane()
+	v = -65 t=0
+
+	finf(-65)
+	m = minf
+	h = hinf
+	n = ninf
+
+	dt = 0.05
+	io = 0
+	wopen("L1.out")
+	fstim(1) fstim(0, 0, 0, 251, .100)
+		fprint("%g %g %g\n", t, v(5e-4), v(.9995))
+	while (t < runtime) {
+	    fadvance()
+		fprint("%g %g %g\n", t, v(5e-4), v(.9995))
+	}
+	wopen()
+}
+
+run()
+
+print "POST-MODEL MEMORY STATS\n"
+system("ps -v")

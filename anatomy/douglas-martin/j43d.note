@@ -1,0 +1,10 @@
+bug in j43d					4/7/95 lbg
+
+cell segment 11-11-2 is a branch point corresponding to line 2169 in
+the original j43d file. In the original file, the diameter given is
+0.3 um. The proximal segment diameter and the two daughter segment
+diameters are 4.0, 2.7 and 3.3 um, respectively. In the lisp file for
+j43d then, we have edited the diameter of 11-11-2 to be 3.3 um.
+
+Note that this is edited twice in the lisp file since segments just
+distal to branch points appear twice in the list.

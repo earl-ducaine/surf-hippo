@@ -1,0 +1,14 @@
+#!/bin/sh 
+
+mv $SURFHOME/src/cmucl-fixes/*.fasl  $SURFHOME/bin/cmucl-fixes/
+mv $SURFHOME/src/development/*.fasl $SURFHOME/bin/development/
+mv $SURFHOME/src/roylance-clmath/*.fasl $SURFHOME/bin/roylance-clmath/
+mv $SURFHOME/src/garnet-fixes/*.fasl  $SURFHOME/bin/garnet-fixes/
+mv $SURFHOME/src/gui/*.fasl  $SURFHOME/bin/gui/
+mv $SURFHOME/src/hippocampus/*.fasl $SURFHOME/bin/hippocampus/
+mv $SURFHOME/src/sys/*.fasl  $SURFHOME/bin/sys/
+mv $SURFHOME/src/parameters/*.fasl  $SURFHOME/bin/parameters/
+mv $SURFHOME/src/turtle/*.fasl $SURFHOME/bin/turtle/
+mv $SURFHOME/src/retina/*.fasl $SURFHOME/bin/retina/
+mv $SURFHOME/src/visual/*.fasl $SURFHOME/bin/visual/
+

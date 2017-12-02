@@ -1,0 +1,7 @@
+# Wed May 10 12:32:41 PDT 1989  JC Wathey
+#
+# Shell script for plotting schematic diagram files generated
+# by ntscable.
+
+ cat $1 | graph -g0 -b | plot -Ttek
+

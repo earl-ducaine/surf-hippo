@@ -1,0 +1,14 @@
+#!/bin/csh -f
+
+foreach ts ($argv)
+    echo timestep = $ts >> rmsresults
+    set wc = (`wc -l b-$ts.0`)
+    set wc = $wc[1]
+    if ($wc > 5001) then
+	rms ref_branch.0 b-$ts.0 >> rmsresults
+	rms ref_branch.x b-$ts.x >> rmsresults
+    else
+	rms b-$ts.0 ref_branch.0 >> rmsresults
+	rms b-$ts.x ref_branch.x >> rmsresults
+    endif
+end

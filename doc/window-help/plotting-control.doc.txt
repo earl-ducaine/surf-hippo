@@ -1,0 +1,143 @@
+************************************************************
+************************************************************
+
+	Plot Windows Mouse and Keyboard Actions
+
+************************************************************
+************************************************************
+
+LEFT, RIGHT, and MIDDLE refer to the mouse buttons.
+
+			    HELP
+h, H, CONTROL-h or CONTROL-H will create a information
+window with this file in it.
+
+If a window is not responsive, first verify that the CAPS LOCK 
+is not ON. Otherwise, try executing the function (UNSTICK-WINDOWS).
+
+			    MENU
+CONTROL-m will create a main plot menu for revising various
+parameters of the selected plot.
+
+			  DESTROY
+CONTROL-d will destroy the selected window (after prompting
+for verification).
+
+CONTROL-D will destroy the selected window immediately.
+
+Avoid destroying any Surf-Hippo window with the X window
+manager.
+
+			   PRINT
+CONTROL-p will prompt for printing the selected window (and
+the others).
+
+			   REPLOT
+R will replot the window.
+
+CONTROL-RIGHT (restore) will replot the original (unzoomed)
+view. 
+
+			    ZOOM
+CONTROL-LEFT will give a resizable rectangle for zooming.
+
+CONTROL-SHIFT-LEFT will give a resizable rectangle for
+zooming to a new window.
+
+RIGHT (unzoom) will replot at the last zoom view.
+
+		   CROSS HAIR and MARKER
+MIDDLE will put a cross hair on the window which can then be
+moved around by the mouse, with the current coordinates
+updated in the upper right corner, in the units of the data
+in the window. If there was a previous point marked on the
+window, then the slope between that point and the current
+one is also displayed. Normally, when the middle mouse
+button is released the xy coordinates of the last location
+of the cross hair is displayed in the units of the window
+data and the cross hair will remain. If CONTROL-g is typed
+while the middle mouse button is held down, then the cross
+hair will be removed. *NOTE* If the window has been resized,
+the cross hair result will not be correct until the window
+has been replotted/redrawn (e.g. for a data plot, doing a
+Restore (CONTROL-RIGHT)). If the window is a HISTOLOGY or
+BUILDER window, then the length between the current and last
+points is shown.
+
+CONTROL-MIDDLE will prompt for placing and editing a small
+cross marker, with optional label, at the any points that
+were selected with the cross hairs. This menu also allows
+for other editing options, such as removing the cross if you
+just want the text. The labels may also be edited directly
+by clicking the left mouse button on the text.
+
+CONTROL-f will remove the oldest zoom-rectangle or
+cross-hair that is visible.
+
+CONTROL-l will remove the newest zoom-rectangle or
+cross-hair that is visible.
+
+CONTROL-A will remove all the zoom-rectangles and markers.
+
+CONTROL-e will erase any pointer comment (e.g. cross-hair
+coordinates).
+
+			   ABORT
+CONTROL-g, when invoked by itself, will toggle a grid on the
+plot. This may also be specified in the main plot menu
+below. Otherwise, CONTROL-g is the generic abort command.
+For example, when zooming or locating a cross hair, keyboard
+keys that invoked the command may be released while moving
+the mouse as long as the mouse button is pressed. Hitting
+CONTROL-g *before* releasing the mouse button will abort the
+operation.
+
+		     COMMENT and TITLE
+CONTROL-t gives a menu for adding/removing comments and
+titles on windows. Window text can be edited directly on the
+window by clicking the the left mouse on the text to start
+editing (typical emacs commands) and clicking with the mouse
+again to exit.
+
+		       LINES and GRID
+CONTROL-b will prompt for drawing a straight line on the
+plot.
+
+CONTROL-B will prompt for destroying or editing any added
+straight lines on the plot.
+
+CONTROL-G, will create a menu for a grid on the plot. This
+menu may also be accessed via the main plot menu below.
+
+			    LOCK
+CONTROL-L will toggle a lock on a plotting window which when
+set prevents that window from being used for subsequent
+plots. If CONTROL-L is activated on a non-locked window,
+then the lock is set. If the lock is already set, a menu
+will verify that you want to unlock the window.
+
+		    SAVE and ERASE DATA
+CONTROL-s will prompt for saving the selected window to a
+Lisp file, allowing easy editing and re-creation of plots.
+
+CONTROL-T gives a menu for saving selected traces to file.
+
+CONTROL-E will erase the data stored in a (standard) plot
+window, but not the displayed image. This may be useful if
+there are a lot of plots and memory is getting tight. While
+a window whose data has been erased may be printed and
+examined with the cross hairs, zooming, unzooming,
+restoring, or other rescaling will not be possible.
+
+			 ALIGNMENT
+CONTROL-a will allow alignment of other windows to the
+selected window.
+
+		       MISCELLANEOUS
+r will resurrect the window (not replot).
+
+If menus are buried under other windows, hitting CONTROL-q
+over any info, plot or histology window will deiconify and
+raise any active menus.
+
+

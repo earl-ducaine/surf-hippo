@@ -1,0 +1,80 @@
+
+/*
+** Rallpak passive cable benchmark
+*/
+
+print "PRE-MODEL MEMORY STATS\n"
+system("ps -v")
+
+entire_len = 1000
+dia = 1
+len = 1
+incompts = entire_len / len
+runtime = 250
+
+create cable
+access cable
+nseg = incompts
+
+/*
+** Initialization routines
+*/
+
+proc geometry() {
+	L = entire_len
+	diam = 1
+	Ra = 100
+}
+
+proc membrane() {
+	insert passive
+	g = 1/40000
+	cm = 1
+	erev = -65
+}
+
+/*
+** Graphics routines
+*/
+
+proc plotvolt() { local x
+
+	axis(0,entire_len,10,0,2,10)
+	setcolor(7)
+	axis()
+
+	plot(1, entire_len/2, -.3) plt(-2) print "x"
+	plot(1, -entire_len, 1) plt(-2) print "V"
+
+	plot(1)
+	for (x) {
+		plot(x*entire_len, v(x)/1000)
+	}
+}
+
+/*
+** Simulation and output of data and graphics (graphics optional)
+*/
+
+proc run() { local io
+	geometry()
+	membrane()
+	v = -65 t=0
+
+	dt = 0.2
+	io = 0
+	wopen("t200.out")
+	fstim(1) fstim(0, 0, 0, 250, .100)
+	fprint("%g %g %g\n", t, v(5e-4), v(.9995))
+	while (t < runtime) {
+	    fadvance()
+		fprint("%g %g %g\n", t, v(5e-4), v(.9995))
+	}
+	wopen()
+}
+
+run()
+
+print "POST-MODEL MEMORY STATS\n"
+system("ps -v")
+

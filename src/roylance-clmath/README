@@ -1,0 +1,71 @@
+1168 Blackfield Way
+Mountain View, CA 94040
+
+3 March 1992
+
+
+These scientific subroutines are a part of my personal lisp library.
+Although they were written to fulfill my needs at the time, they were
+written to be general so I or somebody else could use them for other
+tasks later.  This grab-bag of routines has served me well, and you
+should find them useful.
+
+They are not, however, polished routines.  You will see pieces of
+test code here and there, and many pages of code are really notes
+about what didn't work or what needs to be done.
+
+The routines have also suffered as several versions of lisp have come
+and gone.  Many of the routines were written a long time ago for
+MACLisp on a PDP-10.  Then came ZetaLisp, and now there is Common
+Lisp.  The routines are mostly Common Lisp, but my Lisp Machine has
+many backward compatibility features, so some minor changes may be
+required.
+
+There is, of course, no warranty about the fitness or the accuracy
+of these routines.  Although I have tried to be careful, I have
+fixed too many routines that I once thought were right.
+
+Except for the routines below, you may use these routines in your own
+work and pass them on to your colleagues.  You may incorporate
+individual modules into an application that you sell.  You may
+distribute the source (and even charge a nominal fee) as long
+as the copyright notices are not removed.
+
+I cannot give away some of these routines because they are not
+mine, but rather transliterations of someone else's Fortran or C code
+to lisp.  In particular, some or all the routines in
+
+	regress.lisp    come from Bevington
+
+	fmfp.lisp       come from Kuester & Mize
+	marq.lisp        
+
+	beta.lisp	come from Press
+	gamma.lisp
+				
+These authors published their code, and I expect they meant that
+people should use it.  If you own a copy of the book, then there
+should be no problem with you using the code.
+
+You can ftp a copy of these routines (pub/clmath.tar) from
+the Internet host ftp.ai.mit.edu.
+
+If you discover bugs, please let me know so the fixes can
+be made to the source.
+
+Sincerely,
+Gerald Roylance
+
+---------
+
+Philip R. Bevington,
+  Data Reduction and Error Analysis for the Physical Sciences,
+  McGraw-Hill, New York, 1969.
+
+James Kuester and Joe Mize,
+  Optimization Techniques with Fortran,
+  McGraw-Hill, New York, 1973.
+
+William H. Press, Brian P. Flannery, Saul A. Teukolsky, William T. Vetterling
+  Numerical Recipes in C, The Art of Scientific Computing
+  Cambridge University Press, 1988

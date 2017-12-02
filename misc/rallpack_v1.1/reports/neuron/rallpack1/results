@@ -1,0 +1,42 @@
+
+Results for rallpack 1 using NEURON version 2.43
+
+Peak speed/model size	: 43K for >= 1000 compartments.
+Asymptotic accuracy	: 0.02%
+Semi-accurate timestep	: 100 usec
+Hardware information	: Sun sparc 2; Sun OS 4.1; 26 MIPS
+Setup time              : <1 sec
+Integration method      : Hines/Crank Nicolson
+Compartment equivalents : Not Applicable.
+
+=============================================================================
+Detailed report
+
+1	Accuracy vs Timestep.
+2	Accuracy vs Simulation Speed.
+Timestep (usec)		Simulation Speed	Accuracy (% error)
+	10			4.4			0.02%
+	20			8.8			0.02%
+	50			22			0.03%
+	100			43.8			0.05%
+	200			87.7			0.07%
+	500			219			0.16%
+	1000			438			0.30%
+	2000                    86                      0.56%
+	5000                    215                     1.27%
+	10000			4380			2.4%
+(Model size = 1000 compartments)
+
+
+3       Raw Speed vs Model size.
+4       Memory/compt vs Model size
+Raw Speed			Model Memory per compt	Size
+(ncompts * steps/sec)		(Bytes/compt)		(compartments)
+        926                     20K                     1
+        7692                    2K                      10
+        35K                     360                     100
+        43K(45K without IO)     188                     1000
+        39K                     190                     10000
+(Timestep = 50 usec)
+
+=============================================================================

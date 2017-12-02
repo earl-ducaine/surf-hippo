@@ -1,0 +1,58 @@
+timestep = 10000
+absolute rms diff=5.872653e-04; range=2.487298e-02; 
+ npts=25		normalized rms diff=2.361058e-02
+absolute rms diff=5.808603e-04; range=2.479345e-02; 
+ npts=25		normalized rms diff=2.342798e-02
+timestep = 1000
+absolute rms diff=6.794343e-05; range=2.487298e-02; 
+ npts=250		normalized rms diff=2.731616e-03
+absolute rms diff=6.149164e-05; range=2.479345e-02; 
+ npts=250		normalized rms diff=2.480157e-03
+timestep = 10000
+absolute rms diff=5.872653e-04; range=2.487298e-02; 
+ npts=25		normalized rms diff=2.361058e-02
+absolute rms diff=5.808603e-04; range=2.479345e-02; 
+ npts=25		normalized rms diff=2.342798e-02
+timestep = 1000
+absolute rms diff=6.794343e-05; range=2.487298e-02; 
+ npts=250		normalized rms diff=2.731616e-03
+absolute rms diff=6.149164e-05; range=2.479345e-02; 
+ npts=250		normalized rms diff=2.480157e-03
+timestep = 500
+absolute rms diff=3.729269e-05; range=2.487298e-02; 
+ npts=501		normalized rms diff=1.499325e-03
+absolute rms diff=3.071552e-05; range=2.479345e-02; 
+ npts=501		normalized rms diff=1.238856e-03
+timestep = 200
+absolute rms diff=1.906434e-05; range=2.487298e-02; 
+ npts=1250		normalized rms diff=7.664678e-04
+absolute rms diff=1.219378e-05; range=2.479345e-02; 
+ npts=1250		normalized rms diff=4.918148e-04
+timestep = 100
+absolute rms diff=1.314367e-05; range=2.487298e-02; 
+ npts=2500		normalized rms diff=5.284319e-04
+absolute rms diff=5.994891e-06; range=2.479350e-02; 
+ npts=2500		normalized rms diff=2.417929e-04
+timestep = 50
+absolute rms diff=1.030656e-05; range=2.487298e-02; 
+ npts=5001		normalized rms diff=4.143680e-04
+absolute rms diff=2.891768e-06; range=2.479350e-02; 
+ npts=5001		normalized rms diff=1.166341e-04
+timestep = 20
+absolute rms diff=8.687046e-06; range=2.487298e-02; 
+ npts=6251		normalized rms diff=3.492564e-04
+absolute rms diff=1.035812e-06; range=2.479370e-02; 
+ npts=6251		normalized rms diff=4.177721e-05
+timestep = 20
+timestep = 20
+timestep = 20
+timestep = 20
+absolute rms diff=8.689133e-06; range=2.487298e-02; 
+ npts=5001		normalized rms diff=3.493403e-04
+absolute rms diff=1.038125e-06; range=2.479370e-02; 
+ npts=5001		normalized rms diff=4.187053e-05
+timestep = 10
+absolute rms diff=8.173768e-06; range=2.487298e-02; 
+ npts=5001		normalized rms diff=3.286204e-04
+absolute rms diff=4.381748e-07; range=2.479370e-02; 
+ npts=5001		normalized rms diff=1.767283e-05

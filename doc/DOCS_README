@@ -1,0 +1,74 @@
+
+	      ************************************************************************
+				   
+		                Guide to the Surf-Hippo Documentation
+
+	      ************************************************************************
+
+This directory contains the Surf-Hippo documentation set. User queries will profoundly influence the
+growth rate of given branches.
+
+For complete installation instructions, see surf-hippo/doc/installation/installation.doc.txt.
+
+For a tutorial once the system is installed, read SH_tutorial.pdf.
+
+For the full story, consult the User Manual and the Reference Manual.
+
+Various related documentation from outside sources are found in surf-hippo/doc/outside_docs/.
+
+The Common Lisp HyperSpec is included at surf-hippo/doc/outside_docs/CLHS6 (the Emacs
+configuration file .emacs points to this for integration with SLIME).
+
+The source code (in the subdirectories under surf-hippo/src) is fairly well commented, which is
+especially useful in understanding the nature of various circuit elements.
+
+
+			;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+If there is a reference to a Surf-Hippo function whose source code can't be found, you can try the
+DESCRIBE function. For example, if you looked at the file surf-hippo/src/hippocampus/hippos.lisp and
+saw a call to
+
+  (add-isource (cell-soma cell1))
+
+and you wondered what the ADD-ISOURCE function did, then from Lisp, you would enter:
+
+     * (describe 'add-isource)
+     ADD-ISOURCE is an internal symbol in the SURF-HIPPO package.
+     Function: #<Function ADD-ISOURCE {12532C79}>
+     Function arguments:
+       (&optional (element *soma*) &key name pulse-list (type 'autonomous))
+     Function documentation:
+
+       Adds current source to cell elements associated with optional ELEMENT [default
+     the value of *SOMA*]. Source is called NAME, if supplied, or is given by
+     EltName-isrc, where EltName is the name of cell-element. Creates new source only
+     if one does not exist of the derived name. Optional PULSE-LIST may also be
+     supplied. Returns the source(s). If ELEMENT refers to a cell, then an isource is
+     added to that cell's soma. The default 'AUTONOMOUS type is the generic
+     :AUTONOMOUS current source driven by a waveform or pulse specification (here
+     given by PULSE-LIST - see the function PULSE-LIST for the format of this list).
+
+     Its defined argument types are:
+       (&OPTIONAL T &KEY (:NAME T) (:PULSE-LIST T) (:TYPE T))
+     Its result type is:
+       *
+     On Monday, 4/8/02 04:09:59 pm [-1] it was compiled from:
+     /usr/local/surf-hippo/src/sys/source.lisp
+       Created: Monday, 4/8/02 04:06:00 pm [-1]
+
+Depending on the documentation in the function definition, this may be sufficient. Otherwise,
+DESCRIBE tells you which source file to look at (in this case surf-hippo/src/sys/source.lisp).
+
+Alternatively, if you are running with SLIME, you can use the slime-describe-symbol command:
+Put the cursor on "add-isource" and type C-c C-d d (control-c, control-d, d).
+
+Also with SLIME, for Common Lisp built-in functions, you can access the included HyperSpec
+documentation from the SLIME tab (Documentation, Hyperspec).
+
+The Staff
+
+
+
+
+

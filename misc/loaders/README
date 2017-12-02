@@ -1,0 +1,116 @@
+
+
+******* IMAGE MAKING AND SYSTEM COMPILING WITH THE LOADER FILES ******* 
+
+
+
+Normally image-maker.lisp is loaded into a Garnet image (e.g. M-x garnet-colormap-fix-18-498).
+
+This loads main-compiler.lisp
+
+     main-compiler.lisp defines and sets *SURF-HOME* according to $SURFHOME, if set, or to $HOME/surfhippo/ 
+
+     main-compiler.lisp then loads main-loader.lisp
+
+			main-loader.lisp first "Define Various Globals, Macros and Functions Used
+			During Compiling/Loading", in particular:
+
+			       FIND-FILES-TO-COMPILE, TOUCH-FILE, FIXUP-PATHNAME, DEFVARS, REPLACE-REPEATED-CHARACTER-W-SINGLE, COMPILE-SOURCE-DIRECTORY,
+			       *SURF-HOME* (redundant?), *SURF-USER-HOME*, SURF-HIPPO-PATHNAME, *SURF-PARAMETERS-DIR*, *PRINTER*, UPDATE-MAIN-SYSTEM-VARIABLES
+			       (which is immediately evaluated).
+
+		        Then, when SURF-HIPPO-COMPILE is T, loads surf-hippo-prepare-compile.lisp.
+
+			      surf-hippo-prepare-compile.lisp defines various load variables, e.g.
+			      (IF COMPILE-CMUCL-FIXES-P (DEFVAR LOAD-CMUCL-FIXES-P T))
+			      (IF COMPILE-GARNET-FIXES-P (DEFVAR LOAD-GARNET-FIXES-P T))
+			      (IF COMPILE-GUI-P (DEFVAR LOAD-GUI-P T))
+			      (IF COMPILE-SYS-P (DEFVAR LOAD-SYS-P T))
+			      (IF COMPILE-PARAMETERS-P (DEFVAR LOAD-PARAMETERS-P T))
+
+			Load /lib/surf-hippo-version.lisp
+
+			Define parameter SURF-HIPPO-VERSION-DATE
+
+			Load surf-hippo-setup.lisp
+
+			     Update EXT:*HERALD-ITEMS* according to various system details.
+
+			     Setup variables vis-a-vis the cmucl-fixes files (redundant?), e.g.
+			     (DEFVAR LOAD-CMUCL-FIXES-P T)
+			     (DEFVAR COMPILE-CMUCL-FIXES-P NIL)
+			     (DEFVAR SURF-HIPPO-CMUCL-FIXES-PATHNAME)
+			     (DEFVAR SURF-HIPPO-CMUCL-FIXES-SRC)
+			     (SETQ SURF-HIPPO-CMUCL-FIXES-PATHNAME (FIXUP-PATHNAME (CONCATENATE 'STRING SURF-HIPPO-PATHNAME "/BIN/CMUCL-FIXES/"))
+			           SURF-HIPPO-CMUCL-FIXES-SRC (FIXUP-PATHNAME (CONCATENATE 'STRING SURF-HIPPO-PATHNAME "/SRC/CMUCL-FIXES/")))
+
+			     Finally, load some cmucl fixes before loading Garnet.
+
+			Unless (find :garnet *features*), load garnet-loader.lisp (via $GARNETHOME).
+
+			Load surf-hippo-loader.lisp
+
+			     This file loads all the Surf-Hippo modules.
+
+			     First, create necessary packages, e.g.
+
+			     (IF (AND *CLEAR-SH-PACKAGES* (FIND-PACKAGE "WH"))
+				 (DO-SYMBOLS (FOO (FIND-PACKAGE "WH")) (UNINTERN FOO (FIND-PACKAGE "WH")))
+				 (UNLESS (FIND-PACKAGE "WH")
+				   (MAKE-PACKAGE "WH" :USE '("GARNET-GADGETS" "LISP" "COMMON-LISP-USER" "COMMON-LISP" "KR") :NICKNAMES '("WINDOWS" "WINDOWS-HACK"))))
+
+			     Define vars including SURF::*GC-BYTES-RETAINED-WARNING-THRESHOLD* and loading/compiling vars such as LOAD-GARNET-FIXES-P,
+			     LOAD-ROYLANCE-CLMATH-P, LOAD-GUI-P, LOAD-SYS-P, COMPILE-GARNET-FIXES-P, COMPILE-ROYLANCE-CLMATH-P, COMPILE-GUI-P, COMPILE-SYS-P
+			     etc. (redundant?).
+			     
+			     Call UPDATE-MAIN-SYSTEM-VARIABLES.
+			     
+			     Define SURF-HIPPO-PATHNAMES, setting this to a list of pathname vars including
+			       `(SURF-HIPPO-GARNET-FIXES-PATHNAME SURF-HIPPO-GARNET-FIXES-SRC SURF-HIPPO-ROYLANCE-CLMATH-PATHNAME
+			         SURF-HIPPO-ROYLANCE-CLMATH-SRC SURF-HIPPO-GUI-PATHNAME SURF-HIPPO-GUI-SRC ...)
+
+			     Defun UPDATE-SURF-HIPPO-PATHNAMES, which sets these pathnames e.g.
+			       (SETQ
+			          SURF-HIPPO-GARNET-FIXES-PATHNAME (FIXUP-PATHNAME (CONCATENATE 'STRING SURF-HIPPO-PATHNAME "/bin/garnet-fixes/"))
+                                  SURF-HIPPO-GARNET-FIXES-SRC (FIXUP-PATHNAME (CONCATENATE 'STRING SURF-HIPPO-PATHNAME "/src/garnet-fixes/")) ...)
+
+			     Next (EVAL (CONS 'DEFVARS SURF-HIPPO-PATHNAMES)).
+
+			     Then call UPDATE-SURF-HIPPO-PATHNAMES.
+
+			     Call UNIX::UNIX-MKDIR (for all SURF-HIPPO-PATHNAMES), (EXT:SET-FLOATING-POINT-MODES :TRAPS '(:OVERFLOW :INVALID :DIVIDE-BY-ZERO))
+			     Fixup the :DISPLAY entry in LISP::*ENVIRONMENT-LIST*.
+			     Defun SIM-ERROR.
+			     Call UPDATE-MAIN-SYSTEM-VARIABLES.
+			     Defun INIT-SURF.
+			     Setup search lists, e.g. (SETF (EXT:SEARCH-LIST "garnet-fixes:") (LIST SURF-HIPPO-GARNET-FIXES-PATHNAME)) etc.
+			     
+			     Defparameter variables such as SURF-HIPPO-GARNET-FIXES-LOADER, setting them to the appropriate
+			     subsystem loader file, e.g. (SETQ SURF-HIPPO-GARNET-FIXES-LOADER (MERGE-PATHNAMES "garnet-fixes-loader" "garnet-fixes-src:"))
+			     
+			     Next loop through all the subsystems (modules), via the associated load module flag (e.g. LOAD-GARNET-FIXES-P), the module key
+			     (e.g. :GARNET-FIXES), and the module loader file (e.g. SURF-HIPPO-GARNET-FIXES-LOADER) to determine which files need recompiling,
+			     and touching any other files as required.
+			     
+			     Repeat the loop to actually compile as necessary and load all files.
+			     
+			     The key function within the loop is (LOAD MODULE-LOADER).
+
+			     Each module loader file (here sys-loader.lisp as an example) has the following structure:
+
+				  First defvar SURF-HIPPO-SYS-FILES to all the module file names, e.g. "macros", "declare",
+				  "declare-2" ..., in the order in which they must be compiled/loaded. 
+
+				  Next 
+				  (COMPILE-SOURCE-DIRECTORY SURF-HIPPO-SYS-SRC SURF-HIPPO-SYS-PATHNAME SURF-HIPPO-SYS-FILES
+				  			  :FILES-TO-FORCE-COMPILE-ALL '("STRUCTURES" "STRUCTURE-MACROS" "MACROS" "MATH" "ELEMENT_MACROS")
+							  :ENABLE-COMPILE COMPILE-SYS-P)
+
+				  Finally, (SETF (GET :SURF-HIPPO-MODULES :SYS) T), where :SYS is the module key referred to above.
+
+			When SURF-HIPPO-COMPILE is T, UNIX::RUN-PROGRAM either move_bins_fasl or move_bins_sparcf.
+			
+			Finally, LISP::PURIFY 
+
+Finally, OPAL:MAKE-IMAGE
+

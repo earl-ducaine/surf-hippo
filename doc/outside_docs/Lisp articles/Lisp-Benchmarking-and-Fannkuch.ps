@@ -1,0 +1,2380 @@
+%!PS-Adobe-3.0
+%%Title: (fannkuch.wd)
+%%Creator: (Microsoft Word: LaserWriter 8 8.2.2)
+%%CreationDate: (10:16 AM Friday, July 21, 1995)
+%%For: (kanderson)
+%%Pages: 11
+%%DocumentFonts: Times-Roman Times-Bold Times-Italic Courier Courier-Bold
+%%DocumentNeededFonts: Times-Roman Times-Bold Times-Italic Courier Courier-Bold
+%%DocumentSuppliedFonts:
+%%DocumentData: Clean7Bit
+%%PageOrder: Ascend
+%%Orientation: Portrait
+%%DocumentMedia: Default 612 792 0 () ()
+%ADO_ImageableArea: 12 12 600 780
+%%EndComments
+userdict begin/dscInfo 5 dict dup begin
+/Title(fannkuch.wd)def
+/Creator(Microsoft Word: LaserWriter 8 8.2.2)def
+/CreationDate(10:16 AM Friday, July 21, 1995)def
+/For(kanderson)def
+/Pages 1 def
+end def end
+/md 145 dict def md begin/currentpacking where {pop /sc_oldpacking currentpacking def true setpacking}if
+%%BeginFile: adobe_psp_basic
+%%Copyright: Copyright 1990-1993 Adobe Systems Incorporated. All Rights Reserved.
+/bd{bind def}bind def
+/xdf{exch def}bd
+/xs{exch store}bd
+/ld{load def}bd
+/Z{0 def}bd
+/T/true
+/F/false
+/:L/lineto
+/lw/setlinewidth
+/:M/moveto
+/rl/rlineto
+/rm/rmoveto
+/:C/curveto
+/:T/translate
+/:K/closepath
+/:mf/makefont
+/gS/gsave
+/gR/grestore
+/np/newpath
+14{ld}repeat
+/$m matrix def
+/av 81 def
+/por true def
+/normland false def
+/psb-nosave{}bd
+/pse-nosave{}bd
+/us Z
+/psb{/us save store}bd
+/pse{us restore}bd
+/level2
+/languagelevel where
+{
+pop languagelevel 2 ge
+}{
+false
+}ifelse
+def
+/featurecleanup
+{
+stopped
+cleartomark
+countdictstack exch sub dup 0 gt
+{
+{end}repeat
+}{
+pop
+}ifelse
+}bd
+/noload Z
+/startnoload
+{
+{/noload save store}if
+}bd
+/endnoload
+{
+{noload restore}if
+}bd
+level2 startnoload
+/setjob
+{
+statusdict/jobname 3 -1 roll put
+}bd
+/setcopies
+{
+userdict/#copies 3 -1 roll put
+}bd
+level2 endnoload level2 not startnoload
+/setjob
+{
+1 dict begin/JobName xdf currentdict end setuserparams
+}bd
+/setcopies
+{
+1 dict begin/NumCopies xdf currentdict end setpagedevice
+}bd
+level2 not endnoload
+/pm Z
+/mT Z
+/sD Z
+/realshowpage Z
+/initializepage
+{
+/pm save store mT concat
+}bd
+/endp
+{
+pm restore showpage
+}def
+/$c/DeviceRGB def
+/rectclip where
+{
+pop/rC/rectclip ld
+}{
+/rC
+{
+np 4 2 roll
+:M
+1 index 0 rl
+0 exch rl
+neg 0 rl
+:K
+clip np
+}bd
+}ifelse
+/rectfill where
+{
+pop/rF/rectfill ld
+}{
+/rF
+{
+gS
+np
+4 2 roll
+:M
+1 index 0 rl
+0 exch rl
+neg 0 rl
+fill
+gR
+}bd
+}ifelse
+/rectstroke where
+{
+pop/rS/rectstroke ld
+}{
+/rS
+{
+gS
+np
+4 2 roll
+:M
+1 index 0 rl
+0 exch rl
+neg 0 rl
+:K
+stroke
+gR
+}bd
+}ifelse
+%%EndFile
+%%BeginFile: adobe_psp_colorspace_level1
+%%Copyright: Copyright 1991-1993 Adobe Systems Incorporated. All Rights Reserved.
+/G/setgray ld
+/:F/setrgbcolor ld
+%%EndFile
+%%BeginFile: adobe_psp_uniform_graphics
+%%Copyright: Copyright 1990-1993 Adobe Systems Incorporated. All Rights Reserved.
+/@a
+{
+np :M 0 rl :L 0 exch rl 0 rl :L fill
+}bd
+/@b
+{
+np :M 0 rl 0 exch rl :L 0 rl 0 exch rl fill
+}bd
+/arct where
+{
+pop
+}{
+/arct
+{
+arcto pop pop pop pop
+}bd
+}ifelse
+/x1 Z
+/x2 Z
+/y1 Z
+/y2 Z
+/rad Z
+/@q
+{
+/rad xs
+/y2 xs
+/x2 xs
+/y1 xs
+/x1 xs
+np
+x2 x1 add 2 div y1 :M
+x2 y1 x2 y2 rad arct
+x2 y2 x1 y2 rad arct
+x1 y2 x1 y1 rad arct
+x1 y1 x2 y1 rad arct
+fill
+}bd
+/@s
+{
+/rad xs
+/y2 xs
+/x2 xs
+/y1 xs
+/x1 xs
+np
+x2 x1 add 2 div y1 :M
+x2 y1 x2 y2 rad arct
+x2 y2 x1 y2 rad arct
+x1 y2 x1 y1 rad arct
+x1 y1 x2 y1 rad arct
+:K
+stroke
+}bd
+/@i
+{
+np 0 360 arc fill
+}bd
+/@j
+{
+gS
+np
+:T
+scale
+0 0 .5 0 360 arc
+fill
+gR
+}bd
+/@e
+{
+np
+0 360 arc
+:K
+stroke
+}bd
+/@f
+{
+np
+$m currentmatrix
+pop
+:T
+scale
+0 0 .5 0 360 arc
+:K
+$m setmatrix
+stroke
+}bd
+/@k
+{
+gS
+np
+:T
+0 0 :M
+0 0 5 2 roll
+arc fill
+gR
+}bd
+/@l
+{
+gS
+np
+:T
+0 0 :M
+scale
+0 0 .5 5 -2 roll arc
+fill
+gR
+}bd
+/@m
+{
+np
+arc
+stroke
+}bd
+/@n
+{
+np
+$m currentmatrix
+pop
+:T
+scale
+0 0 .5 5 -2 roll arc
+$m setmatrix
+stroke
+}bd
+%%EndFile
+%%BeginFile: adobe_psp_basic_text
+%%Copyright: Copyright 1990-1993 Adobe Systems Incorporated. All Rights Reserved.
+/S/show ld
+/A{
+0.0 exch ashow
+}bd
+/R{
+0.0 exch 32 exch widthshow
+}bd
+/W{
+0.0 3 1 roll widthshow
+}bd
+/J{
+0.0 32 4 2 roll 0.0 exch awidthshow
+}bd
+/V{
+0.0 4 1 roll 0.0 exch awidthshow
+}bd
+/fcflg true def
+/fc{
+fcflg{
+vmstatus exch sub 50000 lt{
+(%%[ Warning: Running out of memory ]%%\r)print flush/fcflg false store
+}if pop
+}if
+}bd
+/$f[1 0 0 -1 0 0]def
+/:ff{$f :mf}bd
+/MacEncoding StandardEncoding 256 array copy def
+MacEncoding 39/quotesingle put
+MacEncoding 96/grave put
+/Adieresis/Aring/Ccedilla/Eacute/Ntilde/Odieresis/Udieresis/aacute
+/agrave/acircumflex/adieresis/atilde/aring/ccedilla/eacute/egrave
+/ecircumflex/edieresis/iacute/igrave/icircumflex/idieresis/ntilde/oacute
+/ograve/ocircumflex/odieresis/otilde/uacute/ugrave/ucircumflex/udieresis
+/dagger/degree/cent/sterling/section/bullet/paragraph/germandbls
+/registered/copyright/trademark/acute/dieresis/notequal/AE/Oslash
+/infinity/plusminus/lessequal/greaterequal/yen/mu/partialdiff/summation
+/product/pi/integral/ordfeminine/ordmasculine/Omega/ae/oslash
+/questiondown/exclamdown/logicalnot/radical/florin/approxequal/Delta/guillemotleft
+/guillemotright/ellipsis/space/Agrave/Atilde/Otilde/OE/oe
+/endash/emdash/quotedblleft/quotedblright/quoteleft/quoteright/divide/lozenge
+/ydieresis/Ydieresis/fraction/currency/guilsinglleft/guilsinglright/fi/fl
+/daggerdbl/periodcentered/quotesinglbase/quotedblbase/perthousand
+/Acircumflex/Ecircumflex/Aacute/Edieresis/Egrave/Iacute/Icircumflex/Idieresis/Igrave
+/Oacute/Ocircumflex/apple/Ograve/Uacute/Ucircumflex/Ugrave/dotlessi/circumflex/tilde
+/macron/breve/dotaccent/ring/cedilla/hungarumlaut/ogonek/caron
+MacEncoding 128 128 getinterval astore pop
+level2 startnoload
+/copyfontdict
+{
+findfont dup length dict
+begin
+{
+1 index/FID ne{def}{pop pop}ifelse
+}forall
+}bd
+level2 endnoload level2 not startnoload
+/copyfontdict
+{
+findfont dup length dict
+copy
+begin
+}bd
+level2 not endnoload
+md/fontname known not{
+/fontname/customfont def
+}if
+/Encoding Z
+/:mre
+{
+copyfontdict
+/Encoding MacEncoding def
+fontname currentdict
+end
+definefont :ff def
+}bd
+/:bsr
+{
+copyfontdict
+/Encoding Encoding 256 array copy def
+Encoding dup
+}bd
+/pd{put dup}bd
+/:esr
+{
+pop pop
+fontname currentdict
+end
+definefont :ff def
+}bd
+/scf
+{
+scalefont def
+}bd
+/scf-non
+{
+$m scale :mf setfont
+}bd
+/ps Z
+/fz{/ps xs}bd
+/sf/setfont ld
+/cF/currentfont ld
+/mbf
+{
+/makeblendedfont where
+{
+pop
+makeblendedfont
+/ABlend exch definefont
+}{
+pop
+}ifelse
+def
+}def
+%%EndFile
+/currentpacking where {pop sc_oldpacking setpacking}if end
+%%EndProlog
+%%BeginSetup
+md begin
+countdictstack[{
+%%BeginFeature: *ManualFeed False
+
+    1 dict
+    dup /Policies 2 dict dup /PageSize 2 put dup /MediaType 0 put put
+	setpagedevice
+	1 dict 
+    dup /ManualFeed false put 
+    setpagedevice
+%%EndFeature
+}featurecleanup
+countdictstack[{
+%%BeginFeature: *PageSize Letter
+
+    1 dict
+    dup /Policies 2 dict dup /PageSize 2 put dup /MediaType 0 put put
+	setpagedevice
+	2 dict
+    dup /PageSize [612 792] put
+    dup /ImagingBBox null put
+    setpagedevice
+%%EndFeature
+}featurecleanup
+(kanderson)setjob
+/mT[1 0 0 -1 12 780]def
+/sD 16 dict def
+300 level2{1 dict dup/WaitTimeout 4 -1 roll put setuserparams}{statusdict/waittimeout 3 -1 roll put}ifelse
+%%IncludeFont: Times-Roman
+%%IncludeFont: Times-Bold
+%%IncludeFont: Times-Italic
+%%IncludeFont: Courier
+%%IncludeFont: Courier-Bold
+/f0_1/Times-Roman
+:mre
+/f0_12 f0_1 12 scf
+/f0_10 f0_1 10 scf
+/f1_1/Times-Bold
+:mre
+/f1_14 f1_1 14 scf
+/f1_12 f1_1 12 scf
+/f2_1/Times-Italic
+:mre
+/f2_12 f2_1 12 scf
+/f3_1/Courier
+:mre
+/f3_12 f3_1 12 scf
+/f3_10 f3_1 10 scf
+/f4_1/Courier-Bold
+:mre
+/f4_10 f4_1 10 scf
+/Courier findfont[10 0 0 -10 0 0]:mf setfont
+%%EndSetup
+%%Page: 1 1
+%%BeginPageSetup
+initializepage
+(kanderson; page: 1 of 11)setjob
+%%EndPageSetup
+gS 0 0 588 768 rC
+291 742 :M
+f0_10 sf
+(1)S
+262 72 :M
+f1_14 sf
+(Performing Lisp)S
+189 87 :M
+(Analysis of the FANNKUCH Benchmark)S
+260 111 :M
+f0_12 sf
+(Kenneth R. Anderson)S
+132 123 :M
+(  BBN STD,10 Moulton St. Cambridge, MA 02174, KAnderson@bbn.com)S
+280 147 :M
+(Duane Rettig)S
+126 159 :M
+(   Franz Inc., 1995 University Ave., Berkeley CA, 94704,  Duane@franz.com)S
+78 183 :M
+f1_12 sf
+(ABSTRACT)S
+78 207 :M
+f0_12 sf
+.98 .098(This is  the first in a series of articles on Lisp performance, called "Performing Lisp".  This)J
+78 219 :M
+.372 .037(paper analyzes the FANNKUCH benchmark, that was discussed on the comp.lang.lisp internet)J
+78 231 :M
+1.094 .109(newsgroup during September 1994, and reviews the performance issues underlying it.  This)J
+78 243 :M
+(benchmark involves operations on integers and vectors of integers so one might expect that Lisp)S
+78 255 :M
+2.253 .225(and C versions could have comparable performance.  However, the original benchmark)J
+78 267 :M
+1.212 .121(suggested that the Lisp version was at least 10 times slower than the C version. While this)J
+78 279 :M
+(version appeared to be optimized, several important improvements are possible.)S
+78 303 :M
+.766 .077(The improved version is between 24 and 116 percent slower than C when run on several Lisp)J
+78 315 :M
+(implementations.  This can be accounted for by differences in the quality of the compiled code of)S
+78 327 :M
+.093 .009(the inner loops of the benchmark, not by an essential difference between the two languages.  The)J
+78 339 :M
+.5 .05(GNU C compiler, )J
+169 339 :M
+f3_10 sf
+.16(gcc,)A
+f0_12 sf
+.449 .045( produces a loop with a larger overall size \(footprint\) but with a smaller)J
+78 351 :M
+.091 .009(loop body than the current Lisp compilers.  In principle, a Lisp compiler can produce these loops)J
+78 363 :M
+(with the same or fewer number of instructions.)S
+78 387 :M
+.025 .003(It is easy to write benchmarks that make Lisp appear slower than C. However, as with any highly)J
+78 399 :M
+.805 .081(tuned benchmark, a small change can have a profound effect on performance. even in C.  For)J
+78 411 :M
+.413 .041(example, replacing )J
+174 411 :M
+f3_10 sf
+.156(/2)A
+f0_12 sf
+.195 .02( by )J
+f3_10 sf
+.156(>>1)A
+f0_12 sf
+.508 .051( makes a 40% improvement.  Also changing the representation of)J
+78 423 :M
+(integers and arrays of integers among C's built in types varies the performance by 80%.)S
+78 447 :M
+f1_12 sf
+(HISTORY)S
+78 471 :M
+f0_12 sf
+.303 .03(This benchmark came out of a thread on comp.lang.lisp in September 1994 originated by Bruno)J
+78 483 :M
+.349 .035(Haible \(haible@ma2s2.mathematik.uni-karlsruhe.de\). The original post introduced the language)J
+78 495 :M
+.253 .025(Beta to the news group and in passing mentioned an "integer hacking" benchmark that indicated)J
+78 507 :M
+(that some Lisp implementations were much slower \(50 to 100 times\) on the benchmark than C.)S
+78 531 :M
+1.735 .173(Haible describes the benchmark as follows:  Take a permutation of {1,...,n}, for example:)J
+78 543 :M
+1.853 .185({4,2,1,5,3}.  Take the first element, here 4, and reverse the order of the first 4 elements:)J
+78 555 :M
+.674 .067({5,1,2,4,3}.  Repeat this until the first element is a 1, so flipping won't change anything more:)J
+78 567 :M
+.37 .037({3,4,2,1,5}, {2,4,3,1,5}, {4,2,3,1,5}, {1,3,2,4,5},  Count the number of flips, here 5. Do this for)J
+78 579 :M
+.443 .044(all n! permutations, and record the maximum number of flips needed for any permutation.  The)J
+78 591 :M
+1.22 .122(conjecture is that this maximum count is approximated by n*log\(n\) when n goes to infinity.)J
+78 603 :M
+.436 .044(FANNKUCH" is an abbreviation for the German word "Pfannkuchen", or pancakes, in analogy)J
+78 615 :M
+.696 .07(to flipping pancakes. The first few fannkuch numbers and their corresponding permutation are)J
+78 627 :M
+(shown in Exhibit 0.)S
+78 651 :M
+.471 .047(This is a good benchmark because it can easily be programmed in different languages and only)J
+78 663 :M
+.811 .081(uses common language features like manipulation of small integers and vectors of them.  The)J
+78 675 :M
+(original Lisp version of this benchmark is shown in Exhibit 1.)S
+endp
+%%Page: 2 2
+%%BeginPageSetup
+initializepage
+(kanderson; page: 2 of 11)setjob
+%%EndPageSetup
+-12 -12 :T
+gS 12 12 588 768 rC
+303 754 :M
+f0_10 sf
+(2)S
+126 81 :M
+f0_12 sf
+(Exhibit 0 - The first few FANNKUCH numbers and their permutations.)S
+126 105 :M
+f4_10 sf
+(N)S
+153 105 :M
+(F)S
+189 105 :M
+(Permutation)S
+-1 -1 149 107 1 1 148 96 @b
+-1 -1 185 107 1 1 184 96 @b
+126 118 :M
+f3_10 sf
+( 1)S
+153 118 :M
+( 0)S
+189 118 :M
+(\(1\))S
+121 109 -1 2 148 107 1 121 107 @a
+148 109 -1 2 150 107 1 148 107 @a
+150 109 -1 2 184 107 1 150 107 @a
+184 109 -1 2 186 107 1 184 107 @a
+186 109 -1 2 337 107 1 186 107 @a
+-1 -1 149 120 1 1 148 109 @b
+-1 -1 185 120 1 1 184 109 @b
+126 129 :M
+( 2)S
+153 129 :M
+( 1)S
+189 129 :M
+(\(2 1\))S
+-1 -1 149 131 1 1 148 120 @b
+-1 -1 185 131 1 1 184 120 @b
+126 140 :M
+( 3)S
+153 140 :M
+( 2)S
+189 140 :M
+(\(2 3 1\))S
+-1 -1 149 142 1 1 148 131 @b
+-1 -1 185 142 1 1 184 131 @b
+126 151 :M
+( 4)S
+153 151 :M
+( 4)S
+189 151 :M
+(\(3 1 4 2\))S
+-1 -1 149 153 1 1 148 142 @b
+-1 -1 185 153 1 1 184 142 @b
+126 162 :M
+( 5)S
+153 162 :M
+( 7)S
+189 162 :M
+(\(3 1 4 5 2\))S
+-1 -1 149 164 1 1 148 153 @b
+-1 -1 185 164 1 1 184 153 @b
+126 173 :M
+( 6)S
+153 173 :M
+(10)S
+189 173 :M
+(\(5 6 4 1 3 2\))S
+-1 -1 149 175 1 1 148 164 @b
+-1 -1 185 175 1 1 184 164 @b
+126 184 :M
+( 7)S
+153 184 :M
+(16)S
+189 184 :M
+(\(3 1 4 6 7 5 2\))S
+-1 -1 149 186 1 1 148 175 @b
+-1 -1 185 186 1 1 184 175 @b
+126 195 :M
+( 8)S
+153 195 :M
+(22)S
+189 195 :M
+(\(6 1 5 7 8 3 2 4\))S
+-1 -1 149 197 1 1 148 186 @b
+-1 -1 185 197 1 1 184 186 @b
+126 206 :M
+( 9)S
+153 206 :M
+(30)S
+189 206 :M
+(\(6 1 5 9 7 2 8 3 4\))S
+-1 -1 149 208 1 1 148 197 @b
+-1 -1 185 208 1 1 184 197 @b
+126 217 :M
+(10)S
+153 217 :M
+(38)S
+189 217 :M
+(\(5 9 1 8 6 2 10 4 7 3\))S
+-1 -1 149 219 1 1 148 208 @b
+-1 -1 185 219 1 1 184 208 @b
+126 228 :M
+(11)S
+153 228 :M
+(51)S
+189 228 :M
+(\(4 9 11 6 10 7 8 2 1 3 5\))S
+-1 -1 149 230 1 1 148 219 @b
+-1 -1 185 230 1 1 184 219 @b
+126 239 :M
+(12)S
+153 239 :M
+(65)S
+189 239 :M
+(\(2 6 1 10 11 8 12 3 4 7 9 5\))S
+-1 -1 149 241 1 1 148 230 @b
+-1 -1 185 241 1 1 184 230 @b
+126 250 :M
+(13)S
+153 250 :M
+(80)S
+189 250 :M
+(\(2 9 4 5 11 12 10 1 8 13 3 6 7\))S
+-1 -1 149 252 1 1 148 241 @b
+-1 -1 185 252 1 1 184 241 @b
+108 273 :M
+f0_12 sf
+(Exhibit 1 - The original Lisp version of the FANNKUCH benchmark.)S
+108 297 :M
+f3_10 sf
+(\(defun fannkuch-0 \(&optional \(n \(progn)S
+108 308 :M
+(                                  \(format *query-io* "n = ?"\))S
+108 319 :M
+(                                  \(parse-integer \(read-line *query-io*\)\)\)\)\))S
+108 330 :M
+(  \(unless \(and \(> n 0\) \(<= n 100\)\) \(return-from fannkuch-1\)\))S
+108 341 :M
+(  \(let \(\(n n\)\))S
+108 352 :M
+(    \(declare \(fixnum n\)\))S
+108 363 :M
+(    \(let \(\(perm \(make-array n :element-type 'fixnum\)\))S
+108 374 :M
+(          \(perm1 \(make-array n :element-type 'fixnum\)\))S
+108 385 :M
+(          \(zaehl \(make-array n :element-type 'fixnum\)\))S
+108 396 :M
+(          \(permmax \(make-array n :element-type 'fixnum\)\))S
+108 407 :M
+(          \(bishmax -1\)\))S
+108 418 :M
+(      \(declare \(type \(simple-array fixnum \(*\)\) perm perm1 zaehl permmax\)\))S
+108 429 :M
+(      \(declare \(fixnum bishmax\)\))S
+108 440 :M
+(      \(dotimes \(i n\) \(setf \(svref perm1 i\) i\)\))S
+108 451 :M
+(      \(prog)S
+108 462 :M
+(       \(\(r n\)\))S
+108 473 :M
+(       \(declare \(fixnum r\)\))S
+108 484 :M
+(       Kreuz)S
+108 495 :M
+(       \(when \(= r 1\) \(go standardroutine\)\))S
+108 506 :M
+(       \(setf \(svref zaehl \(- r 1\)\) r\))S
+108 517 :M
+(       \(decf r\))S
+108 528 :M
+(       \(go Kreuz\))S
+108 539 :M
+(       Dollar)S
+108 550 :M
+(       \(when \(= r n\) \(go fertig\)\))S
+108 561 :M
+(       \(let \(\(perm0 \(svref perm1 0\)\)\))S
+108 572 :M
+(         \(dotimes \(i r\) \(setf \(svref perm1 i\) \(svref perm1 \(+ i 1\)\)\)\))S
+108 583 :M
+(         \(setf \(svref perm1 r\) perm0\)\))S
+108 594 :M
+(       \(when \(plusp \(decf \(svref zaehl r\)\)\) \(go Kreuz\)\))S
+108 605 :M
+(       \(incf r\))S
+108 616 :M
+(       \(go Dollar\))S
+108 627 :M
+(       standardroutine)S
+108 638 :M
+(       \(dotimes \(i n\) \(setf \(svref perm i\) \(svref perm1 i\)\)\))S
+108 649 :M
+(       \(let \(\(Spiegelungsanzahl 0\) \(k 0\)\))S
+108 660 :M
+(         \(declare \(fixnum Spiegelungsanzahl k\)\))S
+126 671 :M
+( \(loop)S
+126 682 :M
+(  \(when \(= \(setq k \(svref perm 0\)\) 0\) \(return\)\))S
+126 693 :M
+(  \(let \(\(k2 \(ceiling k 2\)\)\))S
+126 704 :M
+(    \(declare \(fixnum k2\)\))S
+126 715 :M
+(    \(dotimes \(i k2\) \(rotatef \(svref perm i\) \(svref perm \(- k i\)\)\)\)\))S
+endp
+%%Page: 3 3
+%%BeginPageSetup
+initializepage
+(kanderson; page: 3 of 11)setjob
+%%EndPageSetup
+-12 -12 :T
+gS 12 12 588 768 rC
+303 754 :M
+f0_10 sf
+(3)S
+126 81 :M
+f3_10 sf
+(  \(incf Spiegelungsanzahl\)\))S
+126 92 :M
+( \(when \(> Spiegelungsanzahl bishmax\))S
+126 103 :M
+(      \(setq bishmax Spiegelungsanzahl\))S
+126 114 :M
+(      \(dotimes \(i n\) \(setf \(svref permmax i\) \(svref perm1 i\)\)\)\)\))S
+108 125 :M
+(       \(go Dollar\))S
+108 136 :M
+(       fertig\))S
+108 147 :M
+(      \(format t "The maximum was ~D.~% at " bishmax\))S
+108 158 :M
+(      \(format t "\("\))S
+108 169 :M
+(      \(dotimes \(i n\))S
+108 180 :M
+(       \(when \(> i 0\) \(format t " "\)\))S
+108 191 :M
+(       \(format t "~D" \(+ \(svref permmax i\) 1\)\)\))S
+108 202 :M
+(      \(format t "\)"\))S
+108 213 :M
+(      \(terpri\))S
+108 224 :M
+(      \(values\)\)\)\))S
+90 246 :M
+f0_12 sf
+.637 .064(Several people studied the benchmark.  Lawrence Mayka \(lgm@polaris.ih.att.com\) produced a)J
+90 258 :M
+1.239 .124(properly optimized Lisp version \(these and other optimizations are described below\).  Jacob)J
+90 270 :M
+1.134 .113(Seligmann \(jacobse@daimi.aau.dk\) provided Haible's C version and a Beta version.  Several)J
+90 282 :M
+.047 .005(people complained about the old fashioned "spaghetti" style of using a )J
+f3_10 sf
+.015(prog)A
+f0_12 sf
+.024 .002( and )J
+480 282 :M
+f3_10 sf
+(go)S
+f0_12 sf
+.044 .004(.  However, it)J
+90 294 :M
+.04 .004(is straight forward to unwind the spaghetti into several nested loops.  Another complaint was that)J
+90 306 :M
+.996 .1(the benchmark involved array creation and formatted output in addition to integer and vector)J
+90 318 :M
+(operations which might contaminate the results.)S
+90 342 :M
+.763 .076(The following exhibit shows the time in seconds for running various versions of the fannkuch)J
+90 354 :M
+(function, where )S
+f3_10 sf
+(N )S
+f0_12 sf
+(= )S
+190 354 :M
+f3_10 sf
+(9)S
+f0_12 sf
+( or )S
+212 354 :M
+f3_10 sf
+(10)S
+f0_12 sf
+(, for various Lisp and C implementations on a Sun Sparc 10:)S
+126 378 :M
+1.873 .187(Exhibit 2:  Time in seconds for various versions of the Fannkuch benchmark. The)J
+126 390 :M
+.661 .066(rightmost column shows the time relative to )J
+348 390 :M
+f3_10 sf
+.912 .091(gcc -O2)J
+f0_12 sf
+.644 .064(.  Each Lisp used an optimization)J
+126 402 :M
+(setting of )S
+174 402 :M
+f3_10 sf
+(\(optimize \(speed 3\) \(safety 1\)\))S
+f0_12 sf
+(.)S
+283 426 :M
+f4_10 sf
+(Original)S
+340 426 :M
+(Final)S
+385 426 :M
+(Final)S
+439 426 :M
+(Relative)S
+126 437 :M
+(Language)S
+193 437 :M
+(Compile Info)S
+283 437 :M
+(N = 9)S
+340 437 :M
+(N = 9)S
+385 437 :M
+(N = 10)S
+439 437 :M
+(N = 10)S
+126 450 :M
+f3_10 sf
+(C)S
+193 450 :M
+(gcc -O2)S
+340 450 :M
+(1.70)S
+385 450 :M
+(20.60)S
+439 450 :M
+(1.00)S
+121 441 -1 2 188 439 1 121 439 @a
+188 441 -1 2 190 439 1 188 439 @a
+190 441 -1 2 278 439 1 190 439 @a
+278 441 -1 2 280 439 1 278 439 @a
+280 441 -1 2 335 439 1 280 439 @a
+335 441 -1 2 337 439 1 335 439 @a
+337 441 -1 2 380 439 1 337 439 @a
+380 441 -1 2 382 439 1 380 439 @a
+382 441 -1 2 434 439 1 382 439 @a
+434 441 -1 2 436 439 1 434 439 @a
+436 441 -1 2 492 439 1 436 439 @a
+126 461 :M
+(C)S
+193 461 :M
+(cc -O2)S
+340 461 :M
+(1.80)S
+385 461 :M
+(22.10)S
+439 461 :M
+(1.07)S
+126 472 :M
+(Lisp)S
+193 472 :M
+(Allegro)S
+283 472 :M
+(13.58)S
+340 472 :M
+(2.00)S
+385 472 :M
+(25.62)S
+439 472 :M
+(1.24)S
+126 483 :M
+(Lisp)S
+193 483 :M
+(CMU)S
+283 483 :M
+( 8.49)S
+340 483 :M
+(2.36)S
+385 483 :M
+(27.22)S
+439 483 :M
+(1.32)S
+126 494 :M
+(Lisp)S
+193 494 :M
+(Lispworks)S
+283 494 :M
+(15.29)S
+340 494 :M
+(2.74)S
+385 494 :M
+(32.56)S
+439 494 :M
+(1.58)S
+126 505 :M
+(Lisp)S
+193 505 :M
+(Lucid 2)S
+385 505 :M
+(35.74)S
+439 505 :M
+(1.73)S
+126 516 :M
+(Lisp)S
+193 516 :M
+(Lucid 1)S
+283 516 :M
+( 7.38)S
+340 516 :M
+(3.75)S
+385 516 :M
+(44.57)S
+439 516 :M
+(2.16)S
+126 527 :M
+(C)S
+193 527 :M
+(cc)S
+340 527 :M
+(5.90)S
+385 527 :M
+(70.90)S
+439 527 :M
+(3.44)S
+126 538 :M
+(C)S
+193 538 :M
+(gcc)S
+340 538 :M
+(6.40)S
+385 538 :M
+(76.70)S
+439 538 :M
+(3.72)S
+90 573 :M
+f0_12 sf
+.765 .076(The original Lisp version is about 10 times slower than best C time, while the optimized Lisp)J
+90 585 :M
+.845 .085(version is only between 24 and 116% slower.  While the original Lisp version, )J
+f3_10 sf
+.32(fannkuch-0,)A
+90 597 :M
+f0_12 sf
+1.329 .133(looked optimized, there were several important improvements in the optimized version.  To)J
+90 609 :M
+(understand them, we review how integer and vector objects are represented in Lisp and C.)S
+90 633 :M
+.117 .012(In C, type information is associated with each variable name at compile time, not with the datum)J
+90 645 :M
+(actually stored there.  Lisp takes the opposite approach, the type of a datum is associated with the)S
+90 657 :M
+.052 .005(datum itself, not with a variable name \(compile time variable declarations are optional\).  So, in C)J
+90 669 :M
+.029 .003(you can't tell the data without a program, while in Lisp you can.  The C approach is referred to as)J
+90 681 :M
+.132 .013("static typing" while the Lisp approach is referred to as "dynamic typing".  However, this is only)J
+90 693 :M
+.566 .057(from the point of view of the variables.  From the point of view of the data, it is the other way)J
+90 705 :M
+(around.)S
+endp
+%%Page: 4 4
+%%BeginPageSetup
+initializepage
+(kanderson; page: 4 of 11)setjob
+%%EndPageSetup
+-12 -12 :T
+gS 12 12 588 768 rC
+303 754 :M
+f0_10 sf
+(4)S
+90 81 :M
+f0_12 sf
+.008 .001(C's numeric types closely match what can be easily manipulated by computer hardware.  There is)J
+90 93 :M
+.888 .089(an )J
+f3_10 sf
+.483(int)A
+f0_12 sf
+1.359 .136( type which is a machine integer, and several modifiers such as ")J
+460 93 :M
+f3_10 sf
+.279(short)A
+f0_12 sf
+.565 .057(", ")J
+508 93 :M
+f3_10 sf
+(long)S
+f0_12 sf
+(",and)S
+90 105 :M
+(")S
+95 105 :M
+f3_10 sf
+.108(unsigned)A
+f0_12 sf
+.313 .031(" that can be used to describe subsets of machine integers.  For example, the integers)J
+90 117 :M
+.135 .013(used in the C version of the benchmark are declared to be ")J
+377 117 :M
+f3_10 sf
+.148 .015(unsigned int)J
+f0_12 sf
+.094 .009(", or unsigned integers)J
+90 129 :M
+(of the standard word size.  Integer operations simply overflow and integer division is truncation.)S
+90 153 :M
+1.196 .12(In Lisp, an object is typically represented by a machine word-sized "object description" that)J
+90 165 :M
+1.268 .127(contains some information about the object's identity and type.  The actual representation is)J
+90 177 :M
+.964 .096(implementation specific,  see [Gudeman] for the range of possibilities. Thus when describing)J
+90 189 :M
+.617 .062(such details we refer to a typical implementation, not a specific one.  For example, on a 32-bit)J
+90 201 :M
+1.863 .186(RISC machine, two to four of the low order bits could provide type information, and the)J
+90 213 :M
+.425 .042(remaining high order bits could provide either the object itself, or a pointer to the actual object.)J
+90 225 :M
+.373 .037(For a small, "immediate object", such as a fixnum, character, or short-float, the object itself can)J
+90 237 :M
+.149 .015(fit entirely in the data portion of its description.  For a larger "indirect" object, such as a bignum,)J
+90 249 :M
+(or array, the data field of the description is a pointer to the object itself.)S
+90 273 :M
+.576 .058(Lisp supports infinite precision integers, and integer division produces infinite precision ratios.)J
+90 285 :M
+.245 .024(The abstract type )J
+f3_10 sf
+.082(integer)A
+f0_12 sf
+.286 .029( is typically implemented using two different representations, )J
+f3_10 sf
+.099(fixnum)A
+90 297 :M
+f0_12 sf
+(for small integers and )S
+f3_10 sf
+(bignum)S
+f0_12 sf
+( for large integers.)S
+90 321 :M
+.627 .063(A two bit type tag of )J
+f3_10 sf
+1.002 .1(#b00 )J
+f0_12 sf
+1.031 .103(is commonly used for fixnums because it has several advantages.)J
+90 333 :M
+.389 .039(Such a fixnum looks like a machine integer multiplied by four.  Thus adding one to a fixnum is)J
+90 345 :M
+.858 .086(the same as adding four to its machine integer representation. This is convenient for indexing)J
+90 357 :M
+.98 .098(through an array of word-sized elements in a byte addressed machine.  Also, RISC machines)J
+90 369 :M
+1.316 .132(provide instructions for doing operations on such integers that provide some automatic type)J
+90 381 :M
+(checking.)S
+90 405 :M
+.959 .096(In Lisp, the main performance consideration when using integers is to use fixnums whenever)J
+90 417 :M
+.808 .081(appropriate.  Also, declaring a variable to be a fixnum can allow the compiler to use machine)J
+90 429 :M
+2.045 .204(instructions rather than costlier generic operations.  However, declaring arguments to the)J
+90 441 :M
+.65 .065(functions )J
+139 441 :M
+f3_10 sf
+.527(+)A
+f0_12 sf
+.439 .044(, )J
+f3_10 sf
+.527(-)A
+f0_12 sf
+.439 .044(, )J
+f3_10 sf
+.527(*)A
+f0_12 sf
+.924 .092(, and )J
+200 441 :M
+f3_10 sf
+.26(truncate)A
+f0_12 sf
+.708 .071( to be fixnums is not enough since there are cases where each)J
+90 453 :M
+.993 .099(function could produce a bignum given only fixnum arguments.  One must either declare the)J
+90 465 :M
+.976 .098(output of the functions to be a fixnum, such as )J
+330 465 :M
+f3_10 sf
+.978 .098(\(the fixnum \(- k i\)\))J
+456 465 :M
+f0_12 sf
+1.04 .104( , or provide a more)J
+90 477 :M
+1.439 .144(restrictive declaration on the arguments.  The function )J
+f3_10 sf
+.446(deftype)A
+f0_12 sf
+1.094 .109( is convenient for this.  For)J
+90 489 :M
+(example, since all integers used in this benchmark are between 0 and 100:)S
+108 513 :M
+f3_10 sf
+(\(deftype small \(\) '\(integer 0 100\)\))S
+90 536 :M
+f0_12 sf
+1.111 .111(A final point about integer arithmetic is that the function / produces a ratio while )J
+f3_10 sf
+.459(truncate)A
+90 548 :M
+f0_12 sf
+1.741 .174(produces an integer.  Be careful with this when converting software from C to Lisp.  For)J
+90 560 :M
+2.285 .228(example, )J
+141 560 :M
+f3_10 sf
+3.011 .301(5/3 )J
+f0_12 sf
+2.846 .285(in C produces )J
+251 560 :M
+f3_10 sf
+1.185(1)A
+f0_12 sf
+2.608 .261(, while )J
+301 560 :M
+f3_10 sf
+2.967 .297(\(/ 5 3\))J
+f0_12 sf
+2.828 .283( in Lisp produces )J
+f3_10 sf
+1.144(5/3)A
+f0_12 sf
+2.416 .242(.  While this is)J
+90 572 :M
+(mathematically correct, accidental use of ratios can make an algorithm significantly slower.)S
+90 596 :M
+.159 .016(Now, we can understand several of the improvements that can be made to the original version of)J
+90 608 :M
+(the benchmark:)S
+108 632 :M
+f1_12 sf
+1.696 .17(IMP1: )J
+147 632 :M
+f0_12 sf
+1.47 .147(Operations on fixnum arguments should be declared to return fixnum results)J
+108 644 :M
+(when appropriate.  Alternatively, declare variables to be a subset of the fixnum range.)S
+90 668 :M
+.273 .027(The second problem has to do with )J
+f3_10 sf
+.099(dotimes.)A
+f0_12 sf
+.226 .023(  It is obvious from the definition of )J
+491 668 :M
+f3_10 sf
+.211 .021(\(dotimes \(i)J
+90 680 :M
+.36 .036(N\) ...\) )J
+139 680 :M
+f0_12 sf
+.32 .032(where )J
+172 680 :M
+f3_10 sf
+.132(N)A
+f0_12 sf
+.316 .032( is a positive fixnum, that )J
+306 680 :M
+f3_10 sf
+.129(i)A
+f0_12 sf
+.323 .032( is also a positive fixnum between 0 and )J
+512 680 :M
+f3_10 sf
+.336 .034(\(- N 1\))J
+f0_12 sf
+(.)S
+90 692 :M
+.144 .014(Unfortunately, not all compilers can deduce this fact, so to be safe you should declare it so.  One)J
+90 704 :M
+.045 .005(can use a specialized )J
+194 704 :M
+f3_10 sf
+.013(dotimes)A
+f0_12 sf
+.039 .004( macro for this purpose.  Without such a declaration, more general,)J
+90 716 :M
+(but slower, increment and comparison operations are done.)S
+endp
+%%Page: 5 5
+%%BeginPageSetup
+initializepage
+(kanderson; page: 5 of 11)setjob
+%%EndPageSetup
+-12 -12 :T
+gS 12 12 588 768 rC
+303 754 :M
+f0_10 sf
+(5)S
+108 93 :M
+f1_12 sf
+(IMP2: )S
+f0_12 sf
+(Declare the index and limit of )S
+291 93 :M
+f3_10 sf
+(dotimes)S
+f0_12 sf
+( to be fixnums when they are.)S
+90 117 :M
+.391 .039(To understand the next performance issue, we need to review arrays.  In C, an array is simply a)J
+90 129 :M
+.413 .041(pointer to a block of memory.  Each element of the block is of the same data type and occupies)J
+90 141 :M
+(same amount of space.)S
+90 165 :M
+.145 .015(Lisp provides several types of arrays.  Fixed length arrays are referred to as type )J
+f3_10 sf
+.052(simple-array)A
+f0_12 sf
+(.)S
+90 177 :M
+.506 .051(Other array types can be variable length or be displaced on top of another array.  Generally, an)J
+90 189 :M
+.444 .044(array element can be an object of any type \(actually any object description\), however, elements)J
+90 201 :M
+.257 .026(can be restricted to be of certain types, such as \()J
+f3_10 sf
+.648 .065(unsigned-byte 32)J
+422 201 :M
+f0_12 sf
+.32 .032(\), an unsigned thirty two bit)J
+90 213 :M
+(integer, or )S
+f3_10 sf
+(single-float)S
+f0_12 sf
+(, a single precision floating point number.)S
+90 237 :M
+.513 .051(Two reasons for using such arrays are 1\) Lisp can refer to such objects without heap allocating)J
+90 249 :M
+1.437 .144(\(bignums or single-floats in the cases mentioned above\), and 2\) such arrays can be used to)J
+90 261 :M
+(interface with other languages, such as C.)S
+90 285 :M
+f3_10 sf
+.473 .047(Fannkuch-0 )J
+157 285 :M
+f0_12 sf
+.364 .036(creates array of type )J
+f3_10 sf
+.764 .076(\(simple-array fixnum \(*\)\))J
+413 285 :M
+f0_12 sf
+.677 .068(.  Such an array is like an int)J
+90 297 :M
+.802 .08(array in C, each array element is stored as a machine integer.  However, the array is accessed)J
+90 309 :M
+.116 .012(using )J
+f3_10 sf
+.039(svref)A
+f0_12 sf
+.097 .01( which should only be used on arrays of type )J
+369 309 :M
+f3_10 sf
+.133 .013(\(simple-array t \(*\)\))J
+f0_12 sf
+.07 .007(, also know as)J
+90 321 :M
+.825 .083(type )J
+115 321 :M
+f3_10 sf
+.228(simple-vector)A
+f0_12 sf
+.612 .061(.  While Lisp warns about this declaration conflict, it treats the array as a)J
+90 333 :M
+f3_10 sf
+(simple-vector)S
+f0_12 sf
+(.  Since the routine never returns the arrays involved, the bug goes unnoticed.)S
+90 357 :M
+.692 .069(To be consistent, one should use either a \()J
+f3_10 sf
+1.386 .139(simple-array fixnum \(*\))J
+444 357 :M
+f0_12 sf
+.302 .03(\) or a )J
+f3_10 sf
+.237(simple-vector)A
+f0_12 sf
+(.)S
+90 369 :M
+.438 .044(However, each has a slightly different effect on performance.  When a fixnum array is used the)J
+90 381 :M
+.254 .025(compiler can use the fact that each element is a fixnum.  However, the array elements are stored)J
+90 393 :M
+(as machine integers.  This requires an extra shift instruction when the array is accessed.)S
+90 417 :M
+.26 .026(Using a simple-vector will avoid this overhead.  However, when storing a fixnum into a simple-)J
+90 429 :M
+.327 .033(vector, one should be sure that the compiler knows that the value being stored is a fixnum.  The)J
+90 441 :M
+.234 .023(reason for this has to do with the generational garbage collector used in some Lisp systems, also)J
+90 453 :M
+1.59 .159(referred to as a ephemeral garbage collector, or EGC.  Such garbage collectors focus their)J
+90 465 :M
+-.007(attention on recently created objects under the assumption that they are likely to become garbage.)A
+90 477 :M
+2.228 .223(This can substantially reduce the total effort involved in garbage collection. However, a)J
+90 489 :M
+.406 .041(reference from an old object to a new one must be recorded. While this can be done efficiently,)J
+90 501 :M
+(this overhead can be avoided when an immediate object, such as a fixnum is stored.)S
+90 525 :M
+(To summarize, consideration of arrays leads to the following improvements:)S
+108 549 :M
+f1_12 sf
+(IMP3: )S
+f0_12 sf
+(Use )S
+166 549 :M
+f3_10 sf
+(svref)S
+f0_12 sf
+( only on simple-vectors.  Better yet, declare the array and use )S
+f3_10 sf
+(aref)S
+f0_12 sf
+(.)S
+108 573 :M
+f1_12 sf
+.854 .085(IMP4: )J
+f0_12 sf
+.591 .059(For an array of fixnum's use type )J
+314 573 :M
+f3_10 sf
+.127(simple-vector)A
+f0_12 sf
+.388 .039( when dealing only with Lisp,)J
+108 585 :M
+(and use type \()S
+175 585 :M
+f3_10 sf
+(simple-array fixnum \(*\))S
+f0_12 sf
+(\) when dealing with another language,  like C.)S
+108 609 :M
+f1_12 sf
+.817 .082(IMP5: )J
+146 609 :M
+f0_12 sf
+.836 .084(When storing a )J
+226 609 :M
+f3_10 sf
+.219(fixnum)A
+f0_12 sf
+.317 .032( into a )J
+f3_10 sf
+.219(simple-vector)A
+f0_12 sf
+.626 .063( be sure the compiler knows that)J
+108 621 :M
+(the value being stored is a fixnum.)S
+90 645 :M
+.247 .025(A major functional difference between the Lisp and C versions of the original benchmark is that)J
+90 657 :M
+.979 .098(the Lisp version has )J
+f3_10 sf
+1.465 .147(\(ceiling k 2\))J
+278 657 :M
+f0_12 sf
+1.116 .112( while the C version has the hand optimized equivalent)J
+90 669 :M
+f3_10 sf
+.175(\(k+1\)/2)A
+f0_12 sf
+.465 .046(, which is optimized by the compiler to )J
+f3_10 sf
+.175(\(k+1\)>>1)A
+f0_12 sf
+.332 .033( since )J
+f3_10 sf
+.175(k)A
+f0_12 sf
+.372 .037( is an unsigned int.  \(This )J
+f3_10 sf
+.351(/2)A
+90 681 :M
+(-> >>1)S
+126 681 :M
+f0_12 sf
+-.004( optimization makes a 40% improvement in the C version.\)  While Lisp provides a ceiling)A
+90 693 :M
+.104 .01(function that works for one required and one optional argument, C only provides one for a single)J
+90 705 :M
+.775 .078(double argument, )J
+f3_10 sf
+.198(ceil.)A
+f0_12 sf
+.336 .034(  Using )J
+250 705 :M
+f3_10 sf
+.685 .068(ceil )J
+f0_12 sf
+.636 .064(instead of the optimized version makes the C version of)J
+90 717 :M
+.09 .009(the benchmark 2.88 times slower.  There is a similar effect in Lisp.  The time difference between)J
+endp
+%%Page: 6 6
+%%BeginPageSetup
+initializepage
+(kanderson; page: 6 of 11)setjob
+%%EndPageSetup
+-12 -12 :T
+gS 12 12 588 768 rC
+303 754 :M
+f0_10 sf
+(6)S
+90 81 :M
+f0_12 sf
+.361 .036(the different Lisp's on the original benchmark is largely due to their treatment of )J
+f3_10 sf
+.125(ceiling)A
+f0_12 sf
+.153 .015(.  It is)J
+90 93 :M
+1.479 .148(simply not possible for either a Lisp or a C compiler to produce code as good as the hand)J
+90 105 :M
+(optimized version which uses information not shared with the compiler.)S
+90 129 :M
+.796 .08(Profiling tools can be used to identify such bottle necks.  For example, the profiler in Allegro)J
+90 141 :M
+.952 .095(Common Lisp show that at least 60% of the time of the original benchmark was spent inside)J
+90 153 :M
+f3_10 sf
+(ceiling)S
+f0_12 sf
+(.)S
+108 177 :M
+f1_12 sf
+.194 .019(IMP6:  )J
+f0_12 sf
+.303 .03(Identify performance bottlenecks using profiling tools and minimize their effect,)J
+108 189 :M
+(for example by inlining.)S
+90 213 :M
+.591 .059(The algorithm generates each of the )J
+271 213 :M
+f3_10 sf
+.181(n)A
+f0_12 sf
+.54 .054(! permutations of )J
+f3_10 sf
+.181(n)A
+f0_12 sf
+.575 .057( integers and computes the number of)J
+90 225 :M
+.059 .006(flips.  It would be better, of course, to generate the permutations in a way that poorer ones can be)J
+90 237 :M
+1.924 .192(immediately eliminated from further consideration.  For example, the heuristic, "The best)J
+90 249 :M
+.084 .008(permutation can not start with )J
+238 249 :M
+f3_10 sf
+(1)S
+f0_12 sf
+.063 .006( or end with )J
+f3_10 sf
+(n)S
+f0_12 sf
+.096 .01(", leads to a simple check that saves about nineteen)J
+90 261 :M
+(percent of the effort.)S
+108 285 :M
+f1_12 sf
+(IMP7:  )S
+f0_12 sf
+(Thinking about the algorithm can lead to improvement.)S
+90 309 :M
+f1_12 sf
+(RESULTS OF THE IMPROVEMENTS)S
+90 333 :M
+f0_12 sf
+.778 .078(Exhibit 3 and 4 show the Lisp and C version of comparable benchmarks.  Both versions were)J
+90 345 :M
+.212 .021(written in similar styles to allow easy comparison.  The Lisp version uses macros to help in type)J
+90 357 :M
+.422 .042(declaration.  Such heavy handed declarations are not required by most Lisp's but makes porting)J
+90 369 :M
+.249 .025(the benchmark easier.  Lisp macros such as )J
+f3_10 sf
+.087(rotatef)A
+f0_12 sf
+.216 .022( are avoided, as are C constructs such as )J
+f3_10 sf
+.174(++)A
+90 381 :M
+f0_12 sf
+(or )S
+103 381 :M
+f3_10 sf
+(register)S
+f0_12 sf
+( declarations.)S
+90 405 :M
+-.011(These improvements lead to a dramatic improvement in the Lisp performance on this benchmark.)A
+90 417 :M
+(Lisp is within 24% and 116% of the best C time.)S
+90 441 :M
+.247 .025(So why are the Lisp versions slower?  Lisp and C implementations produce essentially the same)J
+90 453 :M
+.563 .056(number of machine instructions, 106 for cc, and 108 for Allegro, for example \(see the leftmost)J
+90 465 :M
+.487 .049(column of Exhibit 5\).  Exhibit 3 includes counts of the number of times key blocks of code are)J
+90 477 :M
+.166 .017(entered \(referred to as "Weights" in Exhibit 5\).  The three innermost loops account for over 80%)J
+90 489 :M
+(of the execution time.)S
+90 524 :M
+(Exhibit 3. Fannkuch benchmark in Lisp.)S
+90 548 :M
+f3_10 sf
+(\(deftype small \(\) '\(integer 0 101\)\)\))S
+90 559 :M
+(\(defmacro small \(a\) `\(the small ,a\)\))S
+90 570 :M
+(\(defmacro s+ \(a b\) `\(small \(+ \(small ,a\) \(small ,b\)\)\)\))S
+90 581 :M
+(\(defmacro s- \(a b\) `\(small \(- \(small ,a\) \(small ,b\)\)\)\))S
+90 592 :M
+(\(defmacro s> \(a b\) `\(> \(small ,a\) \(small ,b\)\)\))S
+90 603 :M
+(\(defmacro s= \(a b\) `\(= \(small ,a\) \(small ,b\)\)\))S
+90 614 :M
+(\(defmacro sref \(a i\) `\(small \(svref ,a ,i\)\)\))S
+90 625 :M
+(\(defmacro setfs \(a b\) `\(setf ,a \(small ,b\)\)\))S
+90 636 :M
+(\(defmacro dotimess \(\(i n\) &body body\))S
+90 647 :M
+(  `\(dotimes \(,i ,n\) \(declare \(type small ,i\)\) ,@body\)\))S
+endp
+%%Page: 7 7
+%%BeginPageSetup
+initializepage
+(kanderson; page: 7 of 11)setjob
+%%EndPageSetup
+-12 -12 :T
+gS 12 12 588 768 rC
+303 754 :M
+f0_10 sf
+(7)S
+90 92 :M
+f3_10 sf
+(\(defun fannkuch \(n perm perm1 zaehl permmax\))S
+90 103 :M
+(  \(declare \(optimize \(safety 0\) \(speed 3\) \(space 0\) \(debug 0\)\))S
+90 114 :M
+(           \(type simple-vector perm perm1 zaehl permmax\))S
+90 125 :M
+(           \(type \(integer 1 100\) n\)\))S
+90 136 :M
+(  \(dotimess \(i n\))S
+90 147 :M
+(   \(setfs \(sref perm1 i\) i\)\)                   ; FILL-I)S
+90 158 :M
+(  \(let \(\(bishmax -1\))S
+90 169 :M
+(        \(r n\)\))S
+90 180 :M
+(    \(loop                                      ; 1.00)S
+90 191 :M
+(      \(loop                                    ; 1.72 KREUZ)S
+90 202 :M
+(        \(when \(s= r 1\) \(return\)\))S
+90 213 :M
+(        \(let \(\(i \(s- r 1\)\)\))S
+90 224 :M
+(          \(setfs \(sref zaehl i\) r\))S
+90 235 :M
+(          \(setq r i\)\)\))S
+90 246 :M
+(      \(when \(not \(or \(zerop \(sref perm1 0\)\))S
+90 257 :M
+(                     \(let \(\(i \(s- n 1\)\)\))S
+90 268 :M
+(                       \(s= \(sref perm1 i\) i\)\)\)\))S
+90 279 :M
+(        \(dotimesS  \(i n\)                       ; 0.81)S
+90 290 :M
+(         \(setfs \(sref perm i\) \(sref perm1 i\)\)\) ; 8.11 COPY)S
+90 301 :M
+(        \(let \(\(Spiegelungsanzahl 0\))S
+90 312 :M
+(              \(k 0\)\))S
+90 323 :M
+(          \(loop                                ; 6.39 COUNT)S
+90 334 :M
+(            \(when \(s= \(setq k \(sref perm 0\)\) 0\) \(return\)\))S
+90 345 :M
+(            \(let \(\(k2 \(the small \(ash \(s+ k 1\) -1\)\)\)\))S
+90 356 :M
+(              \(dotimess \(i k2\))S
+90 367 :M
+(               \(let* \(\(temp \(sref perm i\)\)     ; 14.73 FLIP)S
+90 378 :M
+(                      \(j \(s- k i\)\)\))S
+90 389 :M
+(                 \(setfs \(sref perm i\) \(sref perm j\)\))S
+90 400 :M
+(                 \(setfs \(sref perm j\) temp\)\)\)\))S
+90 411 :M
+(            \(setq Spiegelungsanzahl \(s+ Spiegelungsanzahl 1\)\)\))S
+90 422 :M
+(          \(when \(s> Spiegelungsanzahl bishmax\))S
+90 433 :M
+(            \(setq bishmax Spiegelungsanzahl\))S
+90 444 :M
+(            \(dotimesS \(i n\))S
+90 455 :M
+(             \(setfs \(sref permmax i\)\(svref perm1 i\)\)\)\)\)\))S
+90 466 :M
+(      \(loop                                    ; 1.72)S
+90 477 :M
+(        \(when \(s= r n\) \(return-from fannkuch-10 bishmax\)\))S
+90 488 :M
+(        \(let \(\(perm0 \(sref perm1 0\)\)\))S
+90 499 :M
+(          \(let \(\(i 0\)\))S
+90 510 :M
+(            \(loop                              ; 4.44 SHIFT)S
+90 521 :M
+(              \(if \(s= i r\) \(return\)\))S
+90 532 :M
+(              \(let \(\(k \(s+ i 1\)\)\))S
+90 543 :M
+(                \(setfs \(sref perm1 i\) \(sref perm1 k\)\))S
+90 554 :M
+(                \(setq i k\)\)\)\))S
+90 565 :M
+(          \(setfs \(svref perm1 r\) perm0\)\))S
+90 576 :M
+(        \(when \(s> \(setfs \(sref zaehl r\) \(s- \(sref zaehl r\) 1\)\) 0\))S
+90 587 :M
+(          \(return\)\))S
+90 598 :M
+(        \(setq r \(s+ r 1\)\)\)\)\)\))S
+endp
+%%Page: 8 8
+%%BeginPageSetup
+initializepage
+(kanderson; page: 8 of 11)setjob
+%%EndPageSetup
+-12 -12 :T
+gS 12 12 588 768 rC
+303 754 :M
+f0_10 sf
+(8)S
+90 92 :M
+f0_12 sf
+(Exhibit 4.   Fannkuch benchmark in C.)S
+90 115 :M
+f3_10 sf
+(#define ASMALL unsigned int)S
+90 126 :M
+(#define SMALL  unsigned int)S
+90 137 :M
+(#define Length 100)S
+90 159 :M
+(long fannkuch\(n, Perm, Perm1, Zaehl, PermMax\))S
+90 170 :M
+(     SMALL n;)S
+90 181 :M
+(     ASMALL Perm[], Perm1[], Zaehl[], PermMax[];)S
+90 192 :M
+({)S
+90 203 :M
+(  long BishMax=-1, Spiegelungsanzahl;)S
+90 214 :M
+(  SMALL r, i, k;)S
+90 225 :M
+(  for \(i=0; i<n; i++\))S
+90 236 :M
+(    Perm1[i]=i;)S
+90 247 :M
+(  r=n;)S
+90 258 :M
+(  while\(1\) {)S
+90 269 :M
+(    while \(r != 1\) {)S
+90 280 :M
+(      Zaehl[r-1]=r;)S
+90 291 :M
+(      r=r-1;)S
+90 302 :M
+(    })S
+90 313 :M
+(    if \(! \(Perm1[0] == 0 || \(i=n-1, Perm1[i] == i\)\)\) {)S
+90 324 :M
+(      for \(i = 0; i < n; i = i + 1\))S
+90 335 :M
+(        Perm[i] = Perm1[i];)S
+90 346 :M
+(      Spiegelungsanzahl=0;)S
+90 357 :M
+(      while \(!\(\(k=Perm[0]\) == 0\)\) {)S
+90 368 :M
+(        SMALL k2=\(k+1\)>>1;)S
+90 379 :M
+(        for \(i = 0; i < k2; i = i + 1\) {)S
+90 390 :M
+(          SMALL temp = Perm[i];)S
+90 401 :M
+(          Perm[i] = Perm[k - i];)S
+90 412 :M
+(          Perm[k - i] = temp;)S
+90 423 :M
+(        })S
+90 434 :M
+(        Spiegelungsanzahl = Spiegelungsanzahl + 1;)S
+90 445 :M
+(      })S
+90 456 :M
+(      if \(Spiegelungsanzahl > BishMax\) {)S
+90 467 :M
+(        BishMax = Spiegelungsanzahl;)S
+90 478 :M
+(        for \(i = 0; i < n; i = i + 1\))S
+90 489 :M
+(          PermMax[i] = Perm1[i];)S
+90 500 :M
+(      })S
+90 511 :M
+(    })S
+90 522 :M
+(    while\(1\) {)S
+90 533 :M
+(      if \(r == n\) return\(BishMax\);)S
+90 544 :M
+(      { SMALL Perm0;)S
+90 555 :M
+(        Perm0 = Perm1[0];)S
+90 566 :M
+(        i = 0;)S
+90 577 :M
+(        while \(i < r\) {)S
+90 588 :M
+(          k = i + 1;)S
+90 599 :M
+(          Perm1[i]=Perm1[k];)S
+90 610 :M
+(          i = k;)S
+90 621 :M
+(        })S
+90 632 :M
+(        Perm1[r]=Perm0;)S
+90 643 :M
+(      })S
+90 654 :M
+(      if \(\(Zaehl[r] = Zaehl[r]-1\) > 0\) break;)S
+90 665 :M
+(      r=r+1;)S
+90 676 :M
+(    })S
+90 687 :M
+(  })S
+90 698 :M
+(})S
+endp
+%%Page: 9 9
+%%BeginPageSetup
+initializepage
+(kanderson; page: 9 of 11)setjob
+%%EndPageSetup
+-12 -12 :T
+gS 12 12 588 768 rC
+303 754 :M
+f0_10 sf
+(9)S
+90 81 :M
+f0_12 sf
+1.409 .141(Several loops were disassembled to compare the quality of the compiled code, as shown in)J
+90 93 :M
+2.093 .209(Exhibit 5.  The row labeled "Weights" show the relative importance of each loop in the)J
+90 105 :M
+.112 .011(computation, and the column labeled "Dot" shows the dot product of the weights and the lines of)J
+90 117 :M
+.975 .098(code.  It correlates well with relative performance, except for Lucid, which will be discussed)J
+90 129 :M
+(below.)S
+108 153 :M
+(Exhibit 5:   Lines of code for the fannkuch function and several loops.)S
+175 177 :M
+f4_10 sf
+(Fannkuch)S
+238 177 :M
+(Fill-i)S
+282 177 :M
+(Shift)S
+327 177 :M
+(Copy)S
+367 177 :M
+(Flip)S
+416 177 :M
+(Kreuz)S
+461 177 :M
+(Dot)S
+108 188 :M
+f3_10 sf
+(cc)S
+175 188 :M
+(106)S
+238 188 :M
+(5)S
+282 188 :M
+(9)S
+327 188 :M
+(6)S
+367 188 :M
+(8)S
+416 188 :M
+(6)S
+461 188 :M
+(217)S
+108 199 :M
+(gcc -O2)S
+175 199 :M
+(117)S
+238 199 :M
+(5)S
+282 199 :M
+(8)S
+327 199 :M
+(5)S
+367 199 :M
+(10)S
+416 199 :M
+(5)S
+461 199 :M
+(232)S
+108 210 :M
+(Allegro)S
+175 210 :M
+(108)S
+238 210 :M
+(5)S
+282 210 :M
+(8)S
+327 210 :M
+(7)S
+367 210 :M
+(12)S
+416 210 :M
+(6)S
+461 210 :M
+(279)S
+108 221 :M
+(CMUCL)S
+175 221 :M
+(123)S
+238 221 :M
+(7)S
+282 221 :M
+(9)S
+327 221 :M
+(8)S
+367 221 :M
+(14)S
+416 221 :M
+(10)S
+461 221 :M
+(328)S
+108 232 :M
+(Lispworks)S
+175 232 :M
+(132)S
+238 232 :M
+(9)S
+282 232 :M
+(11)S
+327 232 :M
+(12)S
+367 232 :M
+(18)S
+416 232 :M
+(9)S
+461 232 :M
+(427)S
+108 243 :M
+(Lucid)S
+175 243 :M
+(139)S
+238 243 :M
+(6)S
+282 243 :M
+(9)S
+327 243 :M
+(8)S
+367 243 :M
+(13)S
+416 243 :M
+(8)S
+461 243 :M
+(310)S
+108 254 :M
+f4_10 sf
+(Weight)S
+238 254 :M
+(0.00)S
+282 254 :M
+(4.44)S
+327 254 :M
+(8.11)S
+367 254 :M
+(14.73)S
+416 254 :M
+(1.72)S
+90 277 :M
+f0_12 sf
+.617 .062(The bodies of the loops are smaller for C than for Lisp, while the overall footprint of a loop is)J
+90 290 :M
+.934 .093(smaller for Lisp than for C.  Take a loop like )J
+f3_10 sf
+1.598 .16(\(dotimes \(i n\) ...\))J
+444 290 :M
+f3_12 sf
+.53(.)A
+f3_10 sf
+.402 .04(  )J
+f0_12 sf
+1.353 .135(In a simple C-like)J
+90 302 :M
+1.555 .155(assembly language, the loop is coded as something like: \(Each line corresponds to a RISC)J
+90 314 :M
+1.95 .195(machine instruction, except that )J
+f3_10 sf
+2.733 .273(if <condition> goto <address>)J
+450 314 :M
+f0_12 sf
+2.682 .268( corresponds to two)J
+90 326 :M
+(instructions.\))S
+90 350 :M
+f3_10 sf
+(     )S
+f4_10 sf
+(GCC loop              Typical Lisp loop)S
+90 372 :M
+f3_10 sf
+(     i = 0                     i = 0)S
+90 383 :M
+(     if \(i >= N\) goto end      goto test)S
+90 394 :M
+(        ...               top  ...)S
+90 405 :M
+( top  ...                      i = i + 4)S
+90 416 :M
+(     i = i +  1           test if \(i < N\) goto top)S
+90 427 :M
+(     if \(i < N\) goto top)S
+90 438 :M
+( end)S
+90 461 :M
+f0_12 sf
+.254 .025(The difference is a matter of style, rather than language.  The gcc compiler does a test and starts)J
+90 473 :M
+.36 .036(executing the body of the loop, while the typical Lisp code jumps to the test which is at the end)J
+90 485 :M
+(of the loop body.)S
+90 509 :M
+.112 .011(The number of instructions in the body of the loop varies between the different Lisps.  The Lisps)J
+90 521 :M
+.811 .081(with the higher instruction counts are typically due to one or more redundant instructions that)J
+90 533 :M
+(could be removed. There is no reason such deficiencies could not be corrected.)S
+90 557 :M
+(The loop body for )S
+180 557 :M
+f3_10 sf
+(fill-i)S
+f0_12 sf
+(, for example, shows the influence of the two languages:)S
+90 581 :M
+(      )S
+f1_12 sf
+( )S
+f4_10 sf
+(In C:                        In Lisp:)S
+90 592 :M
+f3_10 sf
+(  for \(i=0; i< N; i = i + 1\)  \(dotimes \(i N\))S
+90 603 :M
+(   p[i] = i;                   \(setf \(aref p i\) i\)\))S
+90 625 :M
+(      )S
+f4_10 sf
+(Compiled C              Compiled Lisp)S
+90 647 :M
+f3_10 sf
+(1      i = 0                      i = 0)S
+90 658 :M
+(2      goto test                  goto test)S
+90 669 :M
+(3 top  temp = i << 2          top temp = i + ARRAYOFFSET)S
+90 680 :M
+(4      p[temp] = i                p[temp] = i)S
+90 691 :M
+(5      i = i + 1                  i = i + 4)S
+90 702 :M
+(6 test if \(i < N\) goto top   test if \(i < N\) goto top)S
+endp
+%%Page: 10 10
+%%BeginPageSetup
+initializepage
+(kanderson; page: 10 of 11)setjob
+%%EndPageSetup
+-12 -12 :T
+gS 12 12 588 768 rC
+301 754 :M
+f0_10 sf
+(10)S
+90 81 :M
+f0_12 sf
+.292 .029(The loops have been written in the same style for ease of comparison. While both take the same)J
+90 93 :M
+1.16 .116(number of instructions, there are two differences.  Lisp uses fixnums, while C uses machine)J
+90 105 :M
+.287 .029(integers.  We can see the effect of this in line 5 where )J
+356 105 :M
+f3_10 sf
+.102(i)A
+f0_12 sf
+.266 .027( is incremented by )J
+455 105 :M
+f3_10 sf
+.123(4)A
+f0_12 sf
+.265 .027( rather than by )J
+f3_10 sf
+.123(1)A
+f0_12 sf
+.252 .025(, as)J
+90 117 :M
+.021 .002(in the C version.   In C, where machine integer are used, an )J
+f3_10 sf
+(int )S
+f0_12 sf
+.025 .002(must be left shifted before it can)J
+90 129 :M
+(be used as an array offsets \(alternatively, another counter incremented by one could be used\).)S
+90 153 :M
+.176 .018(On the other hand, when accessing a Lisp array, one must account for the array type tag.  This is)J
+90 165 :M
+.678 .068(done by adding an offset \()J
+221 165 :M
+f3_10 sf
+.207(ARRAYOFFSET)A
+f0_12 sf
+.552 .055(\) to the index to remove the tag.  On CISC computers,)J
+90 177 :M
+.444 .044(like the M68000's, the offset and index can be added to the array pointer in one instruction, but)J
+90 189 :M
+(on a RISC machine, two instructions are required.)S
+90 213 :M
+.791 .079(While )J
+f3_10 sf
+.235(ARRAYOFFSET)A
+f0_12 sf
+.578 .058( is a loop constant, it is generally not pulled out of the loop if an interrupt)J
+90 225 :M
+.512 .051(could occur during the loop.  If a GC occurs, it must be possible to recognize all pointers to an)J
+90 237 :M
+(array as Lisp values, so that the pointers can be changed if the array changes location.  Removing)S
+90 249 :M
+4.572 .457(the )J
+114 249 :M
+f3_10 sf
+1.149(ARRAYOFFSET)A
+f0_12 sf
+3.226 .323( removes the tag information.  On the other hand,when a loop is)J
+90 261 :M
+(noninterruptable, the compiled Lisp code could be smaller than the compiled C code.)S
+90 285 :M
+-.01(One final issue is register versus stack allocation of variables.  In a function call on a SPARC, the)A
+90 297 :M
+1.179 .118(first six arguments are passed in registers, while any additional arguments are passed on the)J
+90 309 :M
+.102 .01(stack.  Internal to a subroutine, 24 registers may be used \(after a )J
+f3_10 sf
+.039(save)A
+f0_12 sf
+.128 .013( instruction\).  An argument)J
+90 321 :M
+1.542 .154(on the stack must be moved to a register before its value can be used.  Thus an important)J
+90 333 :M
+1.111 .111(optimization is to move a stacked variable into a register whenever possible.  Unfortunately,)J
+90 345 :M
+.19 .019(Lucid Common Lisp does a register analysis, but it is suboptimum here.  Important variables are)J
+90 357 :M
+.106 .011(kept on the stack, reducing its performance further.  Unintuitively, performance can be improved)J
+90 369 :M
+.879 .088(by 20% by moving the inner count loop as a separate subroutine \(Referred to as "Lucid 2" in)J
+90 381 :M
+.213 .021(Exhibit 2.\).  An earlier version of Allegro had a register allocation problem here as well, and the)J
+90 393 :M
+(difference between the two C implementations is due to register/stack usage differences.)S
+90 417 :M
+f1_12 sf
+(CONCLUSIONS)S
+90 441 :M
+f0_12 sf
+.206 .021(Lisp provides freedom that can be valuable during software development, but can get in the way)J
+90 453 :M
+(of delivering performance if one is not careful.  It might seem that recoding in C is a good way to)S
+90 465 :M
+.428 .043(deliver performance.  However, it is the recoding process itself, and the analysis of perfomance)J
+90 477 :M
+1.064 .106(details that is important, not the language.  Today's Lisp compilers provide advice that helps)J
+90 489 :M
+1.075 .108(identify performance pitfalls.   Such advice would have identified most of the improvements)J
+90 501 :M
+.467 .047(described above.  Also in CMU Common Lisp, with low optimization settings, declarations are)J
+90 513 :M
+.459 .046(verified at runtime rather than simply trusted, while at higher settings, they are used to produce)J
+90 525 :M
+.59 .059(optimized code.  This allows a fluid software development style where performance issues can)J
+90 537 :M
+(be addressed at various stages.)S
+126 561 :M
+f1_12 sf
+(IMP8:)S
+f0_12 sf
+(  Heed compiler advice.)S
+90 585 :M
+.314 .031(C requires the programmer to provide explicit information from the beginning, so it might seem)J
+90 597 :M
+.43 .043(straightforward to write efficient C here. However, C is not without performance pitfalls either.)J
+90 609 :M
+-.003(Using the floating point version of )A
+259 609 :M
+f3_10 sf
+(ceiling)S
+f0_12 sf
+-.003(, rather than a hand coded one makes a factor of three)A
+90 621 :M
+.793 .079(difference in performance and changing ")J
+297 621 :M
+f3_10 sf
+.457(/2)A
+f0_12 sf
+.765 .077(" to ")J
+337 621 :M
+f3_10 sf
+.281(>>1)A
+f0_12 sf
+.861 .086(" makes a 40% improvement.  The hand)J
+90 633 :M
+(optimized version might be fairly obvious here, but isn't in general [Bentley].)S
+90 657 :M
+.624 .062(Other choices a C programmer could make could have performance effects that are difficult to)J
+90 669 :M
+2.574 .257(predict [Bentley].  For example, the original C version of the benchmark used register)J
+90 681 :M
+.847 .085(declarations which reduced performance by a few percent. Also, by varying the definitions of)J
+90 693 :M
+f3_10 sf
+.449 .045(ASMALL )J
+133 693 :M
+f0_12 sf
+.078(and)A
+f3_10 sf
+.322 .032( SMALL)J
+187 693 :M
+f0_12 sf
+.459 .046( among the types )J
+f3_10 sf
+.185(char)A
+f0_12 sf
+.169 .017(, )J
+305 693 :M
+f3_10 sf
+.11(short,)A
+f0_12 sf
+.055 .006( )J
+345 693 :M
+f3_10 sf
+.076(int)A
+f0_12 sf
+.063 .006(, )J
+f3_10 sf
+.474 .047(unsigned short,)J
+460 693 :M
+f0_12 sf
+.59 .059( and )J
+485 693 :M
+f3_10 sf
+.345 .035(unsigned int)J
+90 705 :M
+f0_12 sf
+.199 .02(the performance of the algorithm ranges from 15% faster to 65% slower than the time in Exhibit)J
+90 717 :M
+(2.  The fastest combination is not particularly obvious:)S
+endp
+%%Page: 11 11
+%%BeginPageSetup
+initializepage
+(kanderson; page: 11 of 11)setjob
+%%EndPageSetup
+-12 -12 :T
+gS 12 12 588 768 rC
+301 754 :M
+f0_10 sf
+(11)S
+108 104 :M
+f3_10 sf
+(#define ASMALL char)S
+108 115 :M
+(#define SMALL  unsigned int)S
+90 137 :M
+f0_12 sf
+.014 .001(Gabriel [Gabriel, 85] teaches us that benchmarking without analysis is bogus.  This benchmark is)J
+90 149 :M
+.227 .023(a perfect example.  Had one accepted the original performance numbers without further analysis)J
+90 161 :M
+.373 .037(one would conclude that Lisp was significantly slower than C, and that certain implementations)J
+90 173 :M
+.012 .001(of Lisp were significantly slower than others.  Both conclusions are false.  It is easy to make Lisp)J
+90 185 :M
+1.737 .174(look slow relative to C, and one Lisp implementation look slower than another simply by)J
+90 197 :M
+2.933 .293(steering the benchmark away from one implementation's pitfalls and toward another's,)J
+90 209 :M
+(intentionally or otherwise.)S
+90 233 :M
+.111 .011(How much difference should one expect between Lisp and C?  This benchmark is quite sensitive)J
+90 245 :M
+.34 .034(to the number of instructions generated for the inner loops.  The data shows that Lisp compilers)J
+90 257 :M
+.126 .013(can be improved here.  \(Three improvements were made to Allegro Common Lisp in the process)J
+90 269 :M
+1.694 .169(of analyzing this benchmark.\)  Lisp itself provides little if any additional overhead in this)J
+90 281 :M
+.284 .028(benchmark as both integer operations and array manipulation are comparable in both languages.)J
+90 293 :M
+.728 .073(A benchmark with a different set of loop weights might have shown more comparable results.)J
+90 305 :M
+1.489 .149(For example a uniform weighting would produce differences of less than 40% between the)J
+90 317 :M
+.283 .028(different language implementations.  Other benchmarks suggest that Lisp programs can be quite)J
+90 329 :M
+.164 .016(comparable, even faster than C programs [Anderson].  It is reasonable to expect that Lisp should)J
+90 341 :M
+.048 .005(be within 20% or less of the C time for benchmarks like this one [Baker].  Anything worse might)J
+90 353 :M
+(indicate a problem to be corrected, as was done here.)S
+90 377 :M
+f1_12 sf
+(REFERENCES)S
+90 401 :M
+f0_12 sf
+(Anderson, Kenneth R. "Courage in Profiles", Lisp Users and Vendors Conference, \(1994\).)S
+90 425 :M
+2.404 .24(Baker, H.G. "Critique of DIN Kernel Lisp Definition Version 1.2", )J
+f2_12 sf
+2.397 .24( Lisp and Symbolic)J
+90 437 :M
+(Computation,)S
+156 437 :M
+f0_12 sf
+(, 4,4  \(march 1992\), 371-398.)S
+90 461 :M
+(Bentley, Kernighan and VanWyk, "An elementary C cost model", Unix Review, 9,2, p. 38-48.)S
+90 485 :M
+(Gabriel R.P.,)S
+153 485 :M
+f2_12 sf
+(Performance and Evaluation of Lisp Systems.)S
+f0_12 sf
+(. MIT Press, Cambridge, MA, 1985.)S
+90 509 :M
+(Gabriel R.P., "Lisp: Good News, Bad News, How to Win Big", AI Expert, June, 1991, p. 31-39.)S
+90 533 :M
+.662 .066(Gudeman, David. "Representing Type Information in Dynamically Typed Languages", TR 93)J
+554 533 :M
+(-)S
+90 545 :M
+.251 .025(27, Dept. Computer Science, University of Arizona, Tucson, 1993.  FTP from ftp.cs.arizona.edu)J
+90 557 :M
+(reports/1993/TR93-27.ps.Z.)S
+endp
+%%Trailer
+end
+%%EOF

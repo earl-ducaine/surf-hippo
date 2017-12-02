@@ -1,0 +1,67 @@
+/*----------------------------------------------------------------
+%W%  %G%
+Input/square.nts  translated Tue Nov 24 14:38:49 1992 by ntscable %I%
+source file syntax: Eutectic
+output file syntax: CABLE
+soma: diameter = 1.7764 um  length = 5.1092 um  area = 28.5131 um2
+      4 three-D points; 4 outline points numbered 1250-1260
+      outline diameter = 2.25676 um
+1 primary neurites
+1 branches totaling 223.248 um in length, 210.406 um2 in area
+17 tree points translated to 2 segments (1 requested)
+Neurites divided into segments of equal dx between adjacent digitized
+branch points.
+Segment length constrained to be < 223.248 um.
+ASCII version of CA1 cell C12861 received 14-APR-89 from D. Amaral.
+Edited 17-APR-89 by JCW: changed soma outline point types to match 
+NTS 3.0 convention; deleted axon and contours of vetricular surface 
+and hippocampal fissure.
+
+No. points   1269
+No. trees       9
+Text  File sent from PDP-11                                                                                                   
+ 
+----------------------------------------------------------------*/
+
+
+/*----------------------------------------------------------------*/
+proc init_topology_0() {
+
+    fcbs(0)
+    fcbs(1, 1, 0)
+}
+
+
+/*----------------------------------------------------------------*/
+proc init_dx_0() { local i
+
+    dx[1] = 223.248
+}
+
+
+/*----------------------------------------------------------------*/
+proc init_diam_0() { local i
+
+    diam[1] = 0.3
+}
+
+
+/*----------------------------------------------------------------*/
+proc geometry() {
+
+    init_topology_0()
+
+    init_dx_0()
+
+    init_diam_0()
+
+					/* cylindrical soma geometry */
+    diam[0] = 1.7764
+    dx[0]   = 5.1092
+    ra      = 75
+    farea(3)
+    area[0] = PI*diam[0]*dx[0]
+    fcbs()
+
+}
+

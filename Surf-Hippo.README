@@ -1,0 +1,271 @@
+Last update March 2017
+
+			      The Surf-Hippo Neuron Simulation System
+
+					     v4_alpha
+
+					  Lyle J. Graham
+		  Neurophysiology of Visual Computation Laboratory, CNRS UMR8250
+			  UFR Biomédicale de l'Université René Descartes
+				      45 rue des Saint-Peres
+					75006 Paris, France
+
+
+If you are using the Surf-Hippo software, please send mail to surfhippo@gmail.com to get on the
+mailing list or for other questions. Periodically updated versions of the User Manual and Reference
+Manual may be found in the download repositories and are also included in the Surf-Hippo
+distribution.The home page is:
+
+				    surf-hipppo.neurophysics.eu
+
+----------------------------------------------------------------------------
+
+					 Table of Contents
+
+    1. Introduction
+    2. Motivations, and Why Lisp?
+    3. System Requirements
+    4. Retrieving, Installing and Running Surf-Hippo
+    5. Acknowledgements and References
+
+----------------------------------------------------------------------------
+
+					  1. Introduction
+
+The Surf-Hippo neuron simulator is used to investigate morphologically and biophysically detailed
+compartmental models of single neurons and networks of neurons. Surf-Hippo allows ready
+construction of cells and networks using built-in functions and various anatomical file formats
+(Neurolucida, NTS and others). Surf-Hippo is a public domain package, written in Lisp, and runs
+under Unix and Linux.
+
+Cell models may have complicated 3-dimensional dendritic trees with distributed non-linearities and
+synaptic inputs driven by arbitrary inputs or other cells. The number of circuit nodes (cell
+compartments) is in practice limited by the memory in the machine; simulations with thousands of
+nodes are routine. The retention of XYZ coordinates for each circuit node may be exploited, for
+example, by simulations which use spatially-coded input, or with network simulations where synaptic
+connectivity is defined by spatial proximity. Channels (Hodgkin-Huxley, an extended Hodgkin-Huxley
+model (Borg-Graham, 1991, 1999, Markovian (Borg-Graham, 1999), and others), synapses (autonomous,
+voltage-dependent, light-dependent, and others), current and voltage sources may be added at
+arbitrary locations within a neuron.  Stationary or moving two dimensional input (e.g. light, for
+retinal (Borg-Graham and Grzywacz, 1992; Borg-Graham, 2001) or visual cortex (Gazeres etal, 1998)
+simulations) is also provided. Multi-compartment concentration systems are provided for modelling
+mechanisms such as calcium-dependent processes.
+
+Surf-Hippo has an extensive graphical user interface, including menus, 3D graphics of dendritic
+trees (with point-and-click measurement, examination and modification of circuit elements), and
+data plotting (reformatable, with mouse-oriented measurement). Publication quality postscript files
+of all graphical output are easily generated. Data files may also be saved for analysis with
+external tools. Surf-Hippo allows automatic saving of edited model parameters into files which are
+both loadable and human readable, a feature which helps to avoid errors in saving results during a
+simulation session.
+
+For integrating the circuit equations, Surf-Hippo uses a variant of the Crank-Nicholson method
+described by Hines (1984; Borg-Graham, 2000). A major difference in the method used by Surf-Hippo
+is a variable time step option, where step size is adjusted according to an estimate of the linear
+truncation error for all state variables (e.g. node voltages, channel particles). The adaptive time
+step can give much faster run times for typical simulations, with the option of verifying selected
+results using the more conservative fixed time step integration.  Another difference is that
+Surf-Hippo allows for either ideal or non-ideal voltage clamp at arbitrary nodes in the circuit.
+
+
+				   2. Motivations, and Why Lisp?
+				   
+In general, the application of Surf-Hippo overlaps packages such as GENESIS and NEURON, as well as
+several other simulators designed for the computational neuroscience community [De Schutter,
+1992]. The fact that Surf-Hippo is the only complete system written in Lisp has at least the
+following advantages.
+				   
+To begin with, the necessity for the numerical analysis of the nonlinear dynamical systems that
+characterize compartmental neuron models means that formal verification of even moderately
+complicated neuron models is not possible. A practical approach to verification is by the
+cross-validation of models using independent tools, e.g.  simulators written in different languages
+and with major or minor differences in algorithms. Thus, in an ideal world (someday!) neuron models
+will be evaluated with more than one software package.
+				   
+A traditional strength of Lisp is its ability to handle both symbolic as well as numeric
+representations. Formulation of complex models of physical systems - of which perhaps the brain is
+the canonical example - is by necessity a symbolic task. Thus, access to model components in
+Surf-Hippo is quasi object-oriented. For example, a large family of functions are based on the
+concept of circuit elements, which apply to different types of physical models (somas, dendritic
+segments, channels, particles, channel types, synapses, etc.). Coupled with the natural
+language-like syntax of Lisp, this makes for extremely efficient writing of model construction and
+analysis, without demanding a highly sophisticated knowledge of Lisp by the user. Simulation
+scripts written by the user, a necessity for serious parameter searching, are also in Lisp, whose
+flexible and powerful syntax is arguably more transparent than most other languages.
+				   
+Evaluation of those models, on the other hand, is a numerical task. Despite this flexibility, the
+numerical performance of Lisp can be similar to C or Fortran. Our results using the Rallpack
+benchmark suite (Bhalla etal, 1992) show that the speed and accuracy of Surf-Hippo is comparable to
+GENESIS and NEURON.
+				   
+Lisp has the advantage that the user communicates directly with the Lisp interpreter environment,
+and thus has complete access to all components of a simulation. In practice, it is often convenient
+to move in and out of the Surf-Hippo GUI loop and access simulation data directly from the Lisp
+interpreter. The data analysis and graphical capablities of Surf-Hippo are sufficiently
+sophisticated so that we use this simulator for working with real physiological data (and for
+directly comparing that data with simulation data).
+				   
+Another advantage of Lisp is that all functions defined in the system may be executed from the
+interpreter either individually or within scripts, which makes for a very flexible working
+environment. New code (including bug fixes) may be (incrementally) compiled and used as needed,
+without recompiling the entire executable. These features, plus those such as the integrated
+documentation of Lisp and flexibility regarding types, makes the development and maintenance of a
+large system like Surf-Hippo much more efficient.
+
+We have endeavored to make this package flexible enough and the user interface powerful enough so
+that Surf-Hippo will be useful in the public domain. User input is encouraged, and we will do do
+our best to assist in the integration of Surf-Hippo (i.e. debug) into outside projects in
+computational neuroscience. We would greatly appreciate reprints or pointers to work that uses
+Surf-Hippo. Please use the address found in the surf-hippo/lib/SNAIL-MAIL file.
+
+
+				       3. System Requirements
+
+Lisp: Surf-Hippo runs under Carnegie Mellon University Common Lisp (CMUCL), using the CMU Garnet
+GUI package - both packages, as well as Surf-Hippo, are in the public domain. It is not absolutely
+necessary to know Lisp to use Surf-Hippo, but even a minimal knowledge (easily acquired) helps
+considerably.
+
+Surf-Hippo may be run either from a complete executable image file (under Linux), or by installing
+CMUCL, and then loading Garnet and the Surf-Hippo code (see below). The latter method is necessary
+if the compiled image file is not available for your platform and operating system.
+
+As of now, Surf-Hippo runs under CMUCL 20d (see http://www.cons.org) and Garnet 3.0.
+
+Platforms: Although all of our work with Surf-Hippo has been on Sparcs and x86 boxes, the package
+should work with any platform that can run CMUCL. For the latest release of CMUCL, see
+http://www.cons.org.
+
+Other Lisp Environments: It should be feasible to compile Surf-Hippo under other Lisps, as long as
+the environment can support Garnet (which also runs on the Mac).
+
+
+			  4. Retrieving, Installing and Running Surf-Hippo
+
+The Surf-Hippo software and documentation takes about 30 megabytes of disk space. The Surf-Hippo
+Lisp image file takes an additional 60 megabytes: note that using the image avoids the need for any
+other Garnet or Lisp files. Using SLIME, an interface from GNU Emacs to an inferior Lisp, is a very
+convenient environment from which to run Surf-Hippo, and is strongly recommended.
+
+The complete source and executable tar files, as well as various related documents, is found at
+surf-hipppo.neurophysics.eu. Untar the file appropriate for your machine and operating system under
+a top level directory called "/usr/local/surf-hippo/".
+
+For the rest of the installation, setup and running, including the necessary edits of your shell
+startup and emacs initialization files, see the installation.doc.txt and other files in the
+surf-hippo/doc/installation directory.
+
+
+				 5. Acknowledgements and References
+
+The initial motivation for Surf-Hippo came from the neuron simulation packages BULLFROG and NEURON
+(not the same as that of M. Hines), developed by Christof Koch and Patrick O'Donnell on Symbolics
+Lisp Machines at the MIT AI Laboratory. A new simulator, HIPPO (as in hippocampus), was developed
+on the Lisp Machine, and later Surf-Hippo was written with some features based on the SURF (as in
+circuit node WAVEforms) circuit simulator, written by Don Webber, then of the VLSI CAD Group at the
+University of California at Berkeley. The name "Surf-Hippo" has the advantage of not being already
+used in other common contexts, e.g.  biblical or biological, nor is it an attempt at a tortured
+acronym. The PLOT-HACK name and many of the ideas in the plot utilities that I wrote for Surf-Hippo
+were inspired by Patrick. Surf-Hippo was developed first within the former Center for Biological
+Information Processing (Tomaso Poggio and Ellen Hildreth, directors), Department of Brain and
+Cognitive Sciences, MIT.
+
+We would greatly appreciate reprints or pointers to work that uses Surf-Hippo (thanks to send these
+to surfhippo@gmail.com).
+
+To cite this package, please use:
+
+   Graham, L.J., The Surf-Hippo Neuron Simulation System, v4, 2017 (surf-hipppo.neurophysics.eu)
+
+With thanks to the Garnet group at CMU - the system organization for Surf-Hippo is derived directly
+from Garnet, and to the CMUCL group at CMU.  The work of both groups contributed enormously to the
+realization of this project.  Also a tip 'o the hat to the CMUCL net community and their ongoing
+help.
+
+Others who have contributed to this project include:
+
+   * Leonardo Topa
+   * Cyril Monier
+   * Nicolas Gazeres
+
+                                 References:
+
+Bhalla, U. S., Bilitch, D. H. and Bower, J. M., "Rallpacks: a set of
+benchmarks for neuronal simulators" Trends In Neurosciences, v.15, n.11,
+1992. Available from ftp://genesis.bbb.caltech.edu/pub/genesis.
+
+Borg-Graham, L., "Modelling the Electrical Behavior of Cortical Neurons --
+Simulations of Hippocampal Pyramidal Cells". Chapter in "Computer Simulation
+in Brain Science", edited by R.M.J. Cotterill, Cambridge University Press,
+1987.
+
+Borg-Graham, L., ``Simulations Suggest Information Processing Roles for the
+Diverse Currents Found in Hippocampal Neurons''. Neural Information
+Processing Systems (Proceedings of the Denver NIPS Conference), edited by
+D.Z. Anderson, American Institute of Physics Press, 1987.
+
+Borg-Graham, L., ``Modelling the Somatic Electrical Behavior of Hippocampal
+Pyramidal Neurons''. Master's Thesis, Department of Electrical Engineering
+and Computer Science, Massachusetts Institute of Technology, 1987 (Also
+appears as MIT AI Lab TR 1161).
+
+Borg-Graham, L., ``Modelling the Non-Linear Conductances of Excitable
+Membranes''. Chapter in ``Cellular Neurobiology: A Practical Approach'',
+edited by J. Chad and H. Wheal, IRL Press at Oxford University Press, 1991.
+
+Borg-Graham, L., ``On Directional Selectivity in Vertebrate Retina: An
+Experimental and Computational Study''. PhD Thesis, Harvard-MIT Division of
+Health Sciences and Technology, Massachusetts Institute of Technology, 1991
+(Also appears as MIT AI Lab TR 1350).
+
+Borg-Graham, L., "Interpretations of Data and Mechanisms for Hippocampal
+Pyramidal Cell Models". Chapter in "Cerebral Cortex, Volume 13, Cortical
+Models", edited by E.G. Jones, P.S. Ulinski and A. Peters, Plenum Press, 1999.
+
+Borg-Graham, L., "Additional Efficient Computation of Branched Nerve
+Equations: Adaptive Time Step and Ideal Voltage Clamp" Journal of
+Computational Neuroscience, v8:3 pp209-226, 2000.
+
+Borg-Graham, L., "The Computation of Directional Selectivity in the Retina Occurs 
+Presynaptic to the Ganglion Cell" Nature Neuroscience v4(2):176-183, 2001
+
+Borg-Graham, L. and Grzywacz, N. M., ``A Model of the Direction Selectivity
+Circuit in Retina: Transformations by Neurons Singly and in Concert''.
+Chapter in ``Single Neuron Computation'', edited by T. McKenna, J. Davis,
+and S. F. Zornetzer, Academic Press, 1992.
+
+Graham, L., "Modelling Neuronal Biophysics". Chapter in The Handbook for Brain 
+Theory and Neural Networks, 2nd edition, ed. M. Arbib, MIT Press, 2002.
+
+Grzywacz, N. M., Amthor, F. R., and Borg-Graham, L. Does Synaptic
+Facilitation Mediate Motion Facilitation in the Retina? Proceedings of the
+Computation in Neural Systems Meeting (CNS92), San Francisco, 1992.
+
+Hines, M.,"Efficient computation of branched nerve equations" International
+Journal Bio-Medical Computing, v. 15, pp. 69-76, 1984.
+
+Shao, L.R., Halvorsrud, Borg-Graham, L. and Storm, J. F.,
+"The role of BK-type Ca++-dependent K+ channels in spike broadening
+during repetitive firing in rat hippocampal pyramidal cells" 
+Journal of Physiology, v521.1, pp135-146, 1999.
+
+Storm, J., Borg-Graham, L., and Adams, P. ``A Passive Component of the
+Afterdepolarization (ADP) in Rat Hippocampal Cells'' Biophysical Society
+Abstracts, 1987.
+
+
+    ********************************************************************
+    ********************************************************************
+    ** Copyright (c) 1989 - 2017                                      **
+    ** by Lyle J. Graham of the Surf-Hippo Project.                      **
+    **                                                                **
+    ** Permission to use, copy, modify, and distribute this           **
+    ** software and its documentation for any purpose and without     **
+    ** fee is hereby granted, provided that the above copyright       **
+    ** notice appear in all copies and that both that copyright       **
+    ** notice and this permission notice appear in supporting         **
+    ** documentation. The Surf-Hippo Project makes no representations **
+    ** about the suitability of this software for any purpose.        **
+    ** It is provided "as is" without express or implied warranty.    **
+    ********************************************************************
+    ********************************************************************

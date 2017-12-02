@@ -1,0 +1,255 @@
+****************************************************************************************************
+****************************************************************************************************
+
+
+				      Surf-Hippo Installation
+
+
+****************************************************************************************************
+****************************************************************************************************
+
+
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+					 Table of Contents
+
+1. Introduction
+2. Tarball Installation
+3. Basic System Setup
+4. Up and Running 
+5. Customization Files (optional)
+6. Common Setup Problems
+7. Loading Surf-Hippo into CMUCL, Recompiling System (optional)
+8. Using Surf-Hippo
+
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+
+****************************************************************************************************
+
+					    Introduction
+
+****************************************************************************************************
+
+This document describes the basic installation of the Surf-Hippo package, under Linux. Here, we
+assume that the reader has a basic familiarity with Linux and of Emacs. For those encountering
+Emacs for the first time, it is *strongly* recommended to take 30 minutes or so and run the Emacs
+tutorial (under Help).
+
+In this text, it is assumed that bash is the Unix shell. Thus, the "startup" file referred to below
+can be your .login file, your .bashrc file, or other file if you use another shell (e.g. .cshrc).
+
+If you are running Surf-Hippo with the complete Lisp image file, the following instructions are
+complete. If you will be installing the Lisp and Garnet separately, refer also to the
+more-installation.doc.txt file in the surf-hippo/doc/installation directory.
+
+
+****************************************************************************************************
+
+					Tarball Installation
+
+****************************************************************************************************
+
+					   INSTALLATION
+
+1. Download the tarball (surf-hippo.VERSION.PLATFORM.zip) from the Surf-Hippo site Download
+Directory (http://surf-hippo.neurophysics.eu/download/) to the /usr/local directory and unzip:
+
+   unix-prompt> cd /usr/local
+   unix-prompt> unzip surf-hippo.VERSION.PLATFORM.zip
+
+This will create the /usr/local/surf-hippo directory, and install the system subdirectories and
+files. Delete the original zip file, and make sure that you have the proper permissions:
+
+    unix-prompt> rm surf-hippo.VERSION.PLATFORM.zip
+    unix-prompt> chmod -R 777 surf-hippo
+
+The Surf-Hippo User Manual is now at /usr/local/surf-hippo/doc/user-manual.pdf, and full installation
+documentation at /usr/local/surf-hippo/doc/installation/installation.doc.txt. 
+
+
+2. Create (or edit) the .emacs and, according to your shell, the .bashrc or .cshrc files in your
+home directory, using the Surf-Hippo examples:
+
+   unix-prompt> cd /usr/local/surf-hippo
+   unix-prompt> cp doc/installation/.emacs ~/.emacs
+
+   unix-prompt> cp doc/installation/.bashrc ~/.bashrc
+   OR
+   unix-prompt> cp doc/installation/.cshrc ~/.cshrc
+
+The shell initialization files define the environment variables SURFHOME and SURFUSERHOME. If
+needed, you should also add the pathname of where data will be accessed (r/w) [otherwise the 
+value assigned to SURFHOME is used], for example under bash:
+
+      export SURFUSERHOME="/home/someone-else/surf-hippo-stuff"   # Edit this line to a directory that you can write to.
+
+If you do not set environment variables with .bashrc or .cshrc, the defaults for both are:
+
+      ~you/surf-hippo
+
+3. To run Surf-Hippo under SLIME, the example .emacs includes the relevant setup information.
+
+Again, in all these cases make sure that you are referring to the correct surf-hippo home directory
+(here assumed to be /usr/local/surf-hippo/).
+
+In normal use we recommend using the fully-integrated SLIME REPL buffer (e.g. *slime-repl surf-hippo*),
+ignoring the *inferior-lisp* buffer.
+
+
+*** EMACS NOTES ***
+
+C-h k <key>
+describe-key “What does this key do?”
+Describes current function bound to <key> for focus buffer.
+
+C-h b describe-bindings “Exactly what bindings are available?”
+Lists the current key-bindings for the focus buffer.
+
+C-h m describe-mode “Tell me all about this mode”
+Shows all the available major mode keys, then the minor mode keys, for the
+modes of the focus buffer.
+
+C-h l view-lossage “Woah, what key chord did I just do?”
+Shows you the literal sequence of keys you’ve pressed in order.
+
+
+****************************************************************************************************
+
+					   Up and Running
+
+****************************************************************************************************
+
+In this section, the Unix environment variable SURFHOME and surf-hippo/ will be used interchangeably
+as a reference to the Surf-Hippo home directory. There are two ways to load Surf-Hippo:
+
+ * Running from SLIME (under Emacs) - From Emacs, type "M-x slime" ("M-x" or "meta-x" means hold
+ down the ESC key, and then type "x", then type "slime" - without the double quotes) in
+ Emacs. 
+
+ * Running from the Linux shell - If you have downloaded an image version, or made one
+ yourself, run the Surf-Hippo CMUCL image using either the executable command (assuming that
+ SURFHOME is in the Linux PATH):
+
+   unix-prompt> surf-hippo
+
+Starting either from Emacs or the shell invokes the image file surf-hippo/image. Once Lisp starts
+(and shows the default CMUCL prompt "*" from the shell, "SH>" from SLIME), enter:
+
+   * (surf)
+
+which starts the menus. 
+
+
+****************************************************************************************************
+
+				       Common Setup Problems
+
+****************************************************************************************************
+
+1. When you run CMU Common Lisp, if you get an error similar to:
+
+      mapin: mmap: Invalid argument
+      ensure_space: Failed to validate 67108864 bytes at 0x01000000
+
+then you might have to setenv CMUCL_EMPTYFILE in your shell startup file, e.g:
+
+      export CMUCL_EMPTYFILE="/tmp/empty"
+
+See the CMUCL installation instructions for more information. 
+
+2. Another common problem is not setting the DISPLAY environment variable properly, giving something
+like:
+
+        CMU Common Lisp 17f, running on neuro16
+        Send bug reports and questions to your local CMU CL maintainer, or to
+        cmucl-bugs@cs.cmu.edu.
+        Loaded subsystems:
+            Python 1.0, target SPARCstation/Sun 4
+            CLOS based on PCL version:  September 16 92 PCL (f)
+            CLX X Library MIT R5.02
+            Motif toolkit and graphical debugger 1.0
+        *** Restarting image created with opal:make-image ***
+        *** Image creation date: Aug 18, 1996, 5:58 AM ***
+
+         Error in function XLIB::HOST-ADDRESS:  Unknown host ""
+
+        Debug  (type H for help)
+
+        (XLIB::HOST-ADDRESS "" 0)
+        0]
+
+Apparently, the CLX is not smart enough to choose an appropriate default if DISPLAY is not
+bound. Make sure it is set from the shell or startup file, for example (from csh):
+
+       lyle@cogni>setenv DISPLAY `/usr/bin/hostname`:0.0
+       lyle@cogni>echo $DISPLAY
+       cogni.iaf.cnrs-gif.fr:0.0
+
+3. In general, CMUCL GC (garbage collection) requires that the swap space be at least twice as large
+as the heap. Also, Lisp starts to thrash when the heap size gets significantly bigger than physical
+memory. As an example, for a machine with 96MB (ok, this is an old referenc), Lisp crashes when the
+heap gets around 41M (assuming that nothing else is running). Edit the following line in
+surf-hippo/misc/loaders/surf-hippo-loader.lisp according to your setup:
+
+    (defvar surf::*gc-bytes-retained-warning-threshold* 40e6)
+
+Check the more-installation.doc file in the surf-hippo/doc/installtion directory, and
+surf-hippo/misc/loaders/surf-hippo-setup.lisp and surf-hippo/misc/loaders/surf-hippo-loader.lisp for
+additional site initializations. Look for the "$$$$ CUSTOMIZE $$$$" string.  CMU Lisp is industrial
+strength but not bullet-proof. Critical results should be saved at reasonable (roughly hourly)
+intervals.
+
+
+****************************************************************************************************
+
+					Customization Files
+
+****************************************************************************************************
+
+If there is either a surf-hippo/customs.lisp or a surf-hippo/lib/patches.lisp file, then these files
+are loaded on the initial start up. For example, the customs.lisp file may set certain global
+variables according to a user's preferences, or load other files. Patch files are posted as
+necessary on the Surf-Hippo web site, or sent out to the user mailing list.
+
+
+****************************************************************************************************
+
+			 Loading Surf-Hippo into CMUCL, Recompiling System
+
+****************************************************************************************************
+
+In some intallations, it may by desired to load the Surf-Hippo source into a running Lisp. For
+example, CMUCL may be run from the Unix shell or from ILISP. Once Lisp has started, you then have to
+load Garnet and Surf-Hippo explicitly by loading:
+
+   * (load "/usr/local/surf-hippo/misc/loaders/main-loader.lisp")
+
+If you need to recompile the entire system, then load instead:
+
+   * (load "/usr/local/surf-hippo/misc/loaders/main-compiler.lisp")
+
+Note that both main-loader.lisp or main-compiler.lisp will load Garnet automatically. The
+main-compiler.lisp file will also transfer the new bin files to the $SURFHOME/bin/
+directories. While compiling the supplied source, all warnings may be ignored, as far as I
+know. Note also that the supplied bin files are for a Sparc. If modified files are compiled
+individually (without using main-compiler.lisp), then you must transfer the .sparcf binary file to
+the appropriate bin directory so that main-loader.lisp will load in the next session. Note that any
+modifications to structure definitions or in-line functions require that the entire system be
+recompiled for safety. 
+
+To save a new image, see the more-installation.doc.txt file. Note that after you have installed your
+system, using an image thereafter is faster. 
+
+
+****************************************************************************************************
+
+					  Using Surf-Hippo
+
+****************************************************************************************************
+
+A good next step is to read the SH_tutorial.pdf in the surf-hippo/doc directory. Next, start with
+the "Running Surf-Hippo" chapter in the User Manual and go from there....
+
+Note: It is best NOT to destroy any Surf-Hippo window with the X window manager: instead, type
+Control "d" over the window.

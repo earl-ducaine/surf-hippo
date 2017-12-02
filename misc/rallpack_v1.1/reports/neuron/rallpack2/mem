@@ -1,0 +1,13 @@
+#!/bin/csh -f
+
+foreach lev ($argv)
+    set run = bm-$lev
+    set hoc = $run.hoc
+    set t = $run.t
+
+    echo "running $hoc : time in $t"
+
+    (time neuron $hoc) > $t
+
+    rm -f branch.out
+end

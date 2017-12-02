@@ -1,0 +1,37 @@
+	*** Quick Guide of Surf-Hippo Installation and Use ***
+
+
+o For an overview of the system, see the Surf-Hippo.README file.
+
+o For the impatient wishing a quick start, see surf-hippo/quick-start.txt
+
+o For complete installation instructions, see surf-hippo/doc/installation/installation.doc.txt.
+
+o For a tutorial once the system is installed, read surf-hippo/doc/SH_tutorial.pdf.
+
+o For the full story, consult the User Manual and the Reference Manual in the surf-hippo/doc
+directory.
+
+
+Surf-Hippo is distributed as a compiled binary, with the Lisp source code that is specific to
+Surf-Hippo. Thus, assuming the binary is available for your system (Linux), there is no need to
+build (compile) the Lisp itself (CMUCL). For information on how build CMUCL for other platforms,
+see the CMUCL site referenced on the Surf-Hippo site (surf-hippo/lib/URL).
+
+The Common Lisp HyperSpec is included at surf-hippo/doc/outside_docs/CLHS6 (the Emacs
+configuration file points to this, for integration with SLIME).
+
+The versions of Surf-Hippo in this directory are alpha or beta releases. Any suggestions or
+bug-reports will be greatly appreciated.
+
+Thanks for your interest,
+
+Lyle J. Graham
+lyle@biomedicale.univ-paris5.fr
+
+N.B. For up to date documentation, consult the Surf-Hippo site (surf-hippo/lib/URL).
+
+
+
+
+

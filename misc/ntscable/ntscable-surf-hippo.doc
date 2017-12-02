@@ -1,0 +1,33 @@
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Lisp notes:
+
+The function FIX-RD3-FILE cleans Douglas format files for ntscable.
+See ntscable/lisp/fix-rd3.lisp for more information.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+C notes:
+
+In order for ntscable to produce files suitable for Surf-Hippo, the
+following file:
+
+	surf-hippo-write.c
+
+replaces:
+
+	write.c
+
+The makefile is edited to reflect this.
+
+
+
+Anatomy files are translated with the following command:
+
+	unix-prompt> ntscable -x n input-anatomy-file output-lisp-file
+
+
+For more information, see the surf-hippo anatomy documentation.

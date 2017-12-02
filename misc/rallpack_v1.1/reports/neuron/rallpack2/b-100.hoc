@@ -1,0 +1,131 @@
+/*
+** Rallpak passive cable benchmark
+*/
+
+print "PRE-MODEL MEMORY STATS\n"
+system("ps -v")
+
+tree_depth = 10
+end_diam = 0.25
+end_length = 4
+lenfactor = 2^(1/3)
+power_law = 1.5
+runtime = 250
+
+nden = 2^tree_depth - 1
+base = 0			/* we record v at the base of the tree and */
+leaf = 2^(tree_depth-1) - 1	/* at the left most leaf of the tree */
+
+graphics = 0
+
+create dendrite[nden]
+
+/*
+** Set up topology
+*/
+
+for i = 0, nden-1 dendrite[i] {
+    if (i < nden/2 - 1) {
+	connect dendrite[i*2 + 1] (0), 1
+	connect dendrite[i*2 + 2] (0), 1
+    }
+    nseg = 1
+}
+/* topology() */
+
+/*
+** Set up geometry and membrane values
+*/
+
+cur_diam = end_diam
+cur_length = end_length
+for (level = tree_depth - 1; level >= 0; level = level - 1) {
+    for i = 2^level - 1, 2^(level+1) - 2 dendrite[i] {
+	diam = cur_diam
+	L = cur_length
+	insert passive
+	g = 1/40000
+	erev = -65
+	Ra = 100
+	cm = 1
+    }
+
+    cur_diam = (2 * cur_diam^power_law)^(1/power_law)
+    cur_length = cur_length*lenfactor
+}
+/*
+dendrite[base] psection()
+access dendrite[leaf]
+psection()
+*/
+
+/*
+** Initialization routines
+*/
+
+proc membrane() {
+	insert passive
+	g = .0001
+	erev = -70
+	Ra = 200
+	cm = 1
+}
+
+/*
+** Graphics routines
+*/
+
+proc plotvolt() { local x
+
+	axis(0,entire_len,10,0,2,10)
+	setcolor(7)
+	axis()
+
+	plot(1, entire_len/2, -.3) plt(-2) print "x"
+	plot(1, -entire_len, 1) plt(-2) print "V"
+
+	plot(1)
+	for (x) {
+		plot(x*entire_len, v(x)/1000)
+	}
+}
+
+/*
+** Simulation and output of data and graphics (graphics optional)
+*/
+
+proc run() { local io
+	forall { v = -65 } t=0
+
+	dt = 0.1
+
+	fstim(1) 
+	dendrite[0] fstim(0, 0, 0, 1e20, .1)
+
+	wopen("branch.out")
+	fprint("%g %g %g\n", t/1000, v.dendrite[base]/1000, v.dendrite[leaf]/1000)
+	/*io = 0*/
+	while (t < runtime) {
+	    fadvance()
+	    /*
+	    io = io + 1
+	    if (io == 10) {
+	    */
+		fprint("%g %g %g\n", t/1000, v.dendrite[base]/1000, v.dendrite[leaf]/1000)
+	    /*
+		io = 0
+	    }
+	    */
+	}
+	wopen()
+
+	if (graphics) {
+	    setcolor(1)
+	    plotvolt()
+	}
+}
+
+run()
+
+print "POST-MODEL MEMORY STATS\n"
+system("ps -v")

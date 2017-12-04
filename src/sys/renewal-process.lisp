@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -46,7 +46,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (declare (optimize (safety 1) (speed 3) (space 1)) (single-float rate))
   (let ((df-rate (coerce rate 'double-float)))
     (declare (double-float df-rate))
-    (coerce (/ (kernel:%log (df-random-not-zero 1.0d0)) (- df-rate)) 'single-float)))
+    (coerce (/ (log (df-random-not-zero 1.0d0)) (- df-rate)) 'single-float)))
 
 (proclaim '(inline SF-FIND-GAMMA-WAITING-TIME))
 (defun SF-FIND-GAMMA-WAITING-TIME (lambda order)
@@ -64,7 +64,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
     (declare (double-float val))
     (dotimes (k order)
       (declare (fixnum k))
-      (incf val (- (kernel:%log (df-random-not-zero 1.0d0)))))
+      (incf val (- (log (df-random-not-zero 1.0d0)))))
     (* 1000.0 (coerce (/ val df-lambda) 'single-float))))
 
 
@@ -85,7 +85,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 
 (defun SWITCHING-PAIRS (array thinnings &optional (step 1.0))
   (when (> (length array) 0)
-    (loop with old-switch = (cdr (find (aref array 0) thinnings :key #'car :test #'<)) 
+    (loop with old-switch = (cdr (find (aref array 0) thinnings :key #'car :test #'<))
 	  with switch = 0
 	  for val across array
 	  for time from 0.0 by step
@@ -95,7 +95,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 	  and do (setq old-switch switch)
 	  finally
 	  (return (append out (list (cons time (cdr (find val thinnings :key #'car :test #'<)))))))))
-	  
+
 
 ;;; *THINNING-STEP-ACONS*
 ;;; -------------
@@ -159,7 +159,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 ;;;       collect (make-events-switching a1 NIL '((11.0 . 1) (75.0 . 100) (1000.0 . 1)))))
 
 ;;; To generate events using the switching GRP method :
-;;;(funcall #'make-events-switching 
+;;;(funcall #'make-events-switching
 ;;;         (get-light-response-array (car (synapses)))
 ;;;         (car (synapse-types)))
 
@@ -180,7 +180,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 	for pair in orders
 	until (> start duration)
 	append (GAMMA-ARRIVAL-TIMES rate start (min (car pair) duration) step (cdr pair)) into out
-	do (setq start (car pair))	
+	do (setq start (car pair))
 	finally (return out)))
 
 
@@ -190,7 +190,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 	until (> start duration)
 	append (SIMPLE-GRP-ARRIVAL-TIMES rate start (min (car pair) duration) (cdr pair))
 	into out
-	do (setq start (car pair))	
+	do (setq start (car pair))
 	finally (return out)))
 
 
@@ -205,7 +205,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 	(values
 	 (sort (append correlated-process (gamma-arrival-times 1-correl start stop 1.0 1)) #'<)
 	 (sort (append correlated-process (gamma-arrival-times 1-correl start stop 1.0 1)) #'<)))))
-	 
+
 
 
 (defun TEST-CORRELATED-PROCESSES (correlation)
@@ -262,7 +262,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 			  :event-width 1    ;; petite barre
 			  :no-labels T
 			  :update-fixed-gap  t
-			  :use-fixed-right-gap T 
+			  :use-fixed-right-gap T
 			  :fixed-right-gap  50
 			  :use-fixed-left-gap T
 			  :fixed-left-gap 50))
@@ -272,17 +272,17 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 	    :x-max 1000.0
 	    :step bin
 	    :bin-skip 24
-	    :give-in-frequency T 
-	    :nb-trials nb-trials 
+	    :give-in-frequency T
+	    :nb-trials nb-trials
 	    :width width
 	    :height 200
 	    :with-comments with-text
 	    :update-fixed-gap  t
 	    :use-fixed-bottom-gap T
-	    :fixed-bottom-gap 30			     
-	    :use-fixed-top-gap T 
-	    :fixed-top-gap 30 
-	    :use-fixed-right-gap T 
+	    :fixed-bottom-gap 30
+	    :use-fixed-top-gap T
+	    :fixed-top-gap 30
+	    :use-fixed-right-gap T
 	    :fixed-right-gap  50
 	    :use-fixed-left-gap T
 	    :fixed-left-gap   50
@@ -314,7 +314,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 	   (,y-max-loc ,y-max)
 	   (,y-solve-loc ,y-solve))
       (- ,x-max-loc (* (/ ,delta-x-loc (- ,y-max-loc ,y-min-loc)) (- ,y-max-loc ,y-solve-loc))))))
-    
+
 
 ;;; PDF-INSTANCE
 ;;; -------
@@ -357,7 +357,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 
 ;;; SERIAL-COEFF
 ;;; serial correlation coefficients
-;;; 
+;;;
 (defun SERIAL-COEFF (interval-seq order)
   "'interval-seq' is a list of *INTERVALS*. 'order' is the distance between intervals."
   (let ((mean (/ (reduce #'+ interval-seq) (length interval-seq))))
@@ -374,7 +374,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 	for val-2 in (cdr event-times-process)
 	collect (- val-2 val-1)))
 
-  
+
 
 
 
@@ -385,27 +385,27 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 	(*plot-window-width*  560))
     (loop for k in '(1 2 4 5 6 100) do
 	  (let* ((*thinning-factor* k)
-		 (events (loop for k below nb-trials collect (gamma-arrival-times array 0.0 500.0 1.0))))	 
+		 (events (loop for k below nb-trials collect (gamma-arrival-times array 0.0 500.0 1.0))))
 	    (event-lists-raster events
 				;; :width width
 				:title (format NIL "Erlang Process Events - Thinning=~A " *thinning-factor*)
 				:stop 500.0
 				:no-labels T
 				:update-fixed-gap  t
-				:use-fixed-right-gap T 
+				:use-fixed-right-gap T
 				:fixed-right-gap  50
 				:use-fixed-left-gap T
 				:fixed-left-gap   50)
 	    (plot-psth  events
 		   :x-min 0.0 :x-max 500.0
 		   :step bin-size :bin-skip 24
-		   :give-in-frequency T 
+		   :give-in-frequency T
 		   :title (format NIL  "Erlang Process PSTH - Thinning=~A " *thinning-factor*)
-		   :nb-trials nb-trials 
+		   :nb-trials nb-trials
 		   ;; :width width
-		   :height 200           
+		   :height 200
 		   :update-fixed-gap  t
-		   :use-fixed-right-gap T 
+		   :use-fixed-right-gap T
 		   :fixed-right-gap  50
 		   :use-fixed-left-gap T
 		   :fixed-left-gap   50)))))
@@ -417,27 +417,27 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 	(*plot-window-width*  560))
     (loop for k in '(1 5 10 100) do
 	  (let* ((*thinning-factor* k)
-		 (events (loop for k below nb-trials collect (gamma-arrival-times array 0.0 500.0 1.0))))	 
+		 (events (loop for k below nb-trials collect (gamma-arrival-times array 0.0 500.0 1.0))))
 	    (event-lists-raster events
 				;; :width width
 				:title (format NIL "Erlang Process Events - Thinning=~A " *thinning-factor*)
 				:stop 500.0
 				:no-labels T
 				:update-fixed-gap  t
-				:use-fixed-right-gap T 
+				:use-fixed-right-gap T
 				:fixed-right-gap  50
 				:use-fixed-left-gap T
 				:fixed-left-gap   50)
 	    (plot-psth  events
 		   :x-min 0.0 :x-max 500.0
 		   :step bin-size :bin-skip 24
-		   :give-in-frequency T 
+		   :give-in-frequency T
 		   :title (format NIL  "Erlang Process PSTH - Thinning=~A " *thinning-factor*)
-		   :nb-trials nb-trials 
+		   :nb-trials nb-trials
 		   :width *plot-window-width*
-		   :height 200           
+		   :height 200
 		   :update-fixed-gap  t
-		   :use-fixed-right-gap T 
+		   :use-fixed-right-gap T
 		   :fixed-right-gap  50
 		   :use-fixed-left-gap T
 		   :fixed-left-gap   50)))))
@@ -467,7 +467,7 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 				  (:simple-grp  (simple-grp-arrival-times (* 10.0e-3 rate) 0.0 x-max order)))
 			)))
 	 (*create-new-plot-windows* T))
-    
+
     (format T "Moyenne=~A~%" (/ (loop for val in values sum (car val)) nb))
     (setq *comment-font*   (opal:get-standard-font :serif :bold-italic :large))
     (setq *plot-axis-font* (opal:get-standard-font :serif :bold-italic :large))
@@ -481,15 +481,15 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
                           :give-in-frequency give-in-frequency
                           :y-axis-label-location :upper-right
                           ;; :y-max y-max
-                          :x-label "msec" 
-                          :y-label "Hz" 
+                          :x-label "msec"
+                          :y-label "Hz"
 			  :with-comments with-comments
 			  :update-fixed-gap  t
 			  :use-fixed-bottom-gap T
-			  :fixed-bottom-gap 30			     
-			  :use-fixed-top-gap T 
-			  :fixed-top-gap 30 
-			  :use-fixed-right-gap T 
+			  :fixed-bottom-gap 30
+			  :use-fixed-top-gap T
+			  :fixed-top-gap 30
+			  :use-fixed-right-gap T
 			  :fixed-right-gap  50
 			  :use-fixed-left-gap T
 			  :fixed-left-gap   50
@@ -498,21 +498,21 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
       (s-value win-psth :axes-type :standard)
       (s-value win-psth :x-axis-p NIL)
       (s-value win-psth :x-axis-tick-skip x-axis-tick-skip)
-      (s-value win-psth :x-max x-max)	
+      (s-value win-psth :x-max x-max)
       (s-value win-psth :x-axis-inc x-inc)
-      
+
       (s-value win-psth :y-axis-p T)
       (s-value win-psth :y-axis-inc y-inc)
 
       (s-value win-psth :x-axis-label (if with-comments "msec" ""))
-      (s-value win-psth :y-axis-label (if with-comments "Hz" ""))      
+      (s-value win-psth :y-axis-label (if with-comments "Hz" ""))
 
       ;; (s-value win-psth :y-axis-label-location :upper-right)
       (s-value win-psth :x-label-h-position :center)
-      
+
       (s-value win-psth :x-are-fns T)
       (s-value win-psth :y-are-fns T)
-      
+
       (let ((*automatic-run* T)) (ph::histogram-menu win-psth)))))
 
 ;; pour la figure :
@@ -573,5 +573,5 @@ IMPORTANT: If lambda is given in spikes/sec, the interval generated is in millis
 		do (let ((bin (truncate (the single-float (- val2 val1)) bin-width)))
 		     (when (< bin stop)
 		       (incf (the fn (nth bin (histo-values histo))))))))
-    
+
     histo))

@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -54,7 +54,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
       (replace-repeated-character-w-single (format nil "~A/" pathname) "/")
       "'" ":"))
     (pathname pathname)))
-    
+
 (defun directory-namestring-no-colons (pathname)
   (directory-namestring (string-head pathname (search ":" (directory-namestring pathname)))))
 
@@ -135,7 +135,7 @@ existing directory. If VERIFY-FILE-EXISTS [default NIL] then file must exist as 
 (defun existing-filename-p (pathname) (full-pathname-p pathname t))
 
 (defun write-file-overwrite-authorization (pathname)
-  (or (not (probe-file (ext:unix-namestring pathname nil)))
+  (or (not (probe-file  pathname))
       (go-ahead-menu (format nil "File ~A already exists. Overwrite?" pathname))))
 
 (defun simple-format-list (thing &optional (stream t) (count 0))
@@ -154,7 +154,7 @@ existing directory. If VERIFY-FILE-EXISTS [default NIL] then file must exist as 
 		    (numbers t)
 		    include-parens )
   ;; Writes out a numerical LIST to STREAM in a reasonable format for both legibility and space saving. At some point we will need to save data in a true
-  ;; binary format. 
+  ;; binary format.
   (declare (optimize (safety 0) (speed 3) (space 1)))
   (let ((*print-pretty* nil)
 	(value-counter 1)
@@ -241,6 +241,9 @@ existing directory. If VERIFY-FILE-EXISTS [default NIL] then file must exist as 
 	,@body))))
 |#
 
+(defun unix-mkdir (name)
+  (uiop:run-program (str "mkdir " name)))
+
 (defun provide-pathname-and-filename (&optional (filename (gensym)) (pathname-directory ""))
   ;; If FILENAME is a full pathname, then will try to MKDIR the directory.
   (if (not pathname-directory)
@@ -250,9 +253,11 @@ existing directory. If VERIFY-FILE-EXISTS [default NIL] then file must exist as 
 	(when (> (length filename) 0)
 	  (setq pathname (pathname-from-filename-or-pathname-or-default filename pathname-directory))
 	  (setq filename (if (full-pathname-p filename) filename (format nil "~A~A" pathname (remove-dirs-from-path filename))))
-	  (unless (full-pathname-p filename) (unix:unix-mkdir (ext:unix-namestring pathname nil) #o777))
+	  (unless (full-pathname-p filename)
+	    (unix-mkdir pathname))
 	  (values (when (full-pathname-p filename) filename)
-		  (when (probe-file (ext:unix-namestring pathname nil)) pathname))))))
+		  (when (probe-file pathname)
+		    pathname))))))
 
 (defun dump-result (result &key (filename *results-filename*) (pathname-directory "") announce-write indent)
   (multiple-value-bind (filename pathname)
@@ -343,7 +348,7 @@ the file is closed."
 		(print-spaces t indent)
 		(setq still-printing nil)
 		(let ((out (loop for list in lists
-				 collect 
+				 collect
 				 (if (< count (length list))
 				     (progn (setq still-printing t)
 					    (nth count list))
@@ -365,8 +370,8 @@ the output file, as follows:
      :OUTPUT-FORMAT           File format
  --------------------------------------------------------------------
      :LISP [default]   A list of lists - ((x1 x2 ... xn)(y1 y2 ... yn))
-     :COLUMNS          Two columns -   x1   y1   
-                                       x2   y2   
+     :COLUMNS          Two columns -   x1   y1
+                                       x2   y2
                                           .
                                           .
                                           .
@@ -381,12 +386,12 @@ will precede each line of any comments, with the default given by the global var
 *XY-DATA-COLUMNS-FILE-COMMENT-DELIMITER*."
   (let* ((filenames (case output-format
 		      (:lisp
-		       (unless comment-delimiter (setq comment-delimiter *XY-DATA-lisp-FILE-COMMENT-DELIMITER*)) 
+		       (unless comment-delimiter (setq comment-delimiter *XY-DATA-lisp-FILE-COMMENT-DELIMITER*))
 		       (list (if filename-extension (format nil "~A.~A" filename filename-extension) filename)))
 		      (:columns
-		       (unless comment-delimiter (setq comment-delimiter *XY-DATA-COLUMNS-FILE-COMMENT-DELIMITER*)) 
+		       (unless comment-delimiter (setq comment-delimiter *XY-DATA-COLUMNS-FILE-COMMENT-DELIMITER*))
 		       (loop for xy in data
-			     for count from 0 collect 
+			     for count from 0 collect
 			     (let ((label (or (nth count labels) (1+ count))))
 			       (format nil (if (string= "/" (string-tail filename 1)) "~A~A~A" "~A~A~A")
 				       filename
@@ -399,7 +404,7 @@ will precede each line of any comments, with the default given by the global var
 		always (case output-format
 			 (:lisp (dump-result-to-lisp-file
 				 (unless suppress-comments extra-comment) :ignore-result (not (unless suppress-comments extra-comment)) :filename filename
-				 :announce-write nil :if-file-exists if-file-exists)) 
+				 :announce-write nil :if-file-exists if-file-exists))
 			 (:columns (write-lists-multi-column nil :comment (unless suppress-comments extra-comment) :filename filename :announce-write nil
 							     :if-file-exists if-file-exists))))
       (case output-format
@@ -427,7 +432,7 @@ will precede each line of any comments, with the default given by the global var
 							(t "")))))
 			  (write-lists-multi-column xy :comment (unless suppress-comments trace-comment) :filename filename))))))))
 
-	    
+
 (export '(read-number-file STORE-XY-DATA
 	  get-dated-directory
 	  get-plot-directory get-data-directory get-plot-code-directory
@@ -444,4 +449,3 @@ will precede each line of any comments, with the default given by the global var
 	  DIRECTORY-NAMESTRING-NO-COLONS
 	  write-file-overwrite-authorization
 	  dump-result-to-lisp-file simple-format-list FORMAT-LIST FORMATTED-LIST-DUMP	  ))
-

@@ -26,9 +26,7 @@
 
 (export '(bisection-search))
 
-(provide "ZEROS-BISECTION")
 
-
 ;;;; Bisection Search
 
 ;;; This bisection search routine relies on a property of floating point
@@ -62,7 +60,7 @@
     ;; That is, f(s1) < 0 < f(s3)
     (if (> f1 0.0)
 	(progn (rotatef s1 s3) (rotatef f1 f3)))
-    
+
     ;; Make sure we have a bracket
     (if (< f3 0.0)
 	(error "BISECTION-SEARCH: search points do not bracket"))

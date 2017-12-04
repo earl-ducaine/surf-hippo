@@ -29,7 +29,6 @@
 ;;; Bugs and Fixes
 ;;;   eps and tau should be vectors
 
-(provide "OPTIMIZE-MARQUARDT")
 
 (in-package "USER")
 
@@ -167,7 +166,7 @@
 
 ;;; LBG 8/27/95 Added ':DERIVATIVE argument so that we can distinguish between different calls of FUNC
 	   (funcall func x y-temp trial-b :derivative)	; evaluate function
-	   
+
 	   (do ((j2 0 (1+ j2)))			; calculate numerical derivative
 	       ((>= j2 n))
 	     (declare (fixnum j2))
@@ -190,7 +189,7 @@
     (declare (fixnum j1))
     (setf (aref ak1 j1) 0.0)
     (cond ((not (= (aref bv j1) 0.0))
-	   
+
 	   ;; calculate the right hand side
 	   (do ((j2 0 (1+ j2)))
 	       ((>= j2 n))
@@ -200,7 +199,7 @@
 		      (* (aref p j2 j1)
 			 (- (aref y j2)
 			    (aref z j2))))))
-	   
+
 	   ;; calculate the left hand side
 	   (do ((j2 0 (1+ j2)))
 	       ((>= j2 k))
@@ -213,7 +212,7 @@
 		     (+ (aref a j1 j2) (* (aref p j3 j1) (aref p j3 j2))
 			))))
 	   ))
-    
+
     (cond ((or (= (aref bv j1) 0.0)
 	       (< (aref a j1 j1) 1.0e-20))
 	   ;; make the equation trivial -- either close enough or don't change
@@ -238,7 +237,7 @@
     (declare (fixnum j1))
     (setf (aref scale-b j1)
 	  (sqrt (aref a j1 j1))))
-  
+
   (do ((j1 0 (1+ j1)))
       ((>= j1 k))
     (declare (fixnum j1))
@@ -317,7 +316,7 @@
     (do ((j1 0 (1+ j1)))
 	((>= j1 k))
       (declare (fixnum j1))
-      
+
       (setf (aref delta-b j1)
 	    (/ (aref ack1 j1) (aref scale-b j1)))
 
@@ -326,14 +325,14 @@
 	    (max (aref bmin j1)
 		 (min (aref bmax j1)
 		      (+ (aref b j1) (aref delta-b j1)))))
-      
+
       (setq dg (+ dg (* (aref delta-b j1)
 			(aref ak1 j1)
 			(aref scale-b j1))))
       (setq dn (+ dn (* (aref delta-b j1) (aref delta-b j1))))
       (setf (aref delta-b j1)
 	    (- (aref trial-b j1) (aref b j1))))
-    
+
     (setq cosg (/ dg (sqrt (* dn gn))))
     (cond ((<  cosg 0.0)
 	   (setq jgam 2)
@@ -358,12 +357,12 @@
        (k  (array-dimension ak1 0)))
       ((>= j1 k))
     (declare (fixnum j1 k))
-    
+
     (do ((j2 0 (1+ j2)))
 	((>= j2 K))
       (declare (fixnum j2))
       (setf (aref ac j1 j2) (aref a j1 j2)))
-    
+
     (setf (aref ack1  j1) (aref ak1 j1))
     (setf (aref ac j1 j1) (+ (aref ac j1 j1) fl))
     ))
@@ -374,7 +373,7 @@
 (defun marquardt (n k X Y Z func deriv B Bmin Bmax Bv
 		  &optional
 		  (eps 0.00002)			; must be > 0.0
-		  (tau 0.00100))		; must be > 0.0 
+		  (tau 0.00100))		; must be > 0.0
   (declare (optimize (safety 0) (speed 3) (space 1))) ; LBG addition
   (declare (fixnum k n)
 	   (float tau eps)
@@ -445,7 +444,7 @@
       (setf (aref trial-b j1) (aref b j1))
       (setf (aref pkn1 j1)
 	    (+ (abs (aref b j1)) 1.0e-02)))	; *** magic number
-	    
+
 
     ;; Iterate to Convergence
 
@@ -461,26 +460,26 @@
 	 (COND ((= ICON -1) (format t "~% No Function Improvement Possible"))
 	       ((= ICON -4) (format t "~% Converged but LAMBDA (FLA) large")))
 	 nil)
-      
+
       (declare (fixnum i))
       (cond ((<= fla 0.0) (setq fla  0.01000)))
       (setq phmin (max phmin 0.0))
 
       (cond ((not (and (> phmin ph) (> i 1)))
 	     (marq-calc-deriv k n b bv bmax x z p trial-b pkn1 func deriv y-temp)))
-      
+
       ;; set up correction equations
       (marq-setup k n ak1 bv p y z a)
-		      
+
       (setq gn 0.0)
       (do ((j1 0 (1+ j1)))
 	  ((>= j1 k))
 	(declare (fixnum j1))
 	(setq gn (+ gn (expt (aref ak1 j1) 2))))
-		      
+
       ;; scale correction equations
       (marq-scale k a ak1 scale-b)
-		      
+
       ;; Keep forcing steeper descent until chi-square improves
 
       (do ((fl (/ fla fnu) (* fnu fl)))
@@ -489,17 +488,17 @@
 	   (setq fla  fl)
 	   NIL)
 	(declare (float fl))
-	
+
 	(marq-new-lambda fl a ac ak1 ack1)	; new correction equations
 	(marq-solve k ac ack1)			; solve the correction equations
 	;; take the step and see if it is good
 	(setq gamm (marq-cal-gam k trial-b b bmin bmax ak1 scale-b ack1 delta-b gn))
 	(funcall func x trial-z trial-b)
 	(setq phi (marq-chi-square n y trial-z))	; calculate CHISQUARE
-	
+
 	(cond ((< phi 1.0e-10)			; converged if chi-square very small
 	       (setq icon 0)
-	       (setq fla fl)	       
+	       (setq fla fl)
 	       (return nil))
 	      ((< phi ph)			; epsilon test
 	       (setq icon 0)			;   eps > |delta-b| / (tau + |trial-b|)
@@ -590,7 +589,7 @@
 			   :initial-contents '( -1000.0 -1000.0 -1000.0)))
 	 (BMAX (make-array K :element-type 'float
 			   :initial-contents '(  1000.0  1000.0  1000.0))))
-    
+
     (format t "~% Calculated    Book")
     (mapc #'(lambda (actual book)
 	      (format t "~% ~3,1,10$ ~3,1,10$"
@@ -602,7 +601,7 @@
 		(coerce B 'list))
 	  (cons 13390.093
 		'(523.29698 -156.93703 -0.19967593)))
-    
+
     (format T "~%Y            Z")
     (mapc #'(lambda (actual book)
 	      (format t "~% ~3,1,10$ ~3,1,10$"

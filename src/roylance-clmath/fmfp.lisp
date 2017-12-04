@@ -31,9 +31,9 @@
 (eval-when (compile load eval)
   nil)
 
-
-;;;; Correspondence among References
 
+;;; Correspondence among References
+;;;
 ;;; Correspondence between Luenberger and SSP
 ;;;
 ;;;	function		F	F
@@ -62,10 +62,7 @@
 ;;;
 ;;;	update k and go to step 1
 
-
-;;;; FMFP
-
-(defun FMFP (FUNCT N X G EST EPS LIMIT)
+(defun fmfp (funct n x g est eps limit)
   (declare (fixnum n)
 	   (type   (array float (*)) x g)
 	   (float  est eps)
@@ -113,17 +110,14 @@
        (n31   (1+ (* 3 n)))
        (nj    0)
        (oldf  0.0) (tt    0.0) (w     0.0) (z     0.0))
-      ()
+      (nil)
     (declare (fixnum k kl n2 n3 n31 nj)
 	     (float alfa ambda dalfa dy dx fx fy gnrm hnrm oldf tt w z)
 	     (type (array float (*)) H))
-
-    ;;
     ;; compute function value and gradient vector for initial argument
     (setq f (funcall funct n x g))
-    ;;
     ;; reset iteration counter and generate identity matrix
-    s1
+   s1
     (do ((j    1 (1+ j))
 	 (k  n31 (+ kl 1))
 	 (kl   0))				;0 just a dummy -- setq'd later
@@ -135,11 +129,9 @@
 	  ((> l nj))
 	(setq kl (+ k l))
 	(setf (aref h kl) 0.0)))
-    ;;
     ;; start iteration loop
-    s5
+   s5
     (setq kount (1+ kount))
-    ;;
     ;; save function value, argument vector and gradient vector
     (setq oldf f)
     (do ((j 1 (1+ j)))
@@ -156,7 +148,6 @@
 	(cond ((>= l j) (setq k (1+ k)))
 	      (t        (setq k (+ k n (- l))))) )
       (setf (aref h j) tt))
-    ;;
     ;; check whether function will decrease stepping along h
     (setq dy   0.0)
     (setq hnrm 0.0)
@@ -169,27 +160,22 @@
       (setq hnrm (+ hnrm (abs (aref h j))))
       (setq gnrm (+ gnrm (abs (aref g j))))
       (setq dy   (+ dy (* (aref h j) (aref g j)))))
-    ;;
     ;; repeat search in direction of steepest descent if
     ;;    directional derivative appears to be positive or zero or
     ;;    direction vector H is small compared to gradient vector G
     (cond ((or (>= dy 0.0) (<= (/ hnrm gnrm) eps)) (go s51)))
-    ;;
     ;; search minimum along direction H
     ;;
     ;; search along H for positive directional derivative
     (setq fy f)
     (setq alfa (/ (* 2.0 (- est f)) dy))
     (setq ambda 1.0)
-    ;;
     ;; use estimate for stepsize only if it is positive and less than 1.
     ;; otherwise take 1. as the stepsize
     (cond ((and (> alfa 0.0) (< alfa ambda))
 	   (setq ambda alfa)))
     (setq alfa 0.0)
-
-    loophead
-    ;;
+   loophead
     ;; save function and derivative values for old argument
     (setq fx fy)
     (setq dx dy)
@@ -199,11 +185,9 @@
 	((> i n))
       (setf (aref x i)
 	    (+ (aref x i) (* ambda (aref h i)))))
-    ;;
     ;; compute function value and gradient for new argument
     (setq f (funcall funct n x g))
     (setq fy f)
-    ;;
     ;; compute directional derivative dy for new argument, terminate
     ;; search if dy is positive.  If dy is zero, the minimum is found
     (setq dy 0.0)
@@ -212,29 +196,24 @@
       (setq dy (+ dy (* (aref g i) (aref h i)))))
     (cond ((= dy 0.0) (go s36))
 	  ((> dy 0.0) (go looptail)))
-    ;;
     ;; terminate search also if the function value indicates that
     ;; a minimum has been passed
     (cond ((>= fy fx) (go looptail)))
-    ;;
     ;; repeat search and double stepsize for further searches
     (setq ambda (+ ambda alfa))
     (setq alfa ambda)
     ;; terminate if the change in argument gets very large
     (cond ((> (* hnrm ambda) 1.0e10)
 	   (error "IER=2 linear search: no minimum exists")))
-
-
     (go loophead)
-    looptail
-
+   looptail
     ;; end of search loop
     ;;
     ;; interpolate cubically in the interval defined by the search
     ;; above and compute the argument x for which the interpolation
     ;; polynomial is minimized
     (setq tt 0.0)
-    s23
+   s23
     (cond ((= ambda 0.0) (go s36)))
     (setq z (+ (/ (* 3.0 (- fx fy)) ambda) dx dy))
     (setq alfa (max (abs z) (abs dx) (abs dy)))
@@ -246,13 +225,11 @@
 	((> i n))
       (setf (aref x i)
 	    (+ (aref x i) (* (- tt alfa) (aref h i)))))
-    ;;
     ;; terminate if the value of the actual function at x is less
     ;; than the function values at the interval ends.  Otherwise reduce
     ;; the interval by choosing one end-point equal to x and repeat
     ;; the interpolation.  Which end-point is chosen depends on the
     ;; value of the function and its gradient at x
-    ;;
     (setq f (funcall funct n x g))
     (cond ((or (>  f fx) (> f fy))
 	   (setq dalfa 0.0)
@@ -275,7 +252,7 @@
 		  (setq tt 0.0)
 		  (go s23)))
 	   ))
-    s36
+   s36
     ;;
     ;; terminate if function has not decreased during last iteration
     (cond ((< (- oldf f) eps) (go s51)))
@@ -307,7 +284,7 @@
     (cond ((<= tt eps) (go s56)))
     ;;
     ;; terminate if number of iterations would exceed limit
-    s42
+   s42
     (cond ((>= kount limit)
 	   (error "FMFP -- IER=1  Number of iterations exceeded")
 	   (setq ier 1)
@@ -343,14 +320,14 @@
 	(setq nj (+ n2 j))
 	(setf (aref h k)
 	      (+ (aref h k)
-		  (/ (* (aref h kl) (aref h nj)) z)
-		  (- (/ (* (aref h l) (aref h j)) alfa))))
+		 (/ (* (aref h kl) (aref h nj)) z)
+		 (- (/ (* (aref h l) (aref h j)) alfa))))
 	(setq k (1+ k))))
     (go s5)
     ;; end of iteration loop
     ;;
     ;; restore old values of function and arguments
-    s51
+   s51
     (do ((j 1 (1+ j)))
 	((> j n))
       (setq k (+ n2 j))
@@ -364,20 +341,17 @@
 	  ((>= ier 0)
 	   (setq ier -1)
 	   (go s1)))
-    s56
+   s56
     (cond ((not (= ier 0))
 	   (format t "IER = ~d" ier)
 	   (error "FMFP IER=nonzero -- somethings amiss")))
-    (return f)
-    ))
+    (return f)))
 
-
-;;;; Sample usage
-
-;;;; F = -3873.9, X1 = 0.20566, X2 = 0.47986
-
+;;; Sample usage
+;;;
+;; F = -3873.9, X1 = 0.20566, X2 = 0.47986
 (EVAL-WHEN (EVAL)
-  
+
   (defun FUNCT (N ARG GRAD)
     (declare (ignore n)
 	     (fixnum n)
@@ -405,7 +379,7 @@
       (setf (aref grad 1) (- dery1))
       (setf (aref grad 2) (- dery2))
       (- val)))
-  
+
   (defun MAIN-LINE ()
     (let* ((N          2)
 	   (LIMIT    100)
@@ -437,3 +411,15 @@
 	(format t "~%		X(~2D) = ~8F" j (aref X j)))
       ))
   )
+
+
+
+;; testing for old-style do
+;; (defun my-do-old () (do ((alfa   0.0)) () (return (list alfa))))
+;;
+;; (defun my-do-ansi () (do ((alfa   0.0)) (nil) (return (list alfa))))
+;;
+;; (defun my-fmfp (n)
+;;   (do ((alfa   0.0))
+;;       (nil)
+;;     (return (list n alfa))))

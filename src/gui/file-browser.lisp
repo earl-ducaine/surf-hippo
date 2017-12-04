@@ -1,37 +1,31 @@
 ;;; -*- Mode: LISP; Syntax: Common-Lisp; Package: WINDOWS-HACK; Base: 10 -*-
 
-#|
 
-====================================================================================================
-			       The Surf-Hippo Neuron Simulator System
-====================================================================================================
+;; The Surf-Hippo Neuron Simulator System
+;;
+;; This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
+;; Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
+;; Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
+;;
+;; Permission to use, copy, modify, and distribute this software and its documentation for any purpose
+;; and without fee is hereby granted, provided that this software is cited in derived published work,
+;; and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
+;; Project makes no representations about the suitability of this software for any purpose. It is
+;; provided "as is" without express or implied warranty.
+;;
+;; If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
+;; on the mailing list.
+;;
+;; Copyright (c) 1989 - 2003, Lyle J. Graham
 
-This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
-Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
-Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
-Permission to use, copy, modify, and distribute this software and its documentation for any purpose
-and without fee is hereby granted, provided that this software is cited in derived published work,
-and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
-Project makes no representations about the suitability of this software for any purpose. It is
-provided "as is" without express or implied warranty.
-                                                                                 
-If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
-on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
-
-|#
 
 ;; GUI Source file: file-browser.lisp
 
-
-(IN-PACKAGE "WINDOWS-HACK")
+(in-package :windows-hack)
 
 ;;; Stolen from Garnet demo-browser.lisp
 
 ;; Schemata defined in the DO-GO procedure which are referenced by other functions
-
 
 (defun PATHNAME-TO-STRING-FN (pathname)
   (if pathname
@@ -168,7 +162,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		       (:selection-function ,#'file-browser-previous-selection-function))))))
 
 (defun get-FILE-BROWSER (&optional directory-search)
-  (create-instance nil gg:browser-gadget 
+  (create-instance nil gg:browser-gadget
 		   ; (:constant T :except :num-menus)
 		   (:menu-items-generating-function (o-formula (if (gvl :directory-search)
 								   #'browser-only-DIRECTORY-FN
@@ -200,31 +194,31 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defvar *min-file-browser-menu-width* 250) ; this seems to cover the PREVIOUS and CANCEL buttons.
 
 (defun directory-browser (&optional (title "Browse and Select Directory") start-directory) (file-browser title start-directory nil t))
-  
+
 (defun file-browser (&optional (title "Browse and Select File") start-directory (extensions t) directory-search)
   ;; Returns a pathname, or NIL if CANCEL.
   (unless *automatic-run*
     (let* ((*BROWSER-FILE* nil)
 	   (start-directory (if (and start-directory (probe-file start-directory))
-				(lisp::unix-namestring (probe-file start-directory))
+				(probe-file start-directory)
 				(multiple-value-bind (flag dir)
-				    (unix::unix-current-directory)
+				    (uiop:getcwd)
 				  dir)))
 	   (*browser-allowed-extensions* extensions)
 	   (file-browser-win (create-instance nil basic-graphics-window
-					      (:visible nil)
-					      (:left (o-formula (or *menu-left* (round (/ (- *screen-width* (gvl :width)) 2)))))
-					      (:top (o-formula (or *menu-top* (round (/ (- *screen-height* (gvl :height)) 2)))))
-					      (:background-color (when wh::*motif-gui-p* OPAL:MOTIF-GRAY))
-					      ;; (:left *file-browser-left*) (:top *file-browser-top*)
-					      (:width (o-formula (if (gvl :file-browser)
-								     (max *min-file-browser-menu-width* (+ 40 (gvl :file-browser :width)))
-								     100)))
-					      (:min-width (o-formula (gvl :width))) ; (:max-width (o-formula (gvl :width)))
-					      (:min-height (o-formula (gvl :height))) ; (:max-height (o-formula (gvl :height)))
-					      (:title title) (:icon-title title)
-					      (:visible t)
-					      (:file-browser (get-FILE-BROWSER directory-search))))
+			       (:visible nil)
+			       (:left (o-formula (or *menu-left* (round (/ (- *screen-width* (gvl :width)) 2)))))
+			       (:top (o-formula (or *menu-top* (round (/ (- *screen-height* (gvl :height)) 2)))))
+			       (:background-color (when wh::*motif-gui-p* OPAL:MOTIF-GRAY))
+			       ;; (:left *file-browser-left*) (:top *file-browser-top*)
+			       (:width (o-formula (if (gvl :file-browser)
+						      (max *min-file-browser-menu-width* (+ 40 (gvl :file-browser :width)))
+						      100)))
+			       (:min-width (o-formula (gvl :width))) ; (:max-width (o-formula (gvl :width)))
+			       (:min-height (o-formula (gvl :height))) ; (:max-height (o-formula (gvl :height)))
+			       (:title title) (:icon-title title)
+			       (:visible t)
+			       (:file-browser (get-FILE-BROWSER directory-search))))
 	   (control-panel (get-browser-CONTROL-PANEL))
 	   (FILE-BROWSER-TOP-AGG (create-instance nil opal:aggregate)))
       (s-value FILE-BROWSER-WIN :aggregate FILE-BROWSER-TOP-AGG)
@@ -259,9 +253,3 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	  *BROWSER-FILE*
 	  directory-browser
 	  file-browser))
-
-
-
-
-
-

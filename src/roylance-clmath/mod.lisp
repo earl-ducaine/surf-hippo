@@ -22,9 +22,6 @@
 
 (in-package "USER")
 
-(provide "MODULAR-ARITHMETIC")
-
-
 ;;;; Greatest Common Divisor Algorithms
 
 #|
@@ -272,4 +269,3 @@
 	       (nil)
 	     (if (prime-test i)
 		 (return i)))))))
-

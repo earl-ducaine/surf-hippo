@@ -9,24 +9,24 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
 ;; GUI Source file: windows-hack.lisp
 
 
-(IN-PACKAGE "WINDOWS-HACK")
+(in-package :windows-hack)
 
 
 ;;; Contains various window and miscellaneous utilities that are required by the MENU-HACK and
@@ -95,7 +95,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;;; The width does not fit the width of "Cancel" button.
 ;
 ;;; I guess this is due to the :CONSTANT declaration for
-;;; the TEXT-BUTTON that is to be appeard in a dialog box 
+;;; the TEXT-BUTTON that is to be appeard in a dialog box
 ;;; (see below).
 ;
 ;(create-instance 'ERROR-GADGET opal:aggregadget
@@ -107,13 +107,13 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;               (:Constant (T :Except :left :top)) ;;<----- here !!!
 ;                ...))))
 ;
-;;; So one way to avoid this situation will be to initialize 
+;;; So one way to avoid this situation will be to initialize
 ;;; :FIXED-WIDTH-SIZE slot in the TEXT-BUTTON, just after
-;;; an instance of QUERY-GADGET is created. Then the button 
+;;; an instance of QUERY-GADGET is created. Then the button
 ;;; width will fit that of "Cancel" button. But this does not
 ;;; care the case of a button whose width is longer than "Cancel".
 ;;; I think the :FIXED-WIDTH-SIZE slot should be declared as an
-;;; exception for the constant. 
+;;; exception for the constant.
 
 
 ;; **********************************
@@ -170,7 +170,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defvar *comment-positions*
   `(:upper-left :upper-middle :upper-right
-    :middle-left :middle :middle-right 
+    :middle-left :middle :middle-right
     :lower-left :lower-middle :lower-right))
 
 (defvar *default-running-comment-position* :upper-right)
@@ -197,7 +197,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defvar *colorized-windows* '())
 (defvar *twin* nil)			; The most recent window (car) of *output-windows*
 
-(defvar *lock-all-windows* nil "When T, any new graphics windows are locked.") 
+(defvar *lock-all-windows* nil "When T, any new graphics windows are locked.")
 
 
 ;;; Empirical screen dimensions in pixels - opal globals are off (because of OLVM?).
@@ -258,49 +258,54 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 
 (defun set-*comment-font*-menu (&optional default-font) (setq *comment-font* (font-menu (or default-font *comment-font*) "Set *COMMENT-FONT* (default commment font)")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Time and Date variables.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; This factor is used to reduce the length of the integer returned by GET-UNIVERSAL-TIME, since we don't need dates previous to 1994.
+;;; Time and Date variables.
+
+
+;; This factor is used to reduce the length of the integer returned by
+;; GET-UNIVERSAL-TIME, since we don't need dates previous to 1994.
 (defparameter *universal-time-conversion-factor*  2986300000)
 
 (defvar *actual-time-stamp* 0)		; This is an integer
 (defvar *time-stamp* "")		; This is a string
 (defvar *time-stamp-suffix* 1)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; These macros are used in several places for window calculations.
+(defmacro schema-half-height (schema)
+  `(/ (fn-gv ,schema :height) 2.0))
 
-(defmacro schema-half-height (schema) `(/ (fn-gv ,schema :height) 2.0))
+(defmacro schema-half-height-fn (schema)
+  `(the (signed-byte 32) (round (schema-half-height ,schema))))
 
-(defmacro schema-half-height-fn (schema) `(the (signed-byte 32) (kernel:%unary-round (schema-half-height ,schema))))
+(defmacro schema-half-width (schema)
+  `(/ (fn-gv ,schema :width) 2.0))
 
-(defmacro schema-half-width (schema) `(/ (fn-gv ,schema :width) 2.0))
+(defmacro schema-half-width-fn (schema)
+  `(the (signed-byte 32) (round (schema-half-width ,schema))))
 
-(defmacro schema-half-width-fn (schema) `(the (signed-byte 32) (kernel:%unary-round (schema-half-width ,schema))))
+;; Running on mars (ultra) dosen't give a (assoc :HOST
+;; lisp::*environment-list*) (??).
+;; (defun initialize-window-system-variables ()
+;;   (setq *displayed-host-name*
+;; 	(cond ((and (stringp (cdr (assoc :HOST lisp::*environment-list*)))
+;; 		    (> (length (cdr (assoc :HOST lisp::*environment-list*))) 0))
+;; 	       (cdr (assoc :HOST lisp::*environment-list*)))
+;; 	      ((> (length (machine-instance)) 0)
+;; 	       (machine-instance))
+;; 	      (t "")))
+;;   (setq *screen-width* (- opal:*screen-width* 12)
+;; 	*screen-height* (- opal:*screen-height* 10))
+;;   ;; Set *STANDARD-GRAPHICS-WIDTH* and  *STANDARD-GRAPHICS-HEIGHT*.
+;;   (setup-plot-tiling))
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; running on mars (ultra) dosen't give a (assoc :HOST lisp::*environment-list*) (??).
-(defun initialize-window-system-variables ()
-  (setq *displayed-host-name* (cond ((and (stringp (cdr (assoc :HOST lisp::*environment-list*)))
-					  (> (length (cdr (assoc :HOST lisp::*environment-list*))) 0))
-				     (cdr (assoc :HOST lisp::*environment-list*)))
-				    ((> (length (machine-instance)) 0)
-				     (machine-instance))
-				    (t "")))
-  (setq *screen-width* (- opal:*screen-width* 12)
-	*screen-height* (- opal:*screen-height* 10))
-  ;; Set *STANDARD-GRAPHICS-WIDTH* and  *STANDARD-GRAPHICS-HEIGHT*.
-  (setup-plot-tiling))
-
-(defun windowp (object) (is-a-p object opal::window))
+(defun windowp (object)
+  (is-a-p object opal::window))
 
 (defun transfer-schema-slots (source destination slots)
-  ;; Each slot in SLOTS may be either a slot keyword or a list of a keyword and a default value. In the latter case, if there
-  ;; SOURCE is NIL then the default value is used for the slot value of DESTINATION.
+  ;; Each slot in SLOTS may be either a slot keyword or a list of a
+  ;; keyword and a default value. In the latter case, if there SOURCE
+  ;; is NIL then the default value is used for the slot value of
+  ;; DESTINATION.
   (loop for slot in slots do
 	(let ((slot-ref (if (consp slot) (first slot) slot))
 	      (default-p (consp slot)))
@@ -353,7 +358,7 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-      
+
 (defun comp-left (comp-width win-width position)
   (declare (optimize (safety 0) (speed 3) (space 1))
 	   (fixnum comp-width win-width))
@@ -418,7 +423,7 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
     (cond-every (background-color (s-value linestyle :background-color background-color))
 		(foreground-color (s-value linestyle :foreground-color foreground-color)))
     linestyle))
-	       
+
 (defun graphics-text-font (&optional win)
   (or (and win (gv win :font))
       *window-default-font*
@@ -432,7 +437,7 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 (create-instance 'white-feedback-object-line-style dashed-line (:foreground-color opal::white))
 (create-instance 'black-feedback-object-line-style dashed-line (:foreground-color opal::black))
 
-;; (create-instance 'feedback-object-line-style dashed-line (:foreground-color (o-formula (gvl :window :default-graphics-color)))) 
+;; (create-instance 'feedback-object-line-style dashed-line (:foreground-color (o-formula (gvl :window :default-graphics-color))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -476,7 +481,7 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 								  (:foreground-color (or (gvl :default-graphics-color) opal::black)))))
 		 (:default-graphics-background (o-formula (if (eql opal::black (gvl :background-color)) opal::black-fill opal::white-fill)))
 		 (:default-graphics-filling-style (o-formula (if (eql opal::black (gvl :background-color)) opal::white-fill opal::black-fill))))
-		 
+
 (defun create-scrolling-display-window (&key (width 750) (height 300) type display-object title (mode :scrolling-output))
   (let* ((win (create-instance nil basic-graphics-window ; inter:interactor-window
 			       (:visible nil)
@@ -580,7 +585,7 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; These are various types of window labels. Each is added to an instance of LABEL-AGG-PROTO, and then the label-agg is added to
-;; the window's top aggregate. 
+;; the window's top aggregate.
 
 (create-instance 'label-agg-proto opal:aggregate)
 
@@ -664,14 +669,14 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 
 ;; Why needed???
 #|
-(s-value window-comment :label :font 
+(s-value window-comment :label :font
 	 (o-formula (cond
 		     ((gvl :parent :comment-font) (gvl :parent :comment-font))
 		     ((gvl :parent :font) (gvl :parent :font))
 		     (t (opal:get-standard-font :serif :bold-italic :medium)))))
 |#
 
-(s-value window-comment :label :font 
+(s-value window-comment :label :font
 	 (o-formula (or (gvl :parent :window :comment-font)
 			(gvl :parent :window :font)
 			*window-default-font*
@@ -719,15 +724,15 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 					   )))
     (opal:add-component label-agg label-background :where :back)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun host-is-display-server ()
   "Return T if host machine is display server."
-  (let* ((display (cdr (assoc :DISPLAY lisp::*environment-list*)))
-	 (display-machine (string-head display (search ":" display))))
-    (true-p (or (string= display ":0.0")
-		(string= (machine-instance) display-machine)
-		(search display-machine (machine-instance))))))
+  (error "Not supported.  Garnet API still in flux with respect to this"))
+
+;; (let* ((display (cdr (assoc :DISPLAY lisp::*environment-list*)))
+;; 	 (display-machine (string-head display (search ":" display))))
+;;   (true-p (or (string= display ":0.0")
+;; 		(string= (machine-instance) display-machine)
+;; 		(search display-machine (machine-instance))))))
 
 (defun GET-win-TITLE-STRING (base-title)
   ;; Starting with a base title string, tacks on the current value of *GLOBAL-WINDOW-TITLE-SUFFIX* and, if appropriate, the *DISPLAYED-HOST-NAME*.
@@ -746,8 +751,6 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 	(string-tail title (- (length title) (+ (length host-name-string) search-position)))
 	title)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun find-output-windows-from-title (title) (MAPCAR-RETURN-NO-NILS *output-windows* (when (string= (gv value :title) title) value)))
 
 (defun find-output-windows (windows &optional type)
@@ -757,11 +760,7 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 	when (or (not type) (equal (gv win :type) type))
 	collect win))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
 ;; Window Alignment/Dimensions
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun 3x2-plot-tiling-square ()
   ;; "Set *STANDARD-GRAPHICS-WIDTH* and *STANDARD-GRAPHICS-HEIGHT* for 3x2 tiling, with squares."
@@ -771,13 +770,13 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 
 (defun 3x2-plot-tiling ()
 ;;  "Set *STANDARD-GRAPHICS-WIDTH* and *STANDARD-GRAPHICS-HEIGHT* for 3x2 tiling, with windows filling screen."
-  (setq *standard-graphics-width* (truncate (- (/ *screen-width* 2) 10)) 
+  (setq *standard-graphics-width* (truncate (- (/ *screen-width* 2) 10))
 	*standard-graphics-height* (- (truncate (/ *screen-height* 3)) *window-manager-title-border-height*)))
 
 (defun setup-plot-tiling ()
   "Set *STANDARD-GRAPHICS-WIDTH* and *STANDARD-GRAPHICS-HEIGHT* for tiling, according to the global variables
 *NUM-GRAPHICS-WINDOWS-ROWS* and *NUM-GRAPHICS-WINDOWS-COLUMNS*, with windows filling screen."
-  (setq *standard-graphics-width* (truncate (- (/ *screen-width* *NUM-GRAPHICS-WINDOWS-COLUMNS*) 10)) 
+  (setq *standard-graphics-width* (truncate (- (/ *screen-width* *NUM-GRAPHICS-WINDOWS-COLUMNS*) 10))
 	*standard-graphics-height* (- (truncate (/ *screen-height* *NUM-GRAPHICS-WINDOWS-ROWS*)) *window-manager-title-border-height*)))
 
 (defun align-to-window (&optional reference-window &key (alignment *default-align-to-window-specification*))
@@ -791,7 +790,7 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 	  do (move-window win
 	      (if (member :top dummy1) (gv reference-window :top) (gv win :top))
 	      (if (member :left dummy1) (gv reference-window :left) (gv win :left))))))
-    
+
 (defun match-win-dimensions-menu (win matched-dimensions &optional additional-windows-to-set)
   (let ((match-win (choose-list-values-from-keys
 		    (loop for candidate-win in (windows-of-mode (gv win :mode))
@@ -807,7 +806,7 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 
 (defun match-win-dimensions (&optional target match (matched-dimensions :Width_&_Height))
   "Resize windows referenced by TARGET to the dimensions of the MATCH window as specified by MATCHED-DIMENSIONS [default
-:WIDTH_&_HEIGHT, otherwise :WIDTH or :HEIGHT]." 
+:WIDTH_&_HEIGHT, otherwise :WIDTH or :HEIGHT]."
   (let* ((match (or match (id-win "Click or type on window for resize reference")))
 	 (target (or target (id-win (format nil "Click or type on window to resize to ~A" (gv match :title))))))
     (loop for target-win in (case target
@@ -827,7 +826,7 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 
 (defun get-window-comment (win &key position (type window-comment) ignore-reserved)
   ;; Return first component of WIN :AGGREGATE of TYPE that is not :RESERVED (unless IGNORE-RESERVED) and, if POSITION is non-NIL, has :POSITION eq to
-  ;; POSITION. 
+  ;; POSITION.
   (loop for comment in (retrieve-window-agg-comps win type)
 	when (and (or ignore-reserved (not (gv comment :reserved)))
 		  (or (not position) (eq (gv comment :position) position)))
@@ -985,7 +984,7 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 	(loop for string in (gv text-obj :deletions) do
 	      (opal:insert-string text-obj string font)
 	      (opal:go-to-next-line text-obj))
-	(opal:go-to-end-of-text text-obj) 
+	(opal:go-to-end-of-text text-obj)
 	(s-value text-obj :deletions nil))
       (let ((label (loop for comp in (get-agg-components win)
 			 when (and (eq (car (gv comp :is-a)) (or type window-comment))
@@ -1042,7 +1041,7 @@ windows are selected from a menu of all output windows."
   (loop for win in (if wins (coerce-to-list wins) (win-menu))
 	do (s-value win :title (format nil "~A ~A" (gv win :title)  (string suffix)))
 	(update-title win)))
-  
+
 (defun add-title (win &key font (update t) position border)
   (loop for win in (case win
 		     (:all (garnet-debug:windows))
@@ -1076,7 +1075,7 @@ windows are selected from a menu of all output windows."
 	 dummy3 dummy4 dummy5 dummy6
 	 (title (retrieve-window-agg-comp win window-title))
 	 (dummy8 (when title (gv title :frame :visible)))
-	 dummy9)	
+	 dummy9)
     (choose-variable-values
      `((dummy6 ,(if title "Remove visible title from window" "Add visible title to window") :boolean)
        (dummy2 ,(format nil "Window title (displayed version can~%be edited from the window)") :string)
@@ -1156,7 +1155,7 @@ windows are selected from a menu of all output windows."
   (if (consp (gv interactor :window))
     (car (gv interactor :window))
     (gv interactor :window)))
-  
+
 (defun align-to-window-inter-function (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (let ((window (first-interactor-window interactor))
@@ -1169,14 +1168,14 @@ windows are selected from a menu of all output windows."
       (when (opal-obj-exists window) (s-value window :print-interactor-running nil)))))
 
 (create-instance 'align-window-Interactor inter:button-Interactor
-		 (:continuous nil) (:start-where t) 
+		 (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL-G instead of :CONTROL-G
 		 ;; (:start-event :control-\a)
 		 (:start-event '(:control-\a :CONTROL-LATIN_SMALL_LETTER_A))
 		 (:final-function #'ALIGN-TO-WINDOW-INTER-FUNCTION))
 
 (create-instance 'help-window-Interactor inter:button-Interactor
-		 (:continuous nil) (:start-where t) 
+		 (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL-G instead of :CONTROL-G
 		 ;; (:start-event '(#\h #\H :control-\h :control-H))
 		 (:start-event '(#\h #\H :control-\h :CONTROL-LATIN_SMALL_LETTER_H :control-\H :CONTROL-LATIN_CAPITAL_LETTER_H))
@@ -1194,7 +1193,7 @@ windows are selected from a menu of all output windows."
       (when (opal-obj-exists window) (s-value window :print-interactor-running nil)))))
 
 (create-instance 'print-window-Interactor inter:button-Interactor
-		 (:continuous nil) (:start-where t) 
+		 (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL-G instead of :CONTROL-G
 		 ;; (:start-event :control-\p)
 		 (:start-event '(:control-\p :CONTROL-LATIN_SMALL_LETTER_P))
@@ -1249,7 +1248,7 @@ windows are selected from a menu of all output windows."
 (create-instance 'refresh-window-Interactor inter:button-Interactor (:continuous nil) (:start-where t) (:start-event #\R))
 
 ;; The :FINAL-FUNCTION for the menu interactor is specific for the various window types.
-(create-instance 'window-menu-Interactor inter:button-Interactor (:continuous nil) (:start-where t) 
+(create-instance 'window-menu-Interactor inter:button-Interactor (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL-G instead of :CONTROL-G
 		 ;; (:start-event :control-\m)
 		 (:start-event '(:control-\m :CONTROL-LATIN_SMALL_LETTER_M)))
@@ -1318,7 +1317,7 @@ windows are selected from a menu of all output windows."
 	  (destroy-window-with-menu win mode))))))
 
 (create-instance 'destroy-window-Interactor inter:button-Interactor
-		 (:continuous nil) (:start-where t) 
+		 (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL-G instead of :CONTROL-G
 		 ;; 		 (:start-event '(:CONTROL-\d :CONTROL-\D))
 		 (:start-event '(:control-\d :CONTROL-\D :CONTROL-LATIN_SMALL_LETTER_D :CONTROL-LATIN_CAPITAL_LETTER_D))
@@ -1383,7 +1382,7 @@ windows are selected from a menu of all output windows."
       (s-value win :comment-interactor-running nil))))
 
 (create-instance 'window-comment-Interactor inter:button-Interactor
-		 (:continuous nil) (:start-where t) 
+		 (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL_G instead of :CONTROL-G
 		 ;; (:start-event :control-\t)
 		 (:start-event '(:control-\t :CONTROL-LATIN_SMALL_LETTER_T))
@@ -1391,7 +1390,7 @@ windows are selected from a menu of all output windows."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun erase-temp-comment-inter-function (interactor final-obj-over)  
+(defun erase-temp-comment-inter-function (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (let ((win (gv interactor :window))
 	*automatic-run*)
@@ -1399,7 +1398,7 @@ windows are selected from a menu of all output windows."
       (add-temp-comment win "" :ignore-reserved t))))
 
 (create-instance 'erase-temp-comment-Interactor inter:button-Interactor
-		 (:continuous nil) (:start-where t) 
+		 (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL_G instead of :CONTROL-G
 		 ;; (:start-event :control-\e)
 		 (:start-event '(:control-\e :CONTROL-LATIN_SMALL_LETTER_E))
@@ -1609,7 +1608,7 @@ windows are selected from a menu of all output windows."
     ;; (opal:move-component agg (gv cross-hair :cross-hair-point) :where :front)
     cross-hair))
 
-(defun add-marker (win points &key 
+(defun add-marker (win points &key
 		   data-x data-y
 		   clear-previous-markers
 		   (add-point nil add-point-supplied-p)
@@ -1626,7 +1625,7 @@ windows are selected from a menu of all output windows."
 	  (add-cross-hair (if add-cross-hair-supplied-p add-cross-hair (member :include_cross_hair *default-marker-options*)))
 	  (label (when (if add-label-supplied-p add-label (member :include_label *default-marker-options*)) label))
 	  (x-label (if (gv win :event-plotter) "ms" (or (gv win :x-units) (gv win :x-label) "")))
-	  (y-label (or (gv win :y-units) (gv win :y-label) "")))	
+	  (y-label (or (gv win :y-units) (gv win :y-label) "")))
       (when (or points data-to-points-function)
 	(let* ((points (or points
 			   (flatten-list
@@ -1652,7 +1651,7 @@ windows are selected from a menu of all output windows."
 	  (push a-list (gv win :markers))
 	  nil)))))
 
-(defun add-markers-with-data (win 
+(defun add-markers-with-data (win
 			      data-x data-y
 			      &key
 			      clear-previous-markers
@@ -1753,7 +1752,7 @@ windows are selected from a menu of all output windows."
 		       (t (choose-window-markers win))))
 	    dummy2 dummy11)
 	(loop for marker in markers unless (or dummy2 (string-member "All markers" dummy11)) do
-	      (let* ((window-markers-w/o-this-one (remove marker (gv win :markers))) 
+	      (let* ((window-markers-w/o-this-one (remove marker (gv win :markers)))
 		     (x-label (marker-window-x-label win))
 		     (y-label (marker-window-y-label win))
 		     (points (marker-points marker))
@@ -1873,7 +1872,7 @@ windows are selected from a menu of all output windows."
 (defun refresh-all-markers (&optional win)
   (let ((*automatic-run* t))
     (loop for win in (or (coerce-to-list win) (clean-up-*output-windows*)) do (mark-coords-pointer-menu win :all))))
-	
+
 (defun remove-all-markers (win &optional update)
   (loop for marker in (gv win :markers) do
 	(remove-label-from-marker marker win)
@@ -1895,7 +1894,7 @@ windows are selected from a menu of all output windows."
 	(opal:destroy cross)))
     marker))
 
-(defun remove-all-cross-hairs-inter (interactor final-obj-over)  
+(defun remove-all-cross-hairs-inter (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (remove-all-markers (gv interactor :window))
   (REMOVE-ALL-ZOOMERS (gv interactor :window)))
@@ -1906,7 +1905,7 @@ windows are selected from a menu of all output windows."
       (s-value win :cross-hair-markers (butlast (gv win :cross-hair-markers)))
       (opal::destroy last-zoomer))))
 
-(defun remove-last-cross-hair (interactor final-obj-over)  
+(defun remove-last-cross-hair (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (let* ((win (gv interactor :window))
 	 (last-marker (car (last (gv win :markers)))))
@@ -1925,7 +1924,7 @@ windows are selected from a menu of all output windows."
       (s-value win :cross-hair-markers (rest (gv win :cross-hair-markers)))
       (opal::destroy first-zoomer))))
 
-(defun remove-first-cross-hair (interactor final-obj-over)  
+(defun remove-first-cross-hair (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (let* ((win (gv interactor :window))
 	 (first-marker (car (gv win :markers))))
@@ -1948,7 +1947,7 @@ windows are selected from a menu of all output windows."
       (opal:destroy marker-label)))
   marker)
 
-(defun remove-all-marker-labels-inter (interactor final-obj-over)  
+(defun remove-all-marker-labels-inter (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (remove-all-marker-labels (gv interactor :window)))
 
@@ -1964,11 +1963,11 @@ windows are selected from a menu of all output windows."
       (opal:destroy point)))
   marker)
 
-(defun remove-all-points-inter (interactor final-obj-over)  
+(defun remove-all-points-inter (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (remove-all-points (gv interactor :window)))
 
-(defun remove-last-point (interactor final-obj-over)  
+(defun remove-last-point (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (let* ((win (gv interactor :window))
 	 (last-marker (car (last (gv win :markers)))))
@@ -1980,7 +1979,7 @@ windows are selected from a menu of all output windows."
 			 (remove-point-from-marker last-marker win)
 			 marker))))))
 
-(defun remove-first-point (interactor final-obj-over)  
+(defun remove-first-point (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (let* ((win (gv interactor :window))
 	 (first-marker (car (gv win :markers))))
@@ -1993,21 +1992,21 @@ windows are selected from a menu of all output windows."
 			 marker))))))
 
 (create-instance 'remove-first-window-coords-pointer inter:button-Interactor
-		 (:continuous nil) (:start-where t) 
+		 (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL_G instead of :CONTROL-G
 		 ;; (:start-event :control-\f)
 		 (:start-event '(:control-\f :CONTROL-LATIN_SMALL_LETTER_F))
 		 (:final-function #'remove-first-cross-hair))
 
 (create-instance 'remove-last-window-coords-pointer inter:button-Interactor
-		 (:continuous nil) (:start-where t) 
+		 (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL_G instead of :CONTROL-G
 		 ;; (:start-event :control-\l)
 		 (:start-event '(:control-\l :CONTROL-LATIN_SMALL_LETTER_L))
 		 (:final-function #'remove-last-cross-hair))
 
 (create-instance 'remove-all-window-coords-pointer inter:button-Interactor
-		 (:continuous nil) (:start-where t) 
+		 (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL_G instead of :CONTROL-G
 		 ;; (:start-event :control-\A)
 		 (:start-event '(:control-\A :CONTROL-LATIN_CAPITAL_LETTER_A))
@@ -2058,7 +2057,7 @@ windows are selected from a menu of all output windows."
 		 (:final-function #'(lambda (interactor final-obj-over)
 				      (declare (ignore final-obj-over interactor))
 				      (loop for win in (garnet-debug:windows)
-					    when (menu-p win)					    
+					    when (menu-p win)
 					    do (resurrect-opal-win win :raise t :visible t :deiconify t :update t)))))
 
 (defun add-window-embellishments (win &optional erase-temp-comment-Interactor-final-function)
@@ -2103,7 +2102,7 @@ windows are selected from a menu of all output windows."
 
 (defun update-*standard-info-output* (&optional win)
   ;; Find a replacement for WIN to set *STANDARD-INFO-OUTPUT*.
-  (setq *standard-info-output* 
+  (setq *standard-info-output*
 	(loop for output-window in *output-windows*
 	      when (and (not (eq win output-window))
 			(eq (gv output-window :mode) :info)
@@ -2111,21 +2110,23 @@ windows are selected from a menu of all output windows."
 	      do (return output-window))))
 
 (defun clear-window (window &optional always)
-  "Destroy WINDOW if unlocked, or if ALWAYS is T. Updates *OUTPUT-WINDOWS*. WINDOW may be a list of windows."
-  (clean-up-*output-windows*)		; Just for insurance.
+  "Destroy WINDOW if unlocked, or if ALWAYS is T. Updates
+   *OUTPUT-WINDOWS*. WINDOW may be a list of windows."
+  (clean-up-*output-windows*)
   (loop for window in (coerce-to-list window) do
-       (when (and (opal-obj-exists window) (or always (and (not (gv window :locked)) ; (member win *output-windows*)
-							   )))
+       (when (and (opal-obj-exists window)
+		  (or always (and (not (gv window :locked)))))
 	 (setq *output-windows* (remove window *output-windows*)
 	       *colorized-windows* (remove window *colorized-windows*))
-	 (cond ((eq window *standard-graphics-output*) (update-*standard-graphics-output* window))
-	       ((eq window *standard-info-output*) (update-*standard-info-output* window)))
-	 (when (gv window :wrap-up-function) (funcall (gv window :wrap-up-function) window)))
-       #+GARNET-V3.0 (destroy-opal-obj window)
-       #-GARNET-V3.0 (safe-destroy window)
-       )
-  (update-*Twin*)			; This calls CLEAN-UP-*OUTPUT-WINDOWS*
-  nil))
+	 (cond ((eq window *standard-graphics-output*)
+		(update-*standard-graphics-output* window))
+	       ((eq window *standard-info-output*)
+		(update-*standard-info-output* window)))
+	 (when (gv window :wrap-up-function)
+	   (funcall (gv window :wrap-up-function) window)))
+       (destroy-opal-obj window))
+  (update-*twin*)
+  nil)
 
 (defun destroy-opal-obj (obj)
   ;; (safe-destroy obj)
@@ -2149,7 +2150,7 @@ windows are selected from a menu of all output windows."
 	  (clean-up-*output-windows*)))
 
 (defun clear-windows-of-mode (mode &optional always)
-  (loop for win in (clean-up-*output-windows*) when (eq mode (gv win :mode)) do (clear-window win always)) 
+  (loop for win in (clean-up-*output-windows*) when (eq mode (gv win :mode)) do (clear-window win always))
   (update-*Twin*))
 
 (defun windows-of-mode (modes)
@@ -2194,7 +2195,7 @@ windows are selected from a menu of all output windows."
 	do (s-value win :locked nil)))
 
 (defun unlock-windows (&optional (wins :all)) (unlock-window wins))
-        
+
 (defun unlock-all-windows ()
   "If windows don't respond, maybe they're stuck. Also unlock them all."
   (unstick-windows)
@@ -2274,7 +2275,7 @@ windows are selected from a menu of all output windows."
 	       (efficient-clear-agg-components comp)
 	       (opal:destroy comp)))
   (opal:destroy agg))
-  
+
 (defun clear-and-add-plot-agg (win type &key (where :back) add (clear t))
   ;; Clears any plot-agg's of type TYPE from WIN's top aggregate, then adds and returns a new plot-agg of type TYPE.
   (when clear (clear-plot-aggs win type))
@@ -2282,7 +2283,7 @@ windows are selected from a menu of all output windows."
 
 (defun get-plot-agg (win type &optional clear-it (where :back))
   ;; Looks for an instance of PLOT-AGG-PROTO in WIN top aggregate, type TYPE, and returns it - if not found, then
-  ;; create one and return it. 
+  ;; create one and return it.
   (when clear-it (clear-plot-aggs win type))
   (if (find-plot-agg win type) (car (find-plot-agg win type)) (add-plot-agg win type where)))
 
@@ -2332,7 +2333,7 @@ windows are selected from a menu of all output windows."
 
 (setf (symbol-function 'identify-window) (symbol-function 'Id-win))
 (setf (symbol-function 'click-window) (symbol-function 'Id-win))
- 
+
 (defun window-titles () (mapcar #'(lambda (win) (format t "~A~%" (gv win :title))) *output-windows*) nil)
 
 ;; ******************************************
@@ -2345,7 +2346,7 @@ windows are selected from a menu of all output windows."
 
 (defun print-universal-time (&optional (stream t))
   (multiple-value-bind (ss mm hh d m y dow dst zone) (decode-universal-time (get-universal-time))
-    (format stream "~2,'0D:~2,'0D:~2,'0D" hh mm ss))) 
+    (format stream "~2,'0D:~2,'0D:~2,'0D" hh mm ss)))
 
 (defun encode-time-stamp ()
   ;; The time stamp changes every 10 seconds. The function DECODE-UNIVERSAL-TIME will decode the
@@ -2359,9 +2360,11 @@ windows are selected from a menu of all output windows."
 	   *time-stamp* (if (= 1 *time-stamp-suffix*)
 			  (format nil "~d" new-actual-time-stamp)
 			  (format nil "~d+~d" new-actual-time-stamp  *time-stamp-suffix*)))))
-	
+
 (defun decode-time-stamp (&optional (time-stamp *actual-time-stamp*))
-  (system::format-universal-time t (+ (truncate (* 10 time-stamp)) *universal-time-conversion-factor*))
+  (format-universal-time
+   t
+   (+ (truncate (* 10 time-stamp)) *universal-time-conversion-factor*))
   (unless (= 1 *time-stamp-suffix*)
     (format t " (~:r in this 10 second period)" *time-stamp-suffix*)))
 
@@ -2387,7 +2390,7 @@ time/date string. If STREAM is T [default], then print out to standard output."
   (if (zerop sublist-length)
     windows
     (let (out)
-      (loop for win-num from 0 to (1- sublist-length) do 
+      (loop for win-num from 0 to (1- sublist-length) do
 	    (loop for simulation in (split-up windows sublist-length)
 		  unless (> win-num (1- (length simulation)))
 		  do (push (elt simulation win-num) out)
@@ -2403,7 +2406,7 @@ time/date string. If STREAM is T [default], then print out to standard output."
 			  (start-x *window-tile-start-x*) (start-y *window-tile-start-y*)	; pixels from top left corner
 			  ignore-window-width ignore-window-height
 			  (window-tile-x-gap *window-tile-x-gap*) (window-tile-y-gap *window-tile-y-gap*))
-  "Retiles the WINDOWS according to WINDOWS-PER-ROW [default *ARRANGE-WINDOWS-PER-ROW*]. 
+  "Retiles the WINDOWS according to WINDOWS-PER-ROW [default *ARRANGE-WINDOWS-PER-ROW*].
 If WINS is NIL, or if USE-MENU is T, then a window menu will choose the retiled windows. If WINS is :ALL, then all *OUTPUT-WINDOWS* will be arranged.
 Tiling references the largest width and height over all windows. The starting position [upper left corner of window] of the tiling is given by START-X
 and START-Y, pixels [default 0 for both, thus the top left corner of the screen]. The spacing between windows is given by WINDOW-TILE-X-GAP and
@@ -2420,7 +2423,7 @@ windows, respectively."
 	  *window-tile-start-x* start-x
 	  *window-tile-start-y* start-y
 	  *arrange-windows-per-row* (min windows-per-row num-wins)
-	  *reassociate-windows* reassociate-windows 
+	  *reassociate-windows* reassociate-windows
 	  *reassociate-windows-sublist-length* reassociate-windows-sublist-length)
     (when (and wins use-menu)
       (let ((dummy1 ignore-window-width)
@@ -2454,8 +2457,8 @@ windows, respectively."
 	     (setq last-win-height (gv win :height))
 	     (resurrect-opal-win win)	; (opal:update win t)
 	     (if (= row-count *arrange-windows-per-row*)
-		 (setq row-count 0 
-		       x start-x 
+		 (setq row-count 0
+		       x start-x
 		       y (+ y
 			    (if IGNORE-WINDOW-height 0 (if (= *arrange-windows-per-row* 1) last-win-height maximum-window-height))
 			    *window-tile-y-gap* *window-tile-fudge-factor*)
@@ -2498,7 +2501,7 @@ windows, respectively."
 (export '(WINDOWP
 	  CREATE-SCROLLING-DISPLAY-WINDOW
 	  FIX-WINDOW-SIZE
-	  raise-all-menus-interactor 
+	  raise-all-menus-interactor
 	  basic-graphics-window
 	  component-top component-left comp-top comp-left
 	  *background-border-width* *running-comment-background-border-width*
@@ -2532,7 +2535,7 @@ windows, respectively."
 	  window-interactor-wrapper
 	  toggle-window-lock-Interactor
 	  initialize-window-system-variables
-	  *DISPLAYED-HOST-NAME*	  
+	  *DISPLAYED-HOST-NAME*
 	  *add-host-name-to-windows*
 	  *always-add-host-name-to-windows*
 	  GET-win-TITLE-STRING
@@ -2561,16 +2564,16 @@ windows, respectively."
 	  *screen-width* *screen-height*
 	  *standard-graphics-width* *standard-graphics-height*
 	  *raise-output-windows* *deiconify-output-windows*
-	  *show-output-windows* *plotting-window-top*  
-	  *update-output-windows* 
+	  *show-output-windows* *plotting-window-top*
+	  *update-output-windows*
 	  *hide-output-windows*
 	  *STANDARD-GRAPHICS-OUTPUT* *STANDARD-INFO-OUTPUT*
 	  *colorized-windows*
 	  *COMMENT-FONT*	  SET-*COMMENT-FONT*-MENU
-	  *automatic-run*	  
+	  *automatic-run*
 	  *output-windows* *omit-title-bar* *window-manager-title-border-height*
 	  *use-*plot-directory*
-	  *plot-directory* 
+	  *plot-directory*
 	  *DATA-DIRECTORY*
 	  *plot-code-directory*
 	  *PLOT-COMMENT*
@@ -2583,7 +2586,7 @@ windows, respectively."
 	  destroy-window-menu
 	  destroy-windows-with-menu
 	  UNLOCK-ALL-WINDOWS
-	  unlock-windows 
+	  unlock-windows
 	  LOCK-ALL-WINDOWS
 	  lock-windows
 	  lock-new-windows
@@ -2626,7 +2629,6 @@ windows, respectively."
 	  *DEFAULT-ALIGN-TO-WINDOW-SPECIFICATION*
 	  ALIGN-TO-WINDOW
 	  *arrange-windows-per-row*
-
 	  *default-marker-label-position*
 	  *default-marker-point-type*
 	  *default-marker-point-width*
@@ -2636,3 +2638,187 @@ windows, respectively."
 	  *default-graphics-window-background-color*
 	  *num-graphics-windows-rows* *num-graphics-windows-columns* setup-plot-tiling
 	  ))
+
+
+;;; Note all the below code is taking straight from CMUCL.  Surely
+;;; there's convenient maintained library to do all this?
+
+(defparameter abbrev-weekday-table
+  '#("Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"))
+
+(defparameter long-weekday-table
+  '#("Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday"
+     "Sunday"))
+
+(defparameter abbrev-month-table
+  '#("Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov"
+     "Dec"))
+
+(defparameter long-month-table
+  '#("January" "February" "March" "April" "May" "June" "July" "August"
+     "September" "October" "November" "December"))
+
+;;; The timezone-table is incomplete but workable.
+
+(defparameter timezone-table
+  '#("GMT" "" "" "" "" "EST" "CST" "MST" "PST"))
+
+(defparameter daylight-table
+  '#(nil nil nil nil nil "EDT" "CDT" "MDT" "PDT"))
+
+(defun format-universal-time (destination universal-time
+					  &key (timezone nil)
+					  (style :short)
+					  (date-first t)
+					  (print-seconds t)
+					  (print-meridian t)
+					  (print-timezone t)
+					  (print-weekday t))
+  "Format-Universal-Time formats a string containing the time and date
+   given by universal-time in a common manner.  The destination is any
+   destination which can be accepted by the Format function.  The
+   timezone keyword is an integer specifying hours west of Greenwich.
+   The style keyword can be :short (numeric date), :long (months and
+   weekdays expressed as words), :abbreviated (like :long but words
+   are abbreviated), :rfc1123 (conforming to RFC 1123), :government
+   (of the form \"XX Mon XX XX:XX:XX\"), or :iso8601 (conforming to
+   ISO 8601), which is the recommended way of printing date and time.
+   The keyword date-first, if nil, will print the time first instead of
+   the date (the default).  The print- keywords, if nil, inhibit the
+   printing of the obvious part of the time/date."
+  (unless (valid-destination-p destination)
+    (error "~A: Not a valid format destination." destination))
+  (unless (integerp universal-time)
+    (error  "~A: Universal-Time should be an integer." universal-time))
+  (when timezone
+    (unless (and (rationalp timezone) (<= -24 timezone 24))
+      (error "~A: Timezone should be a rational between -24 and 24." timezone))
+    (unless (zerop (rem timezone 1/3600))
+      (error "~A: Timezone is not a second (1/3600) multiple." timezone)))
+  (multiple-value-bind (secs mins hours day month year dow dst tz)
+		       (if timezone
+			   (decode-universal-time universal-time timezone)
+			   (decode-universal-time universal-time))
+    (declare (fixnum secs mins hours day month year dow))
+    (let ((time-string "~2,'0D:~2,'0D")
+	  (date-string
+	   (case style
+	     (:short "~D/~D/~2,'0D")			;;  MM/DD/YY
+	     ((:abbreviated :long) "~A ~D, ~D")		;;  Month DD, YYYY
+	     (:rfc1123 "~2,'0D ~A ~4,'0D")		;;  DD Mon YYYY
+	     (:government "~2,'0D ~:@(~A~) ~2,'0D")	;;  DD MON YY
+	     (:iso8601 "~4,'0D-~2,'0D-~2,'0D")          ;;  YYYY-MM-DD
+	     (t
+	      (error "~A: Unrecognized :style keyword value." style))))
+	  (time-args
+	   (case style
+	     ((:rfc1123 :iso8601) (list mins hours))
+	     (t (list mins (max (mod hours 12) (1+ (mod (1- hours) 12)))))))
+	  (date-args (case style
+		       (:short
+			(list month day (mod year 100)))
+		       (:abbreviated
+			(list (svref abbrev-month-table (1- month)) day year))
+		       (:long
+			(list (svref long-month-table (1- month)) day year))
+		       (:rfc1123
+			(list day (svref abbrev-month-table (1- month)) year))
+		       (:government
+			(list day (svref abbrev-month-table (1- month))
+			      (mod year 100)))
+		       (:iso8601
+			(list year month day))))
+	  (timezone-name (case style
+			   (:rfc1123 (timezone-rfc1123-name dst tz))
+			   (:iso8601 (timezone-iso8601-name dst tz))
+			   (t (timezone-name dst tz)))))
+      (declare (simple-string time-string date-string timezone-name))
+      (when print-weekday
+	(push (case style
+		((:short :long) (aref long-weekday-table dow))
+		((:abbreviated :rfc1123 :government :iso8601)
+		 (svref abbrev-weekday-table dow)))
+	      date-args)
+	(setq date-string
+	      (concatenate 'simple-string "~A, " date-string)))
+      (when (or print-seconds (eq style :government))
+	(push secs time-args)
+	(setq time-string
+	      (concatenate 'simple-string time-string ":~2,'0D")))
+      (when (and print-meridian (not (member style '(:rfc1123 :iso8601))))
+	(push (signum (floor hours 12)) time-args)
+	(setq time-string
+	      (concatenate 'simple-string time-string " ~[am~;pm~]")))
+      (apply #'format destination
+	     (if (or date-first (eq style :iso8601))
+		 (concatenate 'simple-string date-string " " time-string
+			      (when print-timezone
+				(if (eq style :iso8601)
+				    "~A"
+				    " ~A")))
+		 (concatenate 'simple-string time-string " " date-string
+			      (if print-timezone " ~A")))
+	     (if (or date-first (eq style :iso8601))
+		 (nconc date-args (nreverse time-args)
+			(if print-timezone
+			    (list timezone-name)))
+		 (nconc (nreverse time-args) date-args
+			(if print-timezone
+			    (list timezone-name))))))))
+
+;;; ISO 8601 style timezone: Z, +1000, -1000.  Timezone is the
+;;; negative of the CL timezone.
+(defun timezone-iso8601-name (dst tz)
+  (let ((tz (- tz)))
+    (if (and (not dst) (= tz 0))
+	"Z"
+	(multiple-value-bind (hours minutes)
+	    (truncate (if dst (1+ tz) tz))
+	  (format nil "~C~2,'0D:~2,'0D"
+		  (if (minusp tz) #\- #\+)
+		  (abs hours)
+		  (abs (truncate (* minutes 60))))))))
+
+;;; RFC 1123 style timezone: GMT, +1000, -1000.
+;;; Timezone is the negative of the CL timezone.
+(defun timezone-rfc1123-name (dst tz)
+  (let ((tz (- tz)))
+    (if (and (integerp tz)
+	     (or (and (not dst) (= tz 0))
+		 (<= 5 tz 8)))
+	(svref (if dst daylight-table timezone-table) tz)
+	(multiple-value-bind
+	      (hours minutes)
+	    (truncate (if dst (1+ tz) tz))
+	  (format nil "~C~2,'0D~2,'0D"
+		  (if (minusp tz) #\- #\+)
+		  (abs hours)
+		  (abs (truncate (* minutes 60))))))))
+
+(defun timezone-name (dst tz)
+  (if (and (integerp tz)
+	   (or (and (not dst) (= tz 0))
+	       (<= 5 tz 8)))
+      (svref (if dst daylight-table timezone-table) tz)
+      (multiple-value-bind
+	  (rest seconds)
+	  (truncate (* (if dst (1- tz) tz) 60 60) 60)
+	(multiple-value-bind
+	    (hours minutes)
+	    (truncate rest 60)
+	  (format nil "[~C~D~@[~*:~2,'0D~@[~*:~2,'0D~]~]]"
+		  (if (minusp tz) #\- #\+)
+		  (abs hours)
+		  (not (and (zerop minutes) (zerop seconds)))
+		  (abs minutes)
+		  (not (zerop seconds))
+		  (abs seconds))))))
+
+;;; Valid-Destination-P ensures the destination stream is okay
+;;; for the Format function.
+(defun valid-destination-p (destination)
+  (or (not destination)
+      (eq destination 't)
+      (streamp destination)
+      (and (stringp destination)
+	   (array-has-fill-pointer-p destination))))

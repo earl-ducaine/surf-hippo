@@ -23,8 +23,6 @@
 
 (in-package "USER")
 
-(provide "IMPORT")
-
 (export '(IMPORT-FILE))
 
 (eval-when (compile load eval)
@@ -93,18 +91,11 @@
 			(make-package package-spec))
 		 pack))))))
 
-
-;;;; Import Load
-
+;;; Import Load
 (defmacro import-load (fxname)
   (let* ((lsp   fxname)				; get the effective pathname
-	 (ext   (progn
-		  #+(and LUCID (not HP)) "lbin"	; normal lucid
-		  #+(and LUCID      HP ) "b"	; hp version of lucid
-		  #+COMMON               "LAP"
-		  #+3600                 "BIN"))
+	 (ext   "LAP")
 	 (bin   (make-pathname :type ext :defaults lsp)))
-
     `(let ((tag (probe-file ',lsp)))
        (declare (special imported-file-list))
        (or (boundp 'imported-file-list)
@@ -117,17 +108,15 @@
 	     (t
 	      (error "IMPORT-LOAD:  File Not Found ~S" ',lsp))))))
 
-
-;;;; Import File
-
+;;; Import File
 (defmacro import-file (fn)
-  
+
   (let* ((filename  (import-filename fn))	; get the effective pathname
 	 (*package* (import-package filename))	; find what package it wants
 	 (form      nil))
 
     (with-open-file (filei filename)
-      
+
       ;; find a sensible form to import
       (dotimes (i 3)				; look at the first 3 forms
 	(setq form (read filei nil :EOF))

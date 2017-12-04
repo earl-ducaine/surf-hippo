@@ -1,35 +1,37 @@
 ;;; -*- Mode: LISP; Syntax: Common-Lisp; Package: SON-OF-PLOT-HACK; Base: 10 -*-
 
-#|
 
-====================================================================================================
-			       The Surf-Hippo Neuron Simulator System
-====================================================================================================
-
-This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
-Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
-Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
-Permission to use, copy, modify, and distribute this software and its documentation for any purpose
-and without fee is hereby granted, provided that this software is cited in derived published work,
-and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
-Project makes no representations about the suitability of this software for any purpose. It is
-provided "as is" without express or implied warranty.
-                                                                                 
-If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
-on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
-
-|#
-
+;; The Surf-Hippo Neuron Simulator System
+;;
+;; This code was written as part of the Surf-Hippo Project, originally
+;; at the Center for Biological Information Processing, Department of
+;; Brain and Cognitive Sciences, Massachusetts Institute of
+;; Technology, and currently at the Neurophysiology of Visual
+;; Computation Laboratory, CNRS.
+;;
+;; Permission to use, copy, modify, and distribute this software and
+;; its documentation for any purpose and without fee is hereby
+;; granted, provided that this software is cited in derived published
+;; work, and the copyright notice appears in all copies and in
+;; supporting documentation. The Surf-Hippo Project makes no
+;; representations about the suitability of this software for any
+;; purpose. It is provided "as is" without express or implied
+;; warranty.
+;;
+;; If you are using this code or any part of Surf-Hippo, please
+;; contact surf-hippo@ai.mit.edu to be put on the mailing list.
+;;
+;; Copyright (c) 1989 - 2003, Lyle J. Graham
 ;; GUI Source file: plot-hack.lisp
 
-;;; This contains some basic plotting routines, inspired by the PLOT-HACK system written by Patrick O'Donnell at the MIT
-;;; AI Lab for the Symbolics window system, and built upon the Garnet GUI toolset from CMU. This system requires that
-;;; WINDOW-HACK and MENU-HACK be loaded. See the plotting.doc file for more information.
+;;; This contains some basic plotting routines, inspired by the
+;;; PLOT-HACK system written by Patrick O'Donnell at the MIT AI Lab
+;;; for the Symbolics window system, and built upon the Garnet GUI
+;;; toolset from CMU. This system requires that WINDOW-HACK and
+;;; MENU-HACK be loaded. See the plotting.doc file for more
+;;; information.
 
-(in-package "SON-OF-PLOT-HACK")
+(in-package :son-of-plot-hack)
 
 (defun if-black-background-white (&optional default-color)
   (let ((window (or (gvl :window) (and (gvl :parent) (gvl :parent :window)))))
@@ -123,7 +125,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		 (:min-width 100)
 		 (:min-height 100)
 		 (:view-angle-comment-p t)
-		 
+
 		 (:plot-line-style-family (o-formula *plot-line-style-family*)) (:connect-data-points t)
 		 (:scatter-symbol *default-scatter-symbol*) (:fill-scatter t) (:scatter-symbol-borderp t) (:scatter-symbol-units-in-pixels t)
 		 (:y-symbol-width *default-scatter-size*) (:x-symbol-width *default-scatter-size*)
@@ -139,14 +141,14 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		 (:x-label-h-position :right) ; :left :center :right
 		 (:y-label-v-position :two-thirds-up)
 		 (:y-label-h-position :left)
-		 
+
 		 ;; For simple axes
 		 (:x-scale-t% 5) (:y-scale-t% 5) (:x-scale-l% 85)
 
 		 ;; These gaps in pixels frame the plotting area.
 		 (:x-plot-left-gap 0)		 (:x-plot-right-gap 0)
 		 (:y-plot-bottom-gap 0)		 (:x-plot-right-gap-extra 0)
-		 
+
 		 ;;These values are in data coordinates, and should be floats.
 		 (:y-max 0.0) (:y-min 0.0) (:y-origin 0.0) (:y-mag 0.0)
 		 (:x-max 0.0) (:x-min 0.0) (:x-origin 0.0) (:x-mag 0.0)
@@ -166,7 +168,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 		 ;; For waterfall plots
 		 (:waterfall-trace-label-skip 0)		 (:gap-between-trace-and-waterfall-label 20)		 (:skirt-to-window-border t)
-					      
+
 		 ;; These slots (pixel units) are for clipping transformed polylines just outside viewing. LG change 24.02.2017
 		 (:y-bound-max (o-formula (+ (gvl :height) *plot-window-xy-bound-border* ;100
 					     )))
@@ -181,7 +183,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		 (:current-xfrm (3-by-3-identity)) ; For 3d plots
 
 		 ;; Must be single-floats
-		 
+
 		 (:x-trace-offset 0.0) (:y-trace-offset 0.0) ; For waterfall plots
 		 (:x-data-offset 0.0) (:y-data-offset 0.0)
 		 (:waterfall-base-x-offset 0.0) (:waterfall-base-y-offset 0.0)
@@ -541,7 +543,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	(min (gv win :y-min))
 	(mag (gv win :y-mag)))
     (+ min
-       (* (/ mag (- (gv win :y-plot-bottom-gap) ; *y-plot-bottom-gap* FIXED, 8/27/94 lbg 
+       (* (/ mag (- (gv win :y-plot-bottom-gap) ; *y-plot-bottom-gap* FIXED, 8/27/94 lbg
 		    (- height label-height)))
 	  (- y-win (- height (gv win :y-plot-bottom-gap)))))))
 
@@ -584,7 +586,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	 (+ min (abs (* how-much min)))))))
 
 (defun check-plot-log-parameters (win)
-  ;; Signals an error if a dimension that is to be logarithmically displayed contains a value less than or equal to 0. 
+  ;; Signals an error if a dimension that is to be logarithmically displayed contains a value less than or equal to 0.
   (or
    (and (or (not (gv win :x-log)) (positive-p (gv win :x-overall-data-min)))
 	(or (not (gv win :y-log)) (positive-p (gv win :y-overall-data-min))))
@@ -642,7 +644,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defun first-delta-t (win)  (or (gv win :delta-t-start) 0))
 
 #|
-(defun last-delta-t (win x-seqs) 
+(defun last-delta-t (win x-seqs)
   (+ (or (gv win :delta-t-start) 0)
      (* (1- (gv win :data-length)) x-seqs)))
 |#
@@ -666,7 +668,7 @@ count  (+ -20  (* count 9.998)) (+ -20 9.998 ...)
 NIL
 |#
 
-(defun last-delta-t (win x-seqs) 
+(defun last-delta-t (win x-seqs)
   (loop for time from (or (gv win :delta-t-start) 0) by x-seqs
 	for count from 1 to (1- (gv win :data-length))
 	finally (return (get-nice-mag time))))
@@ -677,12 +679,12 @@ NIL
     (* (gv win :x-data-scale)
        (+ (gv win :x-data-offset)
 	  (if (numberp x-seqs)
-	      (if (> (gv win :x-data-scale) 0) (last-delta-t win x-seqs) (first-delta-t win)) 
+	      (if (> (gv win :x-data-scale) 0) (last-delta-t win x-seqs) (first-delta-t win))
 	      (if (> (gv win :x-data-scale) 0)
 		  (a-bit-more x-seqs)	; Just the actual max.
 		  (a-bit-less x-seqs)	; Just the actual min if scale is negative.
 		  ))))))
-  
+
 (defun x-data-min (win &optional all)
   (let ((x-seqs (if nil (parse-all-plot-x-seqs win) (car (gv win :x-lists)))))
     (* (gv win :x-data-scale)
@@ -731,7 +733,7 @@ NIL
 	 (extremum (* (gv win :x-data-scale)
 		      (+ (gv win :x-data-offset)
 			 (if (numberp x-seqs)
-			     (if (funcall operator (gv win :x-data-scale) 0) (last-delta-t win x-seqs) (first-delta-t win)) 
+			     (if (funcall operator (gv win :x-data-scale) 0) (last-delta-t win x-seqs) (first-delta-t win))
 			     (if (funcall operator (gv win :x-data-scale) 0)
 				 (a-bit-more x-seqs) ; Just the actual max.
 				 (a-bit-less x-seqs))))))) ; Just the actual min if scale is negative.
@@ -755,7 +757,7 @@ NIL
 				(a-bit-less-sub-domain y-seqs 0.0 x-seqs x-min-spec x-max-spec win)
 				(a-bit-less y-seqs))))))) ; Just the actual min.
     extremum))
-				
+
 (defun y-data-max (win display-sub-domain x-min-spec x-max-spec &optional (all (gv win :accomodate-overlays)))
   (y-data-extremum win display-sub-domain x-min-spec x-max-spec all t))
 
@@ -764,7 +766,7 @@ NIL
 
 (defun setup-xy-data-limits (win display-sub-domain timed-data x-min-spec x-max-spec)
   ;; Sets :X-DATA-MAX, :X-DATA-MIN, :Y-DATA-MAX, :Y-DATA-MIN, and if :AUTO-WF-SETUP, :X-TRACE-OFFSET, :Y-TRACE-OFFSET and
-  ;; :WATERFALL-LABEL-OFFSET. Returns when LOGS-OK. 
+  ;; :WATERFALL-LABEL-OFFSET. Returns when LOGS-OK.
   (declare (optimize (safety 1) (speed 3) (space 0)))
   (when (and (gv win :timed-data) (< (x-data-min win) 0))
     (s-value win :timed-data nil) (setq timed-data nil))
@@ -777,7 +779,7 @@ NIL
     (loop until logs-ok do
 	  (s-value win :x-data-max (x-data-max win))
 	  (s-value win :x-data-min (x-data-min win))
-	  (s-value win :x-overall-data-min (x-data-min win t))			
+	  (s-value win :x-overall-data-min (x-data-min win t))
 	  (setq display-sub-domain (or display-sub-domain (and x-min-spec (> x-min-spec (gv win :x-data-min)))))
 	  (s-value win :y-data-max (y-data-max win display-sub-domain x-min-spec x-max-spec))
 	  (s-value win :y-data-min (y-data-min win display-sub-domain x-min-spec x-max-spec))
@@ -796,16 +798,16 @@ NIL
 	    )
 	  ;; If log used, test for a bad log domain value - menu if so...
 	  (setq logs-ok (check-plot-log-parameters win)))))
-      
+
 (defun set-xy-max/min-spec-and-origins (win replot-win-point-list restore-plot unzoom X-INC X-MAX-SPEC X-MIN-SPEC X-ORIGIN Y-INC Y-MAX-SPEC Y-MIN-SPEC Y-ORIGIN)
   ;; In case of a REPLOT-WIN-POINT-LIST, RESTORE-PLOT, or UNZOOM, the X/Y specified max/mins must be set.
   (s-value win :X-MAX-MIN-SPECIFIED (or x-max-spec x-min-spec))
   (s-value win :Y-MAX-MIN-SPECIFIED (or y-max-spec y-min-spec))
-  (cond (replot-win-point-list		; Converted mouse coordinates (left top width height) to data coordinates. 
+  (cond (replot-win-point-list		; Converted mouse coordinates (left top width height) to data coordinates.
 	 (let* ((replot-x-min (x-plot-win-inv (first replot-win-point-list) win))
 		(replot-x-max (x-plot-win-inv (+ (first replot-win-point-list) (third replot-win-point-list)) win))
 		(replot-y-min (y-plot-win-inv (+ (second replot-win-point-list) (fourth replot-win-point-list)) win))
-		(replot-y-max (y-plot-win-inv (second replot-win-point-list) win)))		  
+		(replot-y-max (y-plot-win-inv (second replot-win-point-list) win)))
 	   (if (or (= replot-x-min replot-x-max) (= replot-y-min replot-y-max)) ; Avoid over zooming - see below
 	       (setq x-min-spec (gv win :x-min) x-max-spec (gv win :x-max)
 		     y-min-spec (gv win :y-min) y-max-spec (gv win :y-max))
@@ -884,7 +886,7 @@ NIL
   (when (gv win :x-axis-coeff) (s-value win :x-axis-coeff (s-flt (gv win :x-axis-coeff))))
   (when (gv win :y-axis-coeff) (s-value win :y-axis-coeff (s-flt (gv win :y-axis-coeff))))
   (setup-plot-preliminaries win preserve-plot-attributes wf-skirt width height consider-labels
-			    x-label-h-position x-label-v-position 
+			    x-label-h-position x-label-v-position
 			    y-label-h-position y-label-v-position
 			    x-label y-label (or restore-plot unzoom replot-win-point-list)
 			    x-origin-tick y-origin-tick reference-ticks-to-origin y-trace-offset x-trace-offset x-are-fns y-are-fns
@@ -896,7 +898,7 @@ NIL
 	      ((gv win :auto-y-scaling) (setq y-inc nil y-max-spec nil y-min-spec nil y-origin nil)))
   (let* ((replotting (or replot-win-point-list restore-plot unzoom))
 	 (y-seqs (parse-plot-y-seqs win))
-	 (x-seqs (car (gv win :x-lists)))	   
+	 (x-seqs (car (gv win :x-lists)))
 	 (accomodate-all (and (> (number-of-overlays win) 1) (gv win :overlay) (gv win :accomodate-overlays))) ; Only OK for windows that have data.
 	 display-sub-domain)
 ;;    (printvars y-seqs x-seqs)
@@ -915,7 +917,7 @@ NIL
 			     (setq x-min-spec (or (gv win :delta-t-start) 0))
 			     (when (= (a-bit-less x-seqs) 0) (setq x-min-spec 0.0))))
       ;; Sets :X-DATA-MAX, :X-DATA-MIN, :Y-DATA-MAX, :Y-DATA-MIN, and, if :AUTO-WF-SETUP, :X-TRACE-OFFSET, :Y-TRACE-OFFSET and
-      ;; :WATERFALL-LABEL-OFFSET. Returns when LOGS-OK. 
+      ;; :WATERFALL-LABEL-OFFSET. Returns when LOGS-OK.
       (setup-xy-data-limits win display-sub-domain (gv win :timed-data) x-min-spec x-max-spec)
       (let* ((log-base (or (gv win :log-base) e))
 	     (number-of-traces (length (or (gv win :trace-order) y-seqs)))
@@ -957,8 +959,8 @@ NIL
 	     (y-min (setup-plot-y-min win y-axis-min number-of-traces)))
 	;;	(format t "y-axis-max ~A, y-axis-min ~A~%" y-axis-max y-axis-min)
 	(s-values win xfrmd-x-data-min xfrmd-x-data-max xfrmd-y-data-min xfrmd-y-data-max)
-	(s-value win :xfrmd-x-data-mag (- xfrmd-x-data-max xfrmd-x-data-min)) 
-	(s-value win :xfrmd-y-data-mag (- xfrmd-y-data-max xfrmd-y-data-min)) 
+	(s-value win :xfrmd-x-data-mag (- xfrmd-x-data-max xfrmd-x-data-min))
+	(s-value win :xfrmd-y-data-mag (- xfrmd-y-data-max xfrmd-y-data-min))
 	(when (gv win :waterfall)
 	  (unless (eq (gv win :axes-type) :none) (s-value win :axes-type :simple))
 	  (if (> (gv win :y-trace-offset) 0)
@@ -1008,11 +1010,11 @@ NIL
 	 (* (gv win :y-trace-offset) (1- number-of-traces))
 	 0.0)))
 
-(defun setup-plot-preliminaries (win preserve-plot-attributes wf-skirt width height 
-				 consider-labels x-label-h-position x-label-v-position y-label-h-position y-label-v-position 
+(defun setup-plot-preliminaries (win preserve-plot-attributes wf-skirt width height
+				 consider-labels x-label-h-position x-label-v-position y-label-h-position y-label-v-position
 				 x-label y-label dont-reset-labels x-origin-tick y-origin-tick reference-ticks-to-origin
 				 y-trace-offset x-trace-offset x-are-fns y-are-fns
-				 include-x-tick-at-0 include-y-tick-at-0 invert-y-axis-label) 
+				 include-x-tick-at-0 include-y-tick-at-0 invert-y-axis-label)
   (unless preserve-plot-attributes (s-value win :label-traces consider-labels))
   (s-values-if-non-nil win width height x-label-v-position x-label-h-position y-label-v-position y-label-h-position)
   (s-values-s-flt-or-0 win y-trace-offset x-trace-offset)
@@ -1149,7 +1151,7 @@ NIL
 				 (case (gv win :x-label-v-position)
 				   ;; For the X axis tick marks
 				   (:ABOVE ;   ******************  LBG Check this  may 10 2001
-				    ;; only account for x marks if ordinate is near top 
+				    ;; only account for x marks if ordinate is near top
 				    (if (< (/ (- (gv win :y-origin) (gv win :y-min)) (gv win :y-mag)) 0.8)
 					(+ 5 (gv (window-plot-axis-font win) :font-height))
 					(+ ; 13
@@ -1239,9 +1241,9 @@ NIL
 				0))
 			     (max (minimum-x-plot-right-gap win)
 				  ;; Go through all the y axis tick mark numbers to find the widest.
-				  (- (max (y-axis-labeled-ticks-below-0-width win) 
+				  (- (max (y-axis-labeled-ticks-below-0-width win)
 					  (y-axis-labeled-ticks-above-0-width win)
-					  (y-label-to-the-left-of-axis win))					       
+					  (y-label-to-the-left-of-axis win))
 				     (* (gv win :width) ; 0
 					(/  (- (gv win :x-origin) (gv win :x-min))
 					; (max (gv win :x-origin) (gv win :x-min))
@@ -1317,7 +1319,7 @@ NIL
 	 (distance-from-axis-min (mod (/ (- axis-root axis-min) adjusted-increment) 1))
 	 (m (* number-of-increments (/ (- axis-max axis-root)  (- axis-max axis-min)))))
 ;    (format t "m ~a~%" m)
-    
+
     (s-value win (case axis (:x :x-axis-root) (:y :y-axis-root)) axis-root)
     (if (> distance-from-axis-max distance-from-axis-min)
 	(case axis
@@ -1326,12 +1328,12 @@ NIL
 	(case axis
 	  (:x (s-value win :x-axis-min (+ axis-min (ceiling distance-from-axis-min))))
 	  (:y (s-value win :y-axis-min (+ axis-min (ceiling distance-from-axis-min))))))
-    (ceiling (/ 
+    (ceiling (/
      (- (gv win (case axis (:x :x-axis-max) (:y :y-axis-max)))
 	(gv win (case axis (:x :x-axis-min) (:y :y-axis-min))))
      number-of-increments))))
 
-	   
+
 (defun set-plot-incs-origin-label-position (win x-origin y-origin x-inc y-inc x-label-v-position x-label-h-position)
   (cond-every ((and (not x-inc) (gv win :x-are-fns)) (setq x-inc (adjust-axis-min-max-for-ints win :x)))
 	      ((and (not y-inc) (gv win :y-are-fns)) (setq y-inc (adjust-axis-min-max-for-ints win :y))))
@@ -1386,12 +1388,12 @@ NIL
 #|
 ;; (gv *twin* :xfrmd-x-data-mag)
 
- 
+
 ;; (* 5 (ceiling (/ 43.0 5)))
 |#
 
 (defun UPDATE-FIXED-GAP (win use-fixed-top-gap fixed-top-gap use-fixed-bottom-gap fixed-bottom-gap use-fixed-right-gap
-					fixed-right-gap use-fixed-left-gap fixed-left-gap) 
+					fixed-right-gap use-fixed-left-gap fixed-left-gap)
   (s-values win
 	    fixed-top-gap fixed-bottom-gap fixed-right-gap fixed-left-gap
 	    (use-fixed-top-gap (and use-fixed-top-gap (numberp fixed-top-gap)))
@@ -1399,7 +1401,7 @@ NIL
 	    (use-fixed-right-gap (and use-fixed-right-gap (numberp fixed-right-gap)))
 	    (use-fixed-left-gap (and use-fixed-left-gap (numberp fixed-left-gap)))))
 
-(defun set-plot-win-orig-parameters (win) 
+(defun set-plot-win-orig-parameters (win)
   ;; These are useful for restoring the plot to its original state.
   (s-values win
 	    (orig-x-min (gv win :x-min))
@@ -1431,7 +1433,7 @@ NIL
       (draw-full-cartesian-axes win :draw-axes nil)
       (get-plot-agg win 'data-grid t)))
 
-a(defun draw-simple-axes (window &key auto-setup)
+(defun draw-simple-axes (window &key auto-setup)
   (when auto-setup
     (s-value window :x-scale-t% 90)
     (s-value window :y-scale-t% 90)
@@ -1446,7 +1448,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 	 (x-body-y2 (round (* (gv window :height) .01 (gv window :x-scale-t%))))
 	 (y-body-x1 (round (* (gv window :width) .01 (gv window :x-scale-l%))))
 	 (y-body-x2 (round (* (gv window :width) .01 (gv window :x-scale-l%))))
-	       
+
 	 (y-body-y1 (round (* (gv window :height) .01 (gv window :y-scale-t%))))
 	 (y-body-y2 (+ (round (* (gv window :height) .01 (gv window :y-scale-t%)))
 		       (- (y-plot-win-float (+ (gv window :y-axis-min) (or *simple-axis-y* (gv window :y-inc))) window nil)
@@ -1455,7 +1457,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 	 (x-label (create-instance nil axis-text
 				   (:label-position (o-formula (or (gvl :window :x-label-v-position) :center)))
 				   (:left (round (+ (the fn x-body-x1) (* 0.5 (- (the fn x-body-x2) (the fn x-body-x1))))))))
-	 
+
 	 (y-label (create-instance nil axis-text
 				   (:label-position (o-formula (or (gvl :window :y-label-h-position) :center)))
 				   (:left (o-formula (case (gvl :window :y-label-h-position)
@@ -1477,7 +1479,7 @@ a(defun draw-simple-axes (window &key auto-setup)
     (s-values x-label window)
     (s-values y-label window)
 
-    (opal:add-components axes-agg gadget y-label x-label)    
+    (opal:add-components axes-agg gadget y-label x-label)
     (s-value y-label :visible (o-formula (gvl :parent :window :y-axis-p)))
     (s-value y-label :string (format nil "~a~A~a"
 				     (if (gv window :simple-axis-y-value-p)
@@ -1526,7 +1528,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 (defun draw-full-cartesian-axes (win &key (draw-axes t) draw-grid)
   ;; Draw X and Y axis onto plot window WIN so that data will be contained in scaled rectangle centered in window. Also adds labeled tick marks and grid.
   (let* ((draw-grid (or draw-grid (gv win :draw-grid)))
-	 ;; (axis-line-style (or (gv win :axis-line-style) *default-axis-line-style*)) 
+	 ;; (axis-line-style (or (gv win :axis-line-style) *default-axis-line-style*))
 	 (grid-line-style (create-plot-line-style (or (gv win :grid-line-style) *default-grid-line-style*) win))
 	 (axis-agg (when draw-axes (get-plot-agg win 'data-axes t))) ; Get a data-axis agg and clear it.
 	 (grid-agg (when draw-grid (get-plot-agg win 'data-grid t))) ; Get a data-axis agg and clear it.
@@ -1537,7 +1539,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 	 (y-axis-root (get-axis-root win :y y-AXIS-MAX Y-AXIS-MIN))
 	 (y-axis-origin y-origin)
  	 (y-origin-w (y-plot-win-float-unbounded y-axis-origin win))
-	 
+
 	 (x-origin (s-flt (gv win :x-origin)))
 	 (x-axis-max (s-flt (max x-origin (gv win :x-axis-max))))
 	 (x-axis-min (s-flt (min x-origin (gv win :x-axis-min))))
@@ -1562,11 +1564,11 @@ a(defun draw-simple-axes (window &key auto-setup)
 						      (:x1 x-origin-w) (:x2 x-origin-w)
 						      (:y1 (y-plot-win-float-unbounded (or y-axis-visible-min y-axis-min) win))
 						      (:y2 (y-plot-win-float-unbounded (or y-axis-visible-max y-axis-max) win))))
-	(add-y-axis-label axis-agg win y-axis-max y-axis-min x-origin-w))	  
+	(add-y-axis-label axis-agg win y-axis-max y-axis-min x-origin-w))
       (add-y-ticks win draw-axes axis-agg y-axis-root ; y-axis-origin
 		   number-y-tics-above-zero
 		   y-axis-visible-min y-axis-visible-max x-axis-visible-min x-axis-visible-max
-		   x-origin-w draw-grid grid-agg grid-line-style NUMBER-y-TICS-BELOW-ZERO x-AXIS-MAX x-AXIS-MIN))      
+		   x-origin-w draw-grid grid-agg grid-line-style NUMBER-y-TICS-BELOW-ZERO x-AXIS-MAX x-AXIS-MIN))
     (when (or (and draw-axes (gv win :x-axis-p)) draw-grid)
       (when (and draw-axes (gv win :x-axis-p)) ;X AXIS
 	(opal:add-component axis-agg (create-instance nil opal:line
@@ -1707,8 +1709,8 @@ a(defun draw-simple-axes (window &key auto-setup)
 
 (defun add-polar-circles (win axis-agg y-axis-root y-axis-max)
   (loop for y from (+ y-axis-root (gv win :y-inc)) by (gv win :y-inc) to y-axis-max do
-	(opal:add-component	
-	 axis-agg				
+	(opal:add-component
+	 axis-agg
 	 (create-instance nil opal:circle (:visible t)
 			  (:line-style (o-formula (create-plot-line-style plot-line-style win))
 			  ;; (o-formula (or (gvl :parent :window :axis-line-style) *default-axis-line-style* thick-black-line))
@@ -1747,7 +1749,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 	  (if (or (gv win :x-axis-prefix) (gv win :x-axis-suffix))
 	      (format nil "~a~A~a" (or (gv win :x-axis-prefix) "") naked-number-string (or (gv win :x-axis-suffix) ""))
 	      naked-number-string)))))
-		
+
 (defun y-axis-number-string (win y)
   (declare (optimize (safety 1) (speed 3) (space 0))
 	   ; (single-float y)
@@ -1885,7 +1887,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 (defun get-plot-point-list (x-base y-seq win &key (x-trace-offset 0.0) (y-trace-offset 0.0) (use-timed-data-x-constraints t) only-visible)
   ;; Note that X-BASE can be a number or a list of single-floats, and Y-SEQ is a list of single-floats. :X-TRACE-OFFSET and
   ;; :Y-TRACE-OFFSET are applied to the data *after*, and :X-DATA-OFFSET and :Y-DATA-OFFSET are applied to the data *before* log, if
-  ;; enabled.  
+  ;; enabled.
   (declare (optimize (safety 1) (speed 3) (space 0)))
   (let* ((max-min-fudge-factor 1e-5)
 	 (x-trace-offset (s-flt (or x-trace-offset 0.0)))
@@ -1915,12 +1917,12 @@ a(defun draw-simple-axes (window &key auto-setup)
 	   (get-plot-point-list-from-lists
 	    x-base x-log x-min x-max x-min-pixels x-max-pixels x-data-offset x-trace-offset x-data-scale
 	    use-timed-data-x-constraints
-	    y-seq y-log y-min y-max y-min-pixels y-max-pixels y-data-offset y-trace-offset y-data-scale 
+	    y-seq y-log y-min y-max y-min-pixels y-max-pixels y-data-offset y-trace-offset y-data-scale
 	    base base-p win only-visible))
 	  ((and (numberp x-base) (listp y-seq))
 	   (let ((delta-x-float (float x-base))
 		 (x-start (s-flt (or (gv win :delta-t-start) 0)))
-		 point-list) 
+		 point-list)
 	     (do ((x x-start (the sf (+ x delta-x-float))) ; LAST-DELTA-T copies this algorithm.
 		  (y-seq y-seq (cdr y-seq)))
 		 ((null y-seq) point-list)
@@ -1970,17 +1972,17 @@ a(defun draw-simple-axes (window &key auto-setup)
 	(when  (<= x-min offsetted-x x-max)
 	  (push (the sf (+ x-trace-offset (log-or-not offsetted-x x-log base-p base))) x-out)
 	  (push (the sf (+ y-trace-offset (log-or-not offsetted-y y-log base-p base))) y-out))))
-    (values (reverse x-out) (reverse y-out)))) 
+    (values (reverse x-out) (reverse y-out))))
 
 
 (defun get-plot-point-list-from-lists (x-seq x-log x-min x-max x-off-win-min-pixels x-off-win-max-pixels
-				       x-data-offset x-trace-offset x-data-scale 
-				       use-timed-data-x-constraints 
+				       x-data-offset x-trace-offset x-data-scale
+				       use-timed-data-x-constraints
 				       y-seq y-log y-min y-max y-off-win-min-pixels y-off-win-max-pixels
 				       y-data-offset y-trace-offset y-data-scale
 				       base base-p win only-visible)
   (declare (optimize (safety 1) (speed 3) (space 0))
-	   (ignore use-timed-data-x-constraints) 
+	   (ignore use-timed-data-x-constraints)
 	   (fixnum x-off-win-min-pixels x-off-win-max-pixels y-off-win-min-pixels y-off-win-max-pixels)
 	   (single-float x-trace-offset x-data-offset x-data-scale
 			 y-trace-offset y-data-offset y-data-scale
@@ -2028,7 +2030,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 	       (offst-y-data-sf (* y-data-scale (+ y-data-offset (the sf (car y-seq)))))
 	       (offset-log-y (+ y-trace-offset (log-or-not offst-y-data-sf y-log base-p base)))
 	       (last-point-visible this-point-visible)
-	       this-x-pixels 
+	       this-x-pixels
 	       this-y-pixels)
 	  (setq this-x-pixels (x-plot-win-float-bounded-w-win-args
 			       offset-log-x x-min-limit x-max-limit x-bound-min x-bound-max width x-plot-left-gap x-min x-mag plot-area-width))
@@ -2067,7 +2069,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 		     x-off-plot-min-pixels x-off-plot-max-pixels y-off-plot-min-pixels y-off-plot-max-pixels
 		     previous-point-hidden)
   (declare (optimize (safety 1) (speed 3) (space 0))
-	   (fixnum last-x-pixels this-x-pixels last-y-pixels this-Y-pixels 
+	   (fixnum last-x-pixels this-x-pixels last-y-pixels this-Y-pixels
 		   x-off-plot-min-pixels x-off-plot-max-pixels y-off-plot-min-pixels y-off-plot-max-pixels))
   (let* ((hidden-x-pixels (if previous-point-hidden last-x-pixels this-x-pixels))
 	 (shown-x-pixels (if previous-point-hidden this-x-pixels last-x-pixels))
@@ -2115,7 +2117,7 @@ a(defun draw-simple-axes (window &key auto-setup)
     (unless (and final-diff-vector-x final-diff-vector-y) (break))
     (when *debug-plot-border-point* (format t " final-diff-vector-x ~A, final-diff-vector-y ~A~%" final-diff-vector-x final-diff-vector-y))
     (values final-diff-vector-x final-diff-vector-y)))
-	    
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Density Plotting
@@ -2136,14 +2138,14 @@ a(defun draw-simple-axes (window &key auto-setup)
 			for x fixnum from 0 to (the fn (1- array-width-x))
 			nconc (loop for y fixnum from 0 to (the fn (1- array-width-y))
 				    for top fixnum from top-border by rect-height
-				    collect 
+				    collect
 				    ;;x y w h c
 				    (let ((val (the sf (/ (the sf (- (aref array x y) z-min)) z-amp))))
 				      (make-virtual-rectangle-item-values-array
 				       left top rect-width rect-height (get-number-fill (if invert (- 1 val) val) color)))))))
 		(:point-in-item nil))))
     (opal:add-component (gv win :aggregate) v-agg :where :front)
-    (resurrect-opal-win win)))	    
+    (resurrect-opal-win win)))
 
 (defun add-density-plot-axes (win x-min x-max y-min y-max x-label-text y-label-text array-width-x array-width-y left-border rect-width top-border rect-height)
   (let* ((axes-agg (get-plot-agg win 'data-axes t)) ; Get a data-axis agg and clear it.
@@ -2200,10 +2202,10 @@ a(defun draw-simple-axes (window &key auto-setup)
     (when (gv win :y-axis-p)
       (let ((y-label
 	     (create-instance nil axis-text
-			      (:label-position (o-formula (or (gvl :window :y-label-h-position) :left))) 
+			      (:label-position (o-formula (or (gvl :window :y-label-h-position) :left)))
 			      (:left y-axis-x-position)
 			      (:top (o-formula
-				     (- top-border 
+				     (- top-border
 					(+ (if (gvl :window)
 					       (gv (window-plot-axis-font (gvl :window)) :font-height)
 					       0)
@@ -2243,13 +2245,13 @@ a(defun draw-simple-axes (window &key auto-setup)
 	  for i from 0 to 99
 	  do (setf (aref scale-array 0 i) val))
     (density-plot scale-array :y-label label :width width :height height
-		  :element-aspect-ratio 1.0 :vertical-border 50 :right-border 15 :left-border left-border 
+		  :element-aspect-ratio 1.0 :vertical-border 50 :right-border 15 :left-border left-border
 		  :y-min y-min :y-max y-max :z-min z-min :z-max z-max
 		  :x-axis-p  nil :y-are-fns t :y-axis-tick-skip (round (1- (/ 100 y-incs))) :y-axis-tick-mark-skip (round (1- (/ 100 y-incs))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Plotlines 
+;;; Plotlines
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -2277,7 +2279,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 		     (or (when dummy6
 			   (line-style-menu
 			    :default-style line-style
-			    :label (format nil "Choose a line style for plotline in ~A" (gv win :title)))) 
+			    :label (format nil "Choose a line style for plotline in ~A" (gv win :title))))
 			 line-style)))))
 
 (defun mark-plot-wins-at-time (time &key (win (standard-plot-windows)) (line-style thick-black-line))
@@ -2387,7 +2389,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 	  finally (s-value win :plotlines new-points))))
 
 (defun plotline-description-string (point win)
-  (format nil "Plotline from [~,2f~d, ~,2f~d] to [~,2f~d, ~,2f~d]" 
+  (format nil "Plotline from [~,2f~d, ~,2f~d] to [~,2f~d, ~,2f~d]"
 	  (gv point :x-start) (gv win :x-label)
 	  (gv point :y-start) (gv win :y-label)
 	  (gv point :x-stop)  (gv win :x-label)
@@ -2407,14 +2409,14 @@ a(defun draw-simple-axes (window &key auto-setup)
 
 (defun choose-plotlines (win menu-label)
   (let ((plotlines (gv win :plotlines)))
-    (choose-list-values-from-keys 
+    (choose-list-values-from-keys
      (loop for point in plotlines collect (list (plotline-description-string point win) point)) nil :punt-if-only-one-entry nil :label menu-label)))
 
 (defun edit-plotlines (win)
   (remove-plotlines win (choose-plotlines win (format nil "Remove these plotlines from ~A" (gv win :title))))
   (loop for plotline in (choose-plotlines win (format nil "Edit these plotlines in ~A" (gv win :title))) do (mark-plotline-menu win plotline))
   (resurrect-opal-win win))
-	  
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun remove-virtual-aggs (win)
@@ -2424,7 +2426,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 	(opal:destroy comp)))
 
 (proclaim '(inline find-max-y-out-of-xy-list find-min-y))
-					
+
 (defun find-max-y-out-of-xy-list (point-list)
   ;; This takes a list of xy points (x0 y0 x1 y1 ... xn yn) and returns ymax.
   (declare (optimize (safety 1) (speed 3) (space 0)))
@@ -2489,7 +2491,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 	  when (or (number-sequence-p new-data) (numberp new-data))
 	  do (return t)
 	  finally (return (numeric-plot-data-p new-data)))))
-  
+
 (defun update-plot-xy-win-xy-data-lists (win xy-data-lists &optional transpose-data) ;; For PLOT-XY-DATA
   (macrolet ((parse-xy-data-lists (index)
 	       `(if (consp (caar xy-data-lists))
@@ -2509,9 +2511,9 @@ a(defun draw-simple-axes (window &key auto-setup)
     (cond
       ((and (listp data-lists) (not (car data-lists))) (parsed-xory-lists-error))
       ((arrayp data-lists)		; data-lists = array ->  (( (array-vals) ))
-       (list (list (array-to-float-list data-lists)))) 
+       (list (list (array-to-float-list data-lists))))
       ((not (or (consp (car data-lists)) (arrayp (car data-lists)))) ; data-lists = (vals) -> (( (vals) ))
-       (list (list (float-list data-lists)))) 
+       (list (list (float-list data-lists))))
       ((or (arrayp (car data-lists))	; data-lists = (array array array ...) OR ( (vals) (vals)...) - list of arrays, or list of lists
 	   (not (consp (caar data-lists))))
        (list (loop for seq in data-lists collect (S-flt-LIST seq)))) ; (( (vals) (vals) (vals) ... )) OR (( (array-vals) (array-vals) (array-vals) ... ))
@@ -2524,7 +2526,7 @@ a(defun draw-simple-axes (window &key auto-setup)
 ;; # groups = (length (gv win :y-lists)) = (length (gv win :x-lists))
 ;; For xref= (nth group (gv win :x-lists)), xref is either a number (delta-x) or a list of x value lists
 ;; For yref= (nth group (gv win :y-lists)), yref is a list of y value lists (i.e. traces)
-;; 
+;;
 ;;
 ;; PLOT-TIMED-DATA (load-y-lists win data-sequences)
 ;; parsed-xor-y-lists
@@ -2655,7 +2657,7 @@ If not a number, TIME-BASE can be -
        y-pixels win))))
 
 (defun add-histo-bin-rectangle-to-agg (plot-agg y-base-pixels line-style filling-style x-pixels x-pixels+bin y-pixels win)
-  (opal:add-component 
+  (opal:add-component
    plot-agg
    (create-instance nil opal:rectangle
 		    (:constant t)
@@ -2674,7 +2676,7 @@ If not a number, TIME-BASE can be -
 
 (defun point-list-w-skirt (point-list win)
   ;; This takes a list of xy points (x0 y0 x1 y1 ... xn yn) and returns (x0 ymax x0 y0 x1 y1 ... xn yn xn ymax), unless HEM-IS-MAX is nil, in which case
-  ;; the result is (x0 ymin x0 y0 x1 y1 ... xn yn xn ymin). 
+  ;; the result is (x0 ymin x0 y0 x1 y1 ... xn yn xn ymin).
   (declare (optimize (safety 1) (speed 3) (space 0)))
   (let* ((last-x (the fn (car (last point-list 2))))
 	 (hem-is-max (> (gv win :y-trace-offset) 0.0))
@@ -2728,7 +2730,7 @@ If not a number, TIME-BASE can be -
 					       (:point-list point-list))))
 	   ; (format t "point-list ~A~%" point-list)
 	   ; (format t "ls ~A~%" (gv line-object :line-style))
-	    (opal:add-component           
+	    (opal:add-component
 	     plot-agg line-object
 	     :where :back)))))
 
@@ -2863,7 +2865,7 @@ If not a number, TIME-BASE can be -
 	     (create-instance nil opal:line
 			      (:line-style (o-formula (create-plot-line-style line-style win)))
 			      (:what-is-it :key-label)
-			      (:x1 key-left) (:x2 *trace-keys-right*) 
+			      (:x1 key-left) (:x2 *trace-keys-right*)
 			      (:y1 y-key) (:y2 y-key)))))))))
 
 (defun non-null-plot-win-labels (win)
@@ -2999,7 +3001,7 @@ If not a number, TIME-BASE can be -
 		  (gv win :event-plot-width))))))
 
 (defun XY-EVENT-PLOTTER-WIN-TO-POINTS (time dummy-y win)
-  (list 
+  (list
    (round (+ (gv win :event-plot-left-border)
 	     (* (gv win :event-plot-width)
 		(/ (- time (gv win :minimum-event-time))
@@ -3028,7 +3030,7 @@ If not a number, TIME-BASE can be -
 								   (format nil "Event time: ~,1fms" time)
 								   (when (gv win :last-pointer-time)
 								     (format nil "~%dt: ~,1fms" (- time (gv win :last-pointer-time)))))))
-			(when final 
+			(when final
 			  (s-value win :last-pointer-time time)
 			  (add-marker win points :data-x time :data-to-points-function #'XY-EVENT-PLOTTER-WIN-TO-POINTS))))))
       (:3dplot
@@ -3057,7 +3059,7 @@ If not a number, TIME-BASE can be -
      (let ((dy (- y (nth 1 (gv win :last-pointer-xy))))
 	   (dx  (- x (nth 0 (gv win :last-pointer-xy)))))
        (format nil "~%dy/dx: ~a/~a" (plot-window-y-number-format dy win) (plot-window-x-number-format dx win))))))
-	       
+
 (defun plot-coords-pointer-current-value-string (x y win)
   (let ((x-label (get-plot-axis-label win :x))
 	(y-label (get-plot-axis-label win :y)))
@@ -3155,7 +3157,7 @@ If not a number, TIME-BASE can be -
       ;; (remove-all-markers win)
       (add-temp-comment win "UnZooming...")
       (plot-timed-data nil nil nil
-		       :win win 
+		       :win win
 		       :unzoom t
 		       :preserve-win-attributes t
 		       :preserve-plot-attributes t		       :resurrect nil
@@ -3221,14 +3223,14 @@ restore, if supplied."
 	       (push dummy5 temp-scatter-symbols)
 	       (push (read-from-string (opal::name-for-schema (nth (1- (max 1 (min (length varying-width) dummy3))) varying-width))) temp-line-styles)
 	       (push dummy4 temp-borderps))
-	       
+
 	  collect (list (gv v-agg :symbol-width) (gv v-agg :symbol-height)) into scatter-width-heights
 	  finally
 	  (s-value plot-win :scatter-symbol (reverse temp-scatter-symbols))
 	  (s-value plot-win :scatter-symbol-borderp (reverse temp-borderps))
 	  (s-value plot-win :scatter-width-heights scatter-width-heights)
 	  (s-value plot-win :scatter-symbol-line-style (reverse temp-line-styles)))))
-	  
+
 (defun plot-line-style-menu (&optional (win (win-menu "Choose plots to assign line styles")))
   (loop for win in (coerce-to-list win) do
 	(loop for count from 1
@@ -3270,16 +3272,16 @@ restore, if supplied."
        (dummy3 "X tick mark length [pixels]" :integer)
        (dummy4 "Y tick mark length [pixels]" :integer))
      :title (gv win :title))
-    (s-value revised-win :x-axis-tick-mark-length dummy3) 
-    (s-value revised-win :y-axis-tick-mark-length dummy4) 
+    (s-value revised-win :x-axis-tick-mark-length dummy3)
+    (s-value revised-win :y-axis-tick-mark-length dummy4)
     (s-value revised-win :x-tick-decimal (unless (zerop dummy1) dummy1))
     (s-value revised-win :y-tick-decimal (unless (zerop dummy2) dummy2))))
-    
+
 (defun histogram-menu (win &optional revised-win)
   (unless revised-win (setq revised-win win))
   (let* (dummy1
 	 (dummy2 (gv win :x-max))
-	 dummy3 
+	 dummy3
 	 (dummy4 (round (gv win :y-max)))
 	 (dummy5 (gv win :bin-width))
 	 (dummy6 (ceiling (gv win :y-inc)))
@@ -3287,8 +3289,8 @@ restore, if supplied."
 	 (dummy8 (gv win :x-inc))
 	 (dummy9 (gv win :x-min))
 	 (dummy12 (gv win :title))
-	 dummy15 
-	 dummy16 
+	 dummy15
+	 dummy16
 	 (dummy17 (gv win :width))
 	 (dummy19 (gv win :height))
 	 dummy20 dummy22 dummy26 )
@@ -3320,8 +3322,8 @@ restore, if supplied."
       (plot-histogram-data (caar (gv win :y-lists))
 			   dummy9
 			   dummy2
-			   
-			   
+
+
 			   :win win :title dummy12
 			   :stipple-percent dummy7
 			   :x-axis-tick-skip (gv win :x-axis-tick-skip)
@@ -3330,7 +3332,7 @@ restore, if supplied."
 					; :bin-width (gv win :bin-width)
 			   :x-label (gv win :x-label) :y-label (gv win :y-label)
 			   :width dummy17 :height dummy19
-			   
+
 			   :y-max dummy4 :y-inc dummy6))))
 
 (defun waterfall-plot-menu (win)
@@ -3360,7 +3362,7 @@ restore, if supplied."
        (dummy14 ,(format nil "X trace offset (~A)" (gv win :x-label)) :number)
        (dummy15 ,(format nil "Y trace offset (~A)" (gv win :y-label)) :number)
        (dummy17 ,(format nil "X base offset (~A)" (gv win :x-label)) :float)
-       (dummy19 ,(format nil "Y base offset (~A)" (gv win :y-label)) :float) 
+       (dummy19 ,(format nil "Y base offset (~A)" (gv win :y-label)) :float)
        ("Trace labels" :comment)
        (dummy16 "Label waterfall" :boolean)
        (dummy5 "Waterfall trace label skip (0=> no skip)" :integer)
@@ -3446,13 +3448,13 @@ restore, if supplied."
 	      (y-scale-t% dummy3)
 	      (x-scale-t% dummy4))))
 
-(defun data-and-trace-offset-plot-menu (win) 
+(defun data-and-trace-offset-plot-menu (win)
   (let ((dummy14 (gv win :x-trace-offset))
 	(dummy15 (gv win :y-trace-offset))
 	(dummy1 (or (gv win :x-data-scale) 1.0))
 	(dummy2 (or (gv win :y-data-scale) 1.0))
 	(dummy21 (gv win :x-data-offset))
-	(dummy22 (gv win :y-data-offset)))	 
+	(dummy22 (gv win :y-data-offset)))
     (choose-variable-values
      `((dummy21 ,(format nil "X data offset (~A) (applied before log, if log coordinates)" (gv win :x-label)) :float)
        (dummy22 ,(format nil "Y data offset (~A) (applied before log, if log coordinates)" (gv win :y-label)) :float)
@@ -3553,13 +3555,13 @@ restore, if supplied."
 		      ((gv win :y-are-fns) :y)
 		      (t :neither)))
 	dummy2
-	
+
 	(dummy7 (if (numberp (gv win :x-axis-root)) :NUMBER (gv win :x-axis-root)))
 	(dummy70 (if (numberp (gv win :x-axis-root)) (gv win :x-axis-root) (gv win :x-origin)))
 
 	(dummy8 (if (numberp (gv win :y-axis-root)) :NUMBER (gv win :y-axis-root)))
 	(dummy80 (if (numberp (gv win :y-axis-root)) (gv win :y-axis-root) (gv win :y-origin)))
-	
+
 	(dummy10 (or (gv win :x-label) "")) (dummy11 (or (gv win :y-label) ""))
 	(dummy12 (not (gv win :reference-ticks-to-origin)))
 	(dummy13 (gv win :y-label-v-position))
@@ -3570,14 +3572,14 @@ restore, if supplied."
 	dummy22
 	(dummy28 (gv win :x-label-h-position))
 	(dummy29 (gv win :axes-type))
-	dummy30)	
+	dummy30)
     (choose-variable-values
      `(
        (dummy1 "Print ticks as integers:" :choose (:x_&_y :x :y :neither) :rank-margin 4 :label-left)
        (dummy29 "Axes type:" :choose (:standard :simple :none) :label-left)
        (:comment)
-       (dummy11 "Y axis label" :string)       
-       (dummy13 "Y axis label vertical position:" :choose ,*y-label-v-positions* :rank-margin 3) 
+       (dummy11 "Y axis label" :string)
+       (dummy13 "Y axis label vertical position:" :choose ,*y-label-v-positions* :rank-margin 3)
        (dummy17 "Tick label position relative to Y axis:" :choose ,*y-label-h-positions* :label-left)
        (dummy10 "X axis label" :string)
        (dummy28 "X label position relative to X axis:" :choose ,*x-label-h-positions* :label-left)
@@ -3660,7 +3662,7 @@ restore, if supplied."
      `((dummy5 "Visible axes:" :choose (:x_&_Y :x :y :none) :rank-margin 4)
        (dummy10 "Limit visibility of X and/or Y axis:" :x-choose  (:limit-x-axis :limit-y-axis))
        (dummy1 "Y axis maximum" :float)
-       (dummy2 "Y axis minimum" :float) 
+       (dummy2 "Y axis minimum" :float)
        (dummy3 "X axis maximum" :float)
        (dummy4 "X axis minimum" :float))
      :title (gv win :title))
@@ -3698,7 +3700,7 @@ restore, if supplied."
 	(dummy14 (gv win :x-plot-right-gap-extra))
 	(dummy16 (or (gv win :y-plot-top-gap-extra) 0))
 	(dummy18 (or (gv win :x-plot-left-gap-extra) 0)))
-	
+
     (choose-variable-values
      '((dummy1 "Use fixed top gap" :boolean)
        (dummy2 "Fixed top gap [pixels]" :integer)
@@ -3708,18 +3710,18 @@ restore, if supplied."
        (dummy6 "Fixed right gap [pixels]" :integer)
        (dummy7 "Use fixed left gap" :boolean)
        (dummy8 "Fixed left gap [pixels]" :integer)
-       (dummy9 "Assign via menu the same fixed gaps to other windows" :boolean) 
+       (dummy9 "Assign via menu the same fixed gaps to other windows" :boolean)
        ("Extra space parameters ignored if associated fixed gap is used" :comment)
        (dummy14 "Extra space on right side [pixels]" :integer)
        (dummy18 "Extra space on left side [pixels]" :integer)
        (dummy16 "Extra space between top of window and traces [pixels]" :integer))
      :title (format nil "Space Around Plot for ~A" (gv revised-win :title)))
-    
+
     (loop for win in (cons revised-win (when dummy9 (win-menu
 						     (format nil "Choose Plot Windows to Set~%Same Fixed Gaps as ~A" (gv revised-win :title))
 						     (loop for win in (windows-of-mode (gv revised-win :mode))
 							   unless (eq win revised-win) collect win))))
-	  when win do 
+	  when win do
 	  (UPDATE-FIXED-GAP win dummy1 dummy2 dummy3 dummy4 dummy5 dummy6 dummy7 dummy8)
 	  (s-value win :x-plot-right-gap-extra dummy14)
 	  (s-value win :x-plot-left-gap-extra dummy18)
@@ -3733,7 +3735,7 @@ restore, if supplied."
 	 dummy13 (dummy14 (cond ((and (gv win :connect-data-points) (gv win :scatter)) :Connect_&_show)
 				((gv win :connect-data-points) :Connect) ((gv win :scatter) :Show)))
 	 dummy15 dummy16 dummy17 dummy18
-	 *preserve-plot-layout* *create-new-plot-windows* (revised-win win) 
+	 *preserve-plot-layout* *create-new-plot-windows* (revised-win win)
 	 (only-win-of-mode-p (= (length (windows-of-mode (gv win :mode))) 1))
 	 (only-one-win-of-mode-p-or-is-scanner (or (eq (gv win :mode) :scanner) only-win-of-mode-p)))
     (choose-variable-values
@@ -3763,19 +3765,19 @@ restore, if supplied."
 	  (:Connect (s-value revised-win :connect-data-points t) (s-value revised-win :scatter nil))
 	  (:Show (s-value revised-win :connect-data-points nil) (s-value revised-win :scatter t)))
 	(case dummy15
-	  (:x_&_y (s-value revised-win :auto-x-scaling t) (s-value revised-win :auto-y-scaling t))       
+	  (:x_&_y (s-value revised-win :auto-x-scaling t) (s-value revised-win :auto-y-scaling t))
 	  (:x (s-value revised-win :auto-x-scaling t) (s-value revised-win :auto-y-scaling nil))
 	  (:y (s-value revised-win :auto-y-scaling t) (s-value revised-win :auto-x-scaling nil)))
 	(when dummy18 (match-win-dimensions-menu (or revised-win win) dummy18))
 	;; Unfortunately, PLOT-MATCH-WIN-SCALE-MENU has side effects on the symbols DUMMY1 through DUMMY8, so it must go here.
-	(when dummy9 (plot-match-win-scale-menu win revised-win dummy9)) 
+	(when dummy9 (plot-match-win-scale-menu win revised-win dummy9))
 	(s-value revised-win :x-min dummy1) (s-value revised-win :x-max dummy2)
 	(s-value revised-win :y-min dummy3) (s-value revised-win :y-max dummy4)
 	(s-value revised-win :x-axis-min dummy1) (s-value revised-win :x-axis-max dummy2)
 	(s-value revised-win :y-axis-min dummy3) (s-value revised-win :y-axis-max dummy4)
 	(s-value revised-win :x-inc dummy5) (s-value revised-win :y-inc dummy6)
 	(s-value revised-win :x-origin dummy7) (s-value revised-win :y-origin dummy8)
-	(when dummy13 (misc-plot-parameters-menu win revised-win))		    
+	(when dummy13 (misc-plot-parameters-menu win revised-win))
 	(when (eq (gv revised-win :waterfall) t) (waterfall-plot-menu revised-win))
 	(let ((label-traces (gv revised-win :label-traces))
 	      (scatter (gv revised-win :scatter)) (SCATTER-SYMBOL (gv revised-win :SCATTER-SYMBOL))
@@ -3800,20 +3802,20 @@ restore, if supplied."
 				  for y-list in (car (gv win :y-lists))
 				  collect (list x-list y-list))
 			    (gv win :label-list)
-			    :win revised-win :label-traces label-traces :connect-data-points connect-data-points 
+			    :win revised-win :label-traces label-traces :connect-data-points connect-data-points
 			    :scatter scatter :SCATTER-SYMBOL SCATTER-SYMBOL :fill-scatter fill-scatter :scatter-symbol-borderp scatter-symbol-borderp
-			    :x-symbol-width x-symbol-width :y-symbol-width y-symbol-width 
+			    :x-symbol-width x-symbol-width :y-symbol-width y-symbol-width
 			    :linear-regression t :draw-grid draw-grid
-			    :simple-axis-x-value-p simple-axis-x-value-p :simple-axis-y-value-p simple-axis-y-value-p 
-			    :use-same-line-style use-same-line-style 
-			    :x-label-v-position x-label-v-position :y-label-h-position y-label-h-position 
-			    :x-min x-min :x-max x-max :y-min y-min :y-max y-max :x-inc x-inc :y-inc y-inc 
+			    :simple-axis-x-value-p simple-axis-x-value-p :simple-axis-y-value-p simple-axis-y-value-p
+			    :use-same-line-style use-same-line-style
+			    :x-label-v-position x-label-v-position :y-label-h-position y-label-h-position
+			    :x-min x-min :x-max x-max :y-min y-min :y-max y-max :x-inc x-inc :y-inc y-inc
 			    :x-origin x-origin :y-origin y-origin :x-label x-label :y-label y-label :x-are-fns x-are-fns :y-are-fns y-are-fns)
 	      (plot-timed-data nil ; (when dummy10 (gv win :y-lists)) (when dummy10 (gv win :label-list))
 			       (gv win :label-list)
 			       nil
 			       :y-lists (gv win :y-lists) :x-lists (gv win :x-lists)
-			       :win revised-win :delta-t-start (gv revised-win :delta-t-start) 
+			       :win revised-win :delta-t-start (gv revised-win :delta-t-start)
 			       :use-bins (gv revised-win :use-bins) :bin-width (gv revised-win :bin-width)
 			       :draw-grid draw-grid :label-traces label-traces :revise-plot (not dummy10) :resurrect (not (eq revised-win win))
 			       :x-axis-p x-axis-p :y-axis-p y-axis-p
@@ -3828,7 +3830,7 @@ restore, if supplied."
 			       :x-data-offset (gv revised-win :x-data-offset) :y-data-offset (gv revised-win :y-data-offset)
 			       :connect-data-points connect-data-points :scatter scatter
 			       :SCATTER-SYMBOL SCATTER-SYMBOL :fill-scatter fill-scatter :scatter-symbol-borderp scatter-symbol-borderp
-			       :x-symbol-width x-symbol-width :y-symbol-width y-symbol-width 
+			       :x-symbol-width x-symbol-width :y-symbol-width y-symbol-width
 			       :x-label-v-position x-label-v-position :y-label-h-position y-label-h-position
 			       :x-min x-min :x-max x-max :y-min y-min :y-max y-max :x-inc x-inc :y-inc y-inc
 			       :x-origin x-origin :y-origin y-origin :x-label x-label :y-label y-label :x-are-fns x-are-fns :y-are-fns y-are-fns
@@ -3903,7 +3905,7 @@ restore, if supplied."
 		      dummy5 (gv match-win :x-inc) dummy6 (gv match-win :y-inc)
 		      dummy7 (gv match-win :x-origin) dummy8 (gv match-win :y-origin)))
 	(:X (setq dummy1 (gv match-win :x-min) dummy2 (gv match-win :x-max)
-		  dummy5 (gv match-win :x-inc) dummy7 (gv match-win :x-origin))) 
+		  dummy5 (gv match-win :x-inc) dummy7 (gv match-win :x-origin)))
 	(:Y (setq dummy3 (gv match-win :y-min) dummy4 (gv match-win :y-max)
 		  dummy8 (gv match-win :y-origin) dummy6 (gv match-win :y-inc)))))))
 
@@ -3929,9 +3931,9 @@ value to the largest of all."
 
 (defun rescale-wins-to-largest-y-magnitude (wins)
   "Rescale all standard plot windows WINS so that all have the minimum Y axis value to the smallest of all, and the maximum Y axis
-value to the largest of all." 
+value to the largest of all."
   (rescale-wins-to-largest-magnitude wins :y))
-  
+
 (defun set-*plot-axis-font*-menu (&optional default-font)
   (setq *plot-axis-font* (font-menu (or default-font *plot-axis-font*) "Set *PLOT-AXIS-FONT* (default plot axis font)")))
 
@@ -4027,7 +4029,7 @@ value to the largest of all."
      (dummy1 (data-and-trace-offset-plot-menu revised-win))
      (dummy26 (scatter-menu win revised-win))
      ((and (eq (gv revised-win :axes-type) :simple) (not (gv revised-win :waterfall))) (SIMPLE-AXES-MENU revised-win))
-     (dummy17 (plot-scale-to-trace-menu revised-win))		    
+     (dummy17 (plot-scale-to-trace-menu revised-win))
      (dummy20 (plot-log-parameters-menu win revised-win)))))
 
 (defun plot-scale-to-trace-menu (revised-win)
@@ -4111,7 +4113,7 @@ value to the largest of all."
 
 (defparameter generic-plot-keywords
   '(:TITLE
-    :left :top :WIDTH :HEIGHT 
+    :left :top :WIDTH :HEIGHT
     :delta-t :delta-t-start :timed-data
 					; :scale
     :data-type :canonic-label
@@ -4121,9 +4123,9 @@ value to the largest of all."
 
     :X-ARE-FNS :Y-ARE-FNS :x-axis-coeff :y-axis-coeff
     :x-axis-prefix :x-axis-suffix :y-axis-prefix :y-axis-suffix
-    
+
     :X-MIN :X-MAX :X-INC :X-ORIGIN :Y-MIN :Y-MAX :Y-INC :Y-ORIGIN :Y-LOG :X-LOG :LOG-BASE :x-axis-root :y-axis-root
-    
+
     :AXES-TYPE :X-AXIS-P :Y-AXIS-P
     :X-SCALE-L% :X-SCALE-T% :Y-SCALE-T% :SIMPLE-AXIS-X-VALUE-P :SIMPLE-AXIS-Y-VALUE-P
     :consider-y-axis-visible-limit :y-axis-visible-max :y-axis-visible-min
@@ -4132,13 +4134,13 @@ value to the largest of all."
     :linear-regression
 
     :x-origin-tick :y-origin-tick :reference-ticks-to-origin :include-x-tick-at-0 :include-y-tick-at-0
-    
+
     :USE-BINS :BIN-WIDTH :STIPPLE-PERCENT :USE-SAME-LINE-STYLE
     :upper-right-comment :comment :comment-position
 
     :USE-FIXED-TOP-GAP :FIXED-TOP-GAP :USE-FIXED-BOTTOM-GAP :FIXED-BOTTOM-GAP :USE-FIXED-RIGHT-GAP :FIXED-RIGHT-GAP :USE-FIXED-LEFT-GAP :FIXED-LEFT-GAP
-    
-    :DRAW-GRID				; :grid-line-style 
+
+    :DRAW-GRID				; :grid-line-style
     :LABEL-TRACES
     :X-DATA-OFFSET :Y-DATA-OFFSET :X-TRACE-OFFSET :Y-TRACE-OFFSET
     :fix-to-unity-mag-if-so :session-name
@@ -4179,7 +4181,7 @@ value to the largest of all."
     (format t " )))~%~% ")
 
     (loop for key in GENERIC-PLOT-WINDOW-SLOTS do (print-s-value-form-window-key-and-value win key))
-	      
+
     (WRITE-WINDOW-DRESSING win)
     (format t " (let ((*automatic-run* t)) (standard-plot-menu win))~%")
     (format t " nil)~% ")))
@@ -4265,7 +4267,7 @@ value to the largest of all."
 				     (gv line-style :color)
 				     (output-parse-color (gv line-style :foreground-color))))))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;		      
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Plot interactors
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -4366,7 +4368,7 @@ value to the largest of all."
 		 (:final-function #'restore-just-recent-traces))
 
 (defun grab-and-store-plot-data (&key filename win (TRACE :all) overlay-index
-				 force-menu (output-format nil output-format-supplied-p) suppress-comments include-which-comments (if-file-exists :supersede)) 
+				 force-menu (output-format nil output-format-supplied-p) suppress-comments include-which-comments (if-file-exists :supersede))
   "Writes XY plot data from WIN into FILENAME. Prompts for non-specfied args. Arguments and behaviour follow STORE-XY-DATA. TRACE and OVERLAY-INDEX
 keywords determine which traces are retrieved, following EXTRACT-PLOT-WINDOW-DATA. If FILENAME does not include a directory path, then this is taken from
 *DATA-DIRECTORY*."
@@ -4549,7 +4551,7 @@ keywords determine which traces are retrieved, following EXTRACT-PLOT-WINDOW-DAT
 
 (defun get-scatter-line-style (plot-win curve-num &optional (line-style thin-black-line))
   ;; CURVE-NUM ranges from 0 to N-1 for N curves
-  (or 
+  (or
    (let ((temp-value (typecase (gv plot-win :scatter-symbol-line-style)
 		       (cons (nth curve-num (gv plot-win :scatter-symbol-line-style)))
 		       (t (gv plot-win :scatter-symbol-line-style)))))
@@ -4586,7 +4588,7 @@ keywords determine which traces are retrieved, following EXTRACT-PLOT-WINDOW-DAT
 	       points floor-half-height floor-half-width ceiling-half-height ceiling-half-width scatter-line-style color-fill))
 	     (v-agg (make-virtual-scatter-aggregate plot-win item-array scatter-symbol what-is-it)))
 	(virtual-agg-finishing v-agg plot-agg :front)))))
-	 
+
 (defun add-scatter-points-to-plot-make-item-array (points floor-half-height floor-half-width ceiling-half-height ceiling-half-width scatter-line-style color-fill)
   (declare (optimize (safety 1) (speed 3) (space 0)))
   (let (output-list)
@@ -4596,7 +4598,7 @@ keywords determine which traces are retrieved, following EXTRACT-PLOT-WINDOW-DAT
       (let ((x-win (car points))
 	    (y-win (cadr points)))
 	(declare (fixnum x-win y-win))
-	(push			
+	(push
 	 (make-virtual-GOB-item-values-array ; x-center y-center x-left x-right y-top y-bottom line-style filling-style
 	  x-win y-win
 	  (the fn (- x-win ceiling-half-width))  (the fn (+ x-win floor-half-width))
@@ -4617,7 +4619,7 @@ keywords determine which traces are retrieved, following EXTRACT-PLOT-WINDOW-DAT
   (when *enable-frob-win-for-virtual-agg*
     (s-value win :visible t)
     (opal:update win)))
-    
+
 (defun virtual-agg-finishing (v-agg parent-agg &optional (where :front))
   (FROB-win-FOR-VIRTUAL-agg (gv parent-agg :window))
   ;; To make the width/height calculation simpler - not clear that this helps
@@ -4636,7 +4638,7 @@ keywords determine which traces are retrieved, following EXTRACT-PLOT-WINDOW-DAT
 				(:what-is-it what-is-it))))
     (opal::recalculate-virtual-aggregate-bboxes v-agg)
     v-agg))
-		   
+
 
 (defun make-virtual-scatter-aggregate (plot-win item-sequence scatter-symbol what-is-it)
   (make-v-agg (scatter-symbol-to-prototype scatter-symbol) item-sequence what-is-it))
@@ -4659,7 +4661,7 @@ keywords determine which traces are retrieved, following EXTRACT-PLOT-WINDOW-DAT
 	  2d-array-max 2d-array-min
 	  clear-plot-windows
 	  plot 2dplot
-	  3dplot-menu 
+	  3dplot-menu
 	  output-parse-line-style
 	  output-parse-color
 	  mark-plotline mark-baseline remove-plotlines
@@ -4672,7 +4674,7 @@ keywords determine which traces are retrieved, following EXTRACT-PLOT-WINDOW-DAT
 	  DEFAULT-WINDOW-FONT-MENU
 	  plot-axis-and-comment-default-fonts-menu
 	  SET-*PLOT-AXIS-FONT*-MENU
-	  restore-plot 
+	  restore-plot
 	  remove-virtual-aggs
 	  REFRESH-PLOT REFRESH-ALL-PLOTS
 	  UPDATE-FIXED-GAP
@@ -4681,5 +4683,3 @@ keywords determine which traces are retrieved, following EXTRACT-PLOT-WINDOW-DAT
 	  window-comment-font
 	  DENSITY-PLOT-SCALE RETRIEVE-SCATTER-V-AGGS set-virtual-gob-width-and-height EDIT-INDIVIDUAL-SCATTER-DIMENSIONS
 	  ))
-	  
-

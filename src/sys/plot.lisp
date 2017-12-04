@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -71,7 +71,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;;; pump 'current
 
 (defun retrieve-single-data (element data-type &optional state-index)
-  (let ((element (if (node-p element) (node-cell-element element) element)))		   
+  (let ((element (if (node-p element) (node-cell-element element) element)))
     (case data-type
       ((or markov-states		; This just here since it was here.
 	   markov-state)
@@ -79,9 +79,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
       (use-*vsrvolt* (reverse *vsrvolt*))
       (use-*vsrnodevolt* (reverse *vsrnodevolt*))
       (t (car (retrieve-plot-data (list (list (list element) data-type))))))))
-  
+
 (defun clear-single-data (element data-type &optional state-index)
-  (let ((element (if (node-p element) (node-cell-element element) element)))		   
+  (let ((element (if (node-p element) (node-cell-element element) element)))
     (case data-type
       ((or markov-states		; This just here since it was here.
 	   markov-state)
@@ -89,7 +89,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
       (use-*vsrvolt* (setq *vsrvolt* nil))
       (use-*vsrnodevolt* (setq *vsrnodevolt* nil))
       (t (car (clear-plot-data (list (list (list element) data-type))))))))
-  
+
 (defun retrieve-plot-data (structures-structure-data-types)
   ;; This function returns a list of data lists, each of which is of the type referenced in the cadr of each sublist in
   ;; STRUCTURES-STRUCTURE-DATA-TYPES and comes from the structure name which is the car of the sublists. The data is reversed from
@@ -129,15 +129,15 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	 (info-filename (get-surf-filename pathname-directory "plot-settings.lisp"))
 	 (new-file (not (probe-file info-filename)))
 	 (*print-pretty* nil))
-    (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-    (when (probe-file (ext:unix-namestring pathname-directory nil))
+    (unix-mkdir (namestring pathname-directory nil) #o777)
+    (when (probe-file (namestring pathname-directory nil))
       (with-open-stream (*standard-output* (open info-filename :direction :output :if-exists :supersede
 						 :if-does-not-exist :create))
 	(when new-file (format t ";;; -*- Package: SURF; Mode: LISP -*-~%~%"))
 	(format t "#|~%~%")
 	(print-circuit t)
 	(format t "|#~%~%")
-	
+
 	(loop for plot-list-info in *plot-lists-info*
 	      when (symbol-value (plot-list-info-names plot-list-info)) do
 	      (write-lisp-sym-list-to-stream (plot-list-info-names plot-list-info)
@@ -170,7 +170,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 				)
 	      do (WRITE-LISP-SYM-AND-VALUE-TO-STREAM plot-var t)))
       (format t "File ~a written~%" info-filename))))
-				   
+
 (defun clear-all-plot-lists ()
   (setq *plot-lists-cells* nil
 	*plot-lists-cell-types* nil)
@@ -307,7 +307,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 	*all-save-leak-current-nodes*
 	(loop for struct-list in (list *plot-leak-currents-structures*) nconc (copy-list struct-list))
-	
+
 	*all-save-capacitance-current-nodes*
 	(loop for struct-list in (list *plot-capacitance-currents-structures*) nconc (copy-list struct-list))))
 
@@ -392,7 +392,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
      (format nil "~a ~a~S"
 	     (if electrode-p
 	       "Electrode"
-		 (concatenate-string-list 
+		 (concatenate-string-list
 		  (loop for table in (coerce-to-list tables)
 			when (type-of-first-hash-value table)
 			collect (REPLACE-CHAR-W-SPACE-IN-STRING (string (type-of-first-hash-value table)) #\-))
@@ -440,7 +440,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 			     (non-empty-hash-tables (plot-list-info-tables plot-list-info))))))
   (let ((plot-menu-class-enable
 	 (choose-list-values-from-keys
-	  (loop for plot-list-info in *plot-lists-info* 
+	  (loop for plot-list-info in *plot-lists-info*
 		when (and
 		      (not (eq '*PLOT-PATH-NODES* (plot-list-info-names plot-list-info)))
 					; (= (length (plot-list-info-tables plot-list-info)) 1)
@@ -471,7 +471,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defun plot-menu-class-enable (element &optional model-type)
   (let ((hash (element-hash-table element model-type)))
-    (loop for plot-list-info in *plot-lists-info* 
+    (loop for plot-list-info in *plot-lists-info*
 	  when (loop for sym in (plot-list-info-tables plot-list-info) thereis (eq hash sym))
 	  collect (slot-descriptor-string plot-list-info))))
 
@@ -480,7 +480,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
    (element model-type)
    (plot-selection-menus (plot-menu-class-enable elt internal-type) elt internal-type)))
 
-(defun plot-selection-menus (plot-menu-class-enable &optional element model-type)	
+(defun plot-selection-menus (plot-menu-class-enable &optional element model-type)
   ;; For each variable class for which plotting is enabled, generate a selection menu for all the instances of the variable class.
   (let ((element (element element model-type)) slot-descriptor-string slot)
     (loop for plot-list-info in *plot-lists-info*
@@ -503,12 +503,12 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		     (select-hash-values-menu
 		      (non-empty-hash-tables (plot-list-info-tables plot-list-info))
 		      (format nil "Select ~as for Plotting" slot-descriptor-string)
-		      :max-per-menu 30 :direction :horizontal :rank-margin 2 
+		      :max-per-menu 30 :direction :horizontal :rank-margin 2
 		      :inclusion-key (when (eq 'MARKOV-STATE slot) 'MARKOV-PARTICLE-P)
 		      :selected-list (if (eq (symbol-value (plot-list-info-names plot-list-info)) 'all)
 				       (mapcar 'list-all-hash-names (non-empty-hash-tables (plot-list-info-tables plot-list-info)))
 				       (symbol-value (plot-list-info-names plot-list-info))))))))))
-		      
+
 ;; possible bug in element-type 1/17/98
 (defun reorder-names-by-type (list-of-names)
   (let ((types-in-names (delete-duplicates (loop for name in list-of-names collect (element-type name)))))
@@ -542,7 +542,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		  (surf-plot (loop for val in this-plot collect (ARCHIVE-VARIABLE-LIST-SIMULATION-SYMBOL-VALUE val))
 			     (mapcar #'(lambda (symbol-and-type)
 					 (string-remove-head (string (ARCHIVE-VARIABLE-LIST-SIMULATION-SYMBOL symbol-and-type)) (1+ (length *simulation-name*))))
-				     this-plot) 
+				     this-plot)
 			     (string this-type)
 			     :x-max nil :x-min nil :x-label *DEFAULT-SURF-PLOT-X-LABEL* :y-label (plot-y-label-from-data-type this-type)))))))
 
@@ -615,7 +615,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		 (string  element)
 		 (number (format nil "~A" element))
 		 (t (format nil "~A" (type-of element)))))
-	      (t 
+	      (t
 	       (let ((add-cell-name (HASH-TABLE-HAS-MORE-THAN-ONE-VALUE-P (cell-hash-table))))
 		 (if (numberp print-name)
 		     (if (electrode-p elt)
@@ -677,7 +677,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;; perhaps fixed 5/5/98
 (defun plot-memb-elt-data-type (plot-list-names-symbol)
   (let* ((plot-list-info (find plot-list-names-symbol *plot-lists-info* :key 'car))
-	 (plot-list-info-types (plot-list-info-types plot-list-info)) 
+	 (plot-list-info-types (plot-list-info-types plot-list-info))
 	 (plotted-elements (flatten-no-nils-list (loop for model-type in plot-list-info-types ; Parse with ELEMENT using the TYPE arg.
 						       collect (element (symbol-value plot-list-names-symbol) model-type))))
 	 (model-types (delete-duplicates (mapcar 'type-of plotted-elements)))
@@ -697,9 +697,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	  for ion in '("K+ " "Na+ " "Ca++ " "")
 	  when elements do
 	  (surf-plot (retrieve-plot-data (list (list elements data-type)))
-		     elements 
+		     elements
 		     (format nil "~A~A" ion (slot-descriptor-string nil :tables (mapcar 'get-model-hash-table model-types) :slot data-type))
-		     :top-element-list elements 
+		     :top-element-list elements
 		     :model-type model-types
 		     :y-min (case data-type
 			      (conductance 0.0)
@@ -815,7 +815,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defun plot-axon-voltages ()
   (surf-plot
    (retrieve-plot-data (list (list *plot-axon-voltages-structures* `voltage)))
-   *plot-axon-voltages* 
+   *plot-axon-voltages*
    "Axon Output Voltages"
    :top-element-list *plot-axon-voltages-structures* :model-type 'axon :y-label "mV" :x-label *DEFAULT-SURF-PLOT-X-LABEL*
    :y-min (unless *automatic-voltage-plot-scaling* *voltage-plot-min*) :y-max (unless *automatic-voltage-plot-scaling* *voltage-plot-max*)))
@@ -834,7 +834,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	    ;; (concatenate 'list *plot-channel-currents* (soma-dendrite-current-labels  *plot-soma-dendrite-currents*))
 	    (concatenate 'list (MASSAGE-ELEMENT-PLOT-LABELS *plot-channel-currents* 'channel)
 			 (soma-dendrite-current-labels (MASSAGE-ELEMENT-PLOT-LABELS *plot-soma-dendrite-currents* 'soma)))))
-    (surf-plot	  
+    (surf-plot
      (retrieve-plot-data (list (list *plot-channel-currents-structures* `current) (list *plot-soma-dendrite-currents-structures* `dendrite-current)))
      labels
      (concatenate-strings
@@ -899,12 +899,12 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (list (nconc (when *plot-shell-1-concentrations-p* (mapcar 'conc-int-shell-1-trace-label *plot-conc-1-ints*))
 	       (when *plot-shell-2-concentrations-p* (mapcar 'conc-int-shell-2-trace-label *plot-conc-2-ints*))
 	       (when *plot-shell-3-concentrations-p* (mapcar 'conc-int-shell-3-trace-label *plot-conc-3-ints*))
-	       (when (and *plot-concentrations-p* (not *PLOT-TOTAL-CONCS-SEPARATELY*)) (mapcar 'conc-int-total-trace-label *plot-conc-ints*))) 
+	       (when (and *plot-concentrations-p* (not *PLOT-TOTAL-CONCS-SEPARATELY*)) (mapcar 'conc-int-total-trace-label *plot-conc-ints*)))
 	(when (and *plot-concentrations-p* *PLOT-TOTAL-CONCS-SEPARATELY*) (mapcar 'conc-int-total-trace-label *plot-conc-ints*))))
 
 (defun concentration-plotter ()
   (loop for data-key-list in (concentration-plotter-data-keys)
-	for label-list in (concentration-plotter-labels) 
+	for label-list in (concentration-plotter-labels)
 	for suffix in '("" " (Total)") do
 	(let ((plot-data (retrieve-plot-data data-key-list))
 	      (title (format nil "~AConcentrations~A" (return-ion-label-if-only-one-plotted) suffix)))
@@ -949,7 +949,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
       (when *plot-standard-windows*
 	(cond-every
 	 (*plot-field-potentials-p* (plot-field-potentials))
-	 (*plot-membrane-voltages-p* (plot-node-voltages))	 
+	 (*plot-membrane-voltages-p* (plot-node-voltages))
 	 (*plot-path-node-voltages-p* (plot-path-node-voltages))
 	 (*plot-membrane-voltage-derivatives-p* (plot-node-voltage-derivatives))
 	 (*plot-axon-voltages-p* (plot-axon-voltages))
@@ -974,7 +974,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	 (*plot-leak-currents-p* (plot-leak-currents))
 	 ((or *plot-shell-1-concentrations-p* *plot-shell-2-concentrations-p* *plot-shell-3-concentrations-p* *plot-concentrations-p*)
 	  (concentration-plotter))
-	 ((or *plot-synapse-events-p* *plot-axon-events-p*) (event-plotter))))    
+	 ((or *plot-synapse-events-p* *plot-axon-events-p*) (event-plotter))))
       (setq *CREATE-NEW-SIMULATION-PLOTS* nil)
       (when *store-plot-results-to-folder* (traces-to-folder t))
       (when *hard-copy-screen* (HARD-COPY-SCREEN)))))
@@ -1023,7 +1023,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 					; (label-cell-type-in-*plot-lists-cell-types* label)
 				)))
 		collect label into label-list and collect data-list into data-lists
-		finally 
+		finally
 		(when (>= (length data-lists) 1) ; Make sure that there is data to plot.
 		  (let (pane-data-list pane-label-list)
 		    (loop for data-list in data-lists for label in label-list for count from 1 for total-count from 1
@@ -1163,6 +1163,6 @@ where each element-pair-X may specify a data-type for one, both or neither eleme
 		     (push trace-label label-list)))))
 	  finally (plot-xy-data
 		   data-lists label-list
-		   :title (or title (car label-list)) :prompt-for-overlay prompt-for-overlay 
+		   :title (or title (car label-list)) :prompt-for-overlay prompt-for-overlay
 		   :x-min x-min :x-max x-max :x-label actual-x-label
 		   :y-min y-min :y-max y-max :y-label actual-y-label))))

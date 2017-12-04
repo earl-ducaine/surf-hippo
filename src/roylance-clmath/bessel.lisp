@@ -16,11 +16,7 @@
 ;;;   Do Y0, Y1 sometime
 ;;;   Use swamped Miller recurrance relations instead
 
-(in-package "USER")
-
-(eval-when (compile load eval)
-  nil)
-
+(in-package :roylance-clmath)
 
 ;; lbg 9-6-95
 #|
@@ -115,7 +111,7 @@
 
 ;;; NBS 9.8.1
 
-(defun BESSEL-I (order x)			
+(defun BESSEL-I (order x)
   (declare (float x z2 zi))
   (setq order (abs order))
   (cond ((= order 0)

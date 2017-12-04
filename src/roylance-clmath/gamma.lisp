@@ -19,9 +19,8 @@
 ;;; Bugs and fixes
 ;;;   gamma-incomplete chokes on large x
 
-(in-package "USER")
+(in-package :user)
 
-(provide "GAMMA-FUNCTION")
 
 ;; lbg 9-6-95
 #|
@@ -30,7 +29,7 @@
   (require "MODULES")
   (module-require "HORNER"))
 |#
-
+
 ;;;; NBS Approximation to the Gamma Function
 
 ;;; NBS 6.1.15 Recurrence Formula
@@ -42,7 +41,7 @@
 ;;;    (gamma z) = (pi csc(pi z)) / (-z (gamma -z))
 
 ;;; NBS 6.1.35
-;;;
+
 (defun gamma-function-nbs (a)
   (let ((x (- a 1.0)))
     (declare (float x))
@@ -275,5 +274,3 @@
 ;;;		= (integral x to inf of (exp -t)(expt t a-1) dt)
 ;;; (gamma a+1 x) = a (gamma a x) - (exp -x) (expt x a)
 ;;; note distinction of LARGE and small gammas
-
-

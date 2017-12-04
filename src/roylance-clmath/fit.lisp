@@ -20,9 +20,6 @@
   (user:module-require "OPTIMIZE-REGRESSION"))
 |#
 
-(provide "OPTIMIZE-LINEAR-FIT")
-
-
 ;;;; Quick Fit
 
 ;;; given a function of x and several parameters,
@@ -69,7 +66,7 @@
     (declare (type fixnum n)
 	     (type (simple-array float   (*)) sigmay yfit a sigmaa r)
 	     (type (simple-array float (* *)) fit-data))
-    
+
     (do ((j 0 (1+ j))
 	 (arguments nil))
 	((> j nterms))

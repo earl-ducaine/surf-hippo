@@ -1,40 +1,41 @@
 ;;; -*- Mode: LISP; Syntax: Common-Lisp; Package: WINDOWS-HACK; Base: 10 -*-
 
-#|
 
-====================================================================================================
-			       The Surf-Hippo Neuron Simulator System
-====================================================================================================
-
-This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
-Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
-Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
-Permission to use, copy, modify, and distribute this software and its documentation for any purpose
-and without fee is hereby granted, provided that this software is cited in derived published work,
-and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
-Project makes no representations about the suitability of this software for any purpose. It is
-provided "as is" without express or implied warranty.
-                                                                                 
-If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
-on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
-
-|#
-
+;; The Surf-Hippo Neuron Simulator System
+;;
+;; This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
+;; Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
+;; Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
+;;
+;; Permission to use, copy, modify, and distribute this software and its documentation for any purpose
+;; and without fee is hereby granted, provided that this software is cited in derived published work,
+;; and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
+;; Project makes no representations about the suitability of this software for any purpose. It is
+;; provided "as is" without express or implied warranty.
+;;
+;; If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
+;; on the mailing list.
+;;
+;; Copyright (c) 1989 - 2003, Lyle J. Graham
+;;
 ;; GUI Source file: math.lisp
 
 
-(IN-PACKAGE "WINDOWS-HACK")
+(in-package :windows-hack)
 
-;; Some math and logical functions. Check the macros.lisp file for some math macros, and sequences.lisp for some sequence-oriented math functions.
+;; Some math and logical functions. Check the macros.lisp file for
+;; some math macros, and sequences.lisp for some sequence-oriented
+;; math functions.
 
-(defun half (number) (/ number 2))
+(defun half (number)
+  (/ number 2))
 
 (proclaim '(inline float-floor))
+
 (defun float-floor (number &optional (divisor 1.0))
-  ;; Returns the greatest integer not greater than number, or number/divisor. The second returned value is (mod number divisor).
+  ;; Returns the greatest integer not greater than number, or
+  ;; number/divisor. The second returned value is (mod number
+  ;; divisor).
   (declare (optimize (safety 0) (speed 3) (space 0) (compilation-speed 0))
 	   (single-float number divisor))
   (multiple-value-bind (tru rem) (truncate number divisor)
@@ -58,7 +59,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (declare (optimize (safety 2) (speed 3) (space 0) (compilation-speed 0)))
   (do* ((result (list :header))
 	(P result))			; P points to last cell of result
-      ((or (null list-1) (null list-2)) ; done when either list used up	
+      ((or (null list-1) (null list-2)) ; done when either list used up
        (if (null list-1)		; in which case, append the
 	 (rplacd p list-2)		;   other list
 	 (rplacd p list-1))
@@ -244,25 +245,27 @@ value."
 	      summing (square (float (- comp1 comp2))))))
 
 (defun cartesian-vector-distance-float (x1 x2)
-  "Return the cartesian distance between the two lists of single float numbers, X1 and X2, of the same arbitrary length. Returns a
-single float value."
+  "Return the cartesian distance between the two lists of single float
+   numbers, X1 and X2, of the same arbitrary length. Returns a single
+   float value."
   (declare (optimize (safety 0) (speed 3) (space 1)))
   (do* ((x1 (the cons x1) (cdr x1))
 	(x2 (the cons x2) (cdr x2))
 	(sum (the sf (square (the sf (- (the sf (car x1)) (the sf (car x2))))))
 	     (the sf (+ sum (the sf (square (the sf (- (the sf (car x1))
 						       (the sf (car x2))))))))))
-       ((null x1) (cond ((< sum 0) 0.0)
-			(t (the sf (coerce (kernel::%sqrt (coerce sum 'double-float)) 'single-float)))))))
+       ((null x1)
+	(cond ((< sum 0)
+	       0.0)
+	      (t
+	       (the sf (coerce (sqrt (coerce sum 'double-float)) 'single-float)))))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun max-of-only-nums (&rest args) (apply 'max (no-nils args)))
 (defun min-of-only-nums (&rest args) (apply 'min (no-nils args)))
 
 (export '(MAX-OF-ONLY-NUMS MIN-OF-ONLY-NUMS))
 
-;;; BOUND-VAL, BOUND-INT-VAL Returns VAL after passing it through piece-wise linear squashing function defined by MAX and MIN.
 (proclaim '(inline bound-int-val))
 (defun bound-int-val (val max min)
   (declare (type fixnum val max min))
@@ -279,7 +282,7 @@ single float value."
   (declare (optimize (safety 0) (speed 3) (space 1)))
   (let ((array (make-array '(3 3) :initial-element 0.0 :element-type 'single-float)))
     (declare (type (simple-array single-float (3 3)) array))
-    (dotimes (i 3)	
+    (dotimes (i 3)
       (declare (fixnum i))
       (setf (aref array i i) 1.0))
     array))
@@ -405,7 +408,7 @@ INTERCEPT [on the X axis] may be a number or :UNDEFINED."
 (defun lin-reg-slope-infinite-p (slope-annotation) (= slope-annotation *lin-reg-slope-infinite*))
 (defun lin-reg-slope-undefined-p (slope-annotation) (= slope-annotation *lin-reg-slope-undefined*))
 
-(defun lin-reg-slope-annotation-string (slope-annotation) 
+(defun lin-reg-slope-annotation-string (slope-annotation)
   (cond ((lin-reg-slope-undefined-p slope-annotation) "(slope undefined)")
 	((lin-reg-slope-infinite-p slope-annotation) "(slope infinite)")
 	((lin-reg-slope-ok-p slope-annotation) "(slope ok)")
@@ -455,7 +458,7 @@ INTERCEPT [on the X axis] may be a number or :UNDEFINED."
        slope-num (- (* n sumxy) (* sumy sumx))
        slope-den (- (* n sumxx) (* sumx sumx))))
     (when debug (format t "n: ~A sumx: ~A sumy: ~A sumxy: ~a sumxx: ~A num: ~A den: ~A~%" n sumx sumy sumxy sumxx slope-num slope-den))
-    
+
     (cond
      ((or (and equal-xs equal-ys) (= 0 slope-den slope-num)) (setq slope-annotation slope-undefined))
      ((or equal-xs (= 0 slope-den)) (setq slope-annotation slope-infinite) (setq intercept (aref df-arrayx 0)))
@@ -472,7 +475,7 @@ INTERCEPT [on the X axis] may be a number or :UNDEFINED."
     (setq r (if (= n 2) 1.0d0 (r-from-lxx-lxy-lyy lxx lxy lyy)))
     (when print-results
       (format t "~%mx=~a, varx=~a, my=~a, vary=~a, covxy=~a~%" meanx (lxx df-arrayx) meany (lxx df-arrayy) (lxy df-arrayx df-arrayy))
-      (format t "Slp=~a, Intcpt= ~a, r = ~a ~A~%" slope intercept r (lin-reg-slope-annotation-string slope-annotation))) 
+      (format t "Slp=~a, Intcpt= ~a, r = ~a ~A~%" slope intercept r (lin-reg-slope-annotation-string slope-annotation)))
     (values (s-flt slope) (s-flt intercept) (s-flt r) slope-annotation)))
 
 
@@ -588,11 +591,11 @@ flanking the true median. Also returns a copy of LIST, converted to single float
 	  single-float-<-merge-lists*
 	  single-float-ascending-sort-list
 	  average-closest-n-1-vals
-	  closest-n-1-vals	  
+	  closest-n-1-vals
 	  in-middle-kludge
 	  GET-NICE-MAG
 	  msd-round MSD-CEILING MSD-FLOOR
-	  
+
 	  cos-degrees sin-degrees
 	  coerce-to-even-int
 	  rad-to-deg deg-to-rad

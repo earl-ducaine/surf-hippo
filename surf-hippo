@@ -1,7 +1,0 @@
-#!/bin/sh
-
-cd $SURFHOME
-
-lisp=/usr/local/surf-hippo/cmucl-20d/bin/lisp
-
-exec /usr/local/cmucl/cmucl-20d/bin/lisp  "$@" -core  /usr/local/surf-hippo/lib/images/cmucl-20d-image

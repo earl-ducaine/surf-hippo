@@ -1,46 +1,39 @@
 ;;; -*- Mode: LISP; Syntax: Common-Lisp; Package: WINDOWS-HACK; Base: 10 -*-
 
-#|
-
-====================================================================================================
-			       The Surf-Hippo Neuron Simulator System
-====================================================================================================
-
-This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
-Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
-Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
-Permission to use, copy, modify, and distribute this software and its documentation for any purpose
-and without fee is hereby granted, provided that this software is cited in derived published work,
-and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
-Project makes no representations about the suitability of this software for any purpose. It is
-provided "as is" without express or implied warranty.
-                                                                                 
-If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
-on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
-
-|#
-
-;; GUI Source file: utilities.lisp
-
-
-(IN-PACKAGE "WINDOWS-HACK")
-
-
-;; **********************************
+;; The Surf-Hippo Neuron Simulator System
 ;;
-;; Some utility functions
+;; This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
+;; Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
+;; Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
 ;;
-;; **********************************
+;; Permission to use, copy, modify, and distribute this software and its documentation for any purpose
+;; and without fee is hereby granted, provided that this software is cited in derived published work,
+;; and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
+;; Project makes no representations about the suitability of this software for any purpose. It is
+;; provided "as is" without express or implied warranty.
+;;
+;; If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
+;; on the mailing list.
+;;
+;; Copyright (c) 1989 - 2003, Lyle J. Graham
 
-(defvar *abort-on-sim-error* t "When T SIM-ERROR as default aborts to top level; otherwise SIM-ERROR goes to the debugger.")
+
+(in-package :windows-hack)
+
+;;; Utility functions
+
+(defvar *abort-on-sim-error* t
+  "When T SIM-ERROR as default aborts to top level; otherwise
+   SIM-ERROR goes to the debugger.")
 
 (defun sim-error (&optional (message "") (abort-on-error *abort-on-sim-error*))
-  "A fatal error occurred, print MESSAGE and abort if ABORT-ON-ERROR [default *ABORT-ON-SIM-ERROR*]; otherwise stay in debugger."
-  (inter:beep)  (inter:beep)  (inter:beep)
-  (format *error-output* "~%~% Fatal Error in Function ~A:~%" (kernel:find-caller-name))
+  "A fatal error occurred, print MESSAGE and abort if ABORT-ON-ERROR
+   [default *ABORT-ON-SIM-ERROR*]; otherwise stay in debugger."
+  (inter:beep)
+  (inter:beep)
+  (inter:beep)
+  (format *error-output* "~%~% Fatal Error in Function ~A:~%")
+  (break)
   (if abort-on-error
     (progn
       (format *error-output* "~%  ~a~%" message)
@@ -51,49 +44,63 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 ;; Stolen from CMUCL17C code/query.lisp.
 (defun yes-or-no-p-default-no (&optional format-string &rest arguments &key default)
-  "Clears the input, beeps, prints the message, if any, and reads characters from *QUERY-IO* until the user enters YES \(case
-insensitive\) as an affirmative. If user only RETURNs or types something else, then returns DEFAULT [modification from cmucl 17c
-query.lisp]."
+  "Clears the input, beeps, prints the message, if any, and reads
+   characters from *QUERY-IO* until the user enters YES (case
+   insensitive) as an affirmative. If user only RETURNs or types
+   something else, then returns DEFAULT [modification from cmucl 17c
+   query.lisp]."
   (clear-input *query-io*)
-#+garnet (inter:beep)
+  (inter:beep)
   (when format-string
     (fresh-line *query-io*)
     (apply #'format *query-io* format-string arguments)
     (force-output *query-io*))
-  (or (string-equal (string-trim " 	" (read-line *query-io*)) "yes") default))
-  
+  (if (string-equal (string-trim " 	" (read-line *query-io*)))
+      "yes"
+      default))
+
 (defun y-or-n-p-default-no (&optional format-string &rest arguments &key default)
-  "Clears the input, beeps, prints the message, if any, and reads characters from *QUERY-IO* until the user enters Y \(case
-insensitive\) as an affirmative. If user only RETURNs or types something else, then returns DEFAULT [modification from cmucl 17c
-query.lisp]."
+  "Clears the input, beeps, prints the message, if any, and reads
+   characters from *QUERY-IO* until the user enters Y \(case
+   insensitive\) as an affirmative. If user only RETURNs or types
+   something else, then returns DEFAULT [modification from cmucl 17c
+   query.lisp]."
   (clear-input *query-io*)
-#+garnet (inter:beep)
+  (inter:beep)
   (when format-string
     (fresh-line *query-io*)
     (apply #'format *query-io* format-string arguments)
     (force-output *query-io*))
-  (or (string-equal (string-trim " 	" (read-line *query-io*)) "Y") default))
+  (if (string-equal (string-trim " 	" (read-line *query-io*)))
+      "Y"
+      default))
 
 (defun quit (&optional finish-function)
-  (when t ; (Yes-OR-No-P-DEFAULT-NO "Do you really want to quit LISP? (RETURN for NO, yes/YES for YES): ")
-    ;; May 22 2002. CMU Common Lisp release x86-linux 2.4.20 10 March 2000 build 498
-    ;; (RedHat 7.3) Seem to need the RECKLESSLY-P flag - otherwise get
-    ;;    Error in function UNIX::SIGSEGV-HANDLER:  Segmentation Violation at #x4000BB04.
-    (when finish-function (funcall finish-function))
-    (system::quit t)))
+  ;; (Yes-OR-No-P-DEFAULT-NO "Do you really want to quit LISP? (RETURN for NO, yes/YES for YES): ")
+  ;;
+  ;; May 22 2002. CMU Common Lisp release x86-linux 2.4.20 10 March
+  ;; 2000 build 498 (RedHat 7.3) Seem to need the RECKLESSLY-P flag -
+  ;; otherwise get Error in function UNIX::SIGSEGV-HANDLER:
+  ;; Segmentation Violation at #x4000BB04.
+  (when finish-function
+    (funcall finish-function))
+  (surf-hippo-ext:quit))
 
 (defvar *show-csh-result* nil)
 (defvar *announce-shell-exec* nil "Announce execution of shell command by SHELL-EXEC.")
 (defvar *wait-for-run-program* nil)
 
 (defun shell-exec (command &optional (show-result *show-csh-result*))
-  "Execute the COMMAND string in the shell, announcing the process when *ANNOUNCE-SHELL-EXEC* is T, and announcing the result if
-SHOW-RESULT is T [default *SHOW-CSH-RESULT*]."
-  (when *announce-shell-exec* (format t "~%;;; Shell command: ~s~%"command))
+  "Execute the COMMAND string in the shell, announcing the process
+   when *ANNOUNCE-SHELL-EXEC* is T, and announcing the result if
+   SHOW-RESULT is T [default *SHOW-CSH-RESULT*]."
+  (when *announce-shell-exec*
+    (format t "~%;;; Shell command: ~s~%" command))
   (let* ((output-stream (make-string-output-stream))
-	 (process (ext:run-program "csh" (list "-fc" command) :output output-stream :wait *wait-for-run-program*)))
-    (when show-result (format t "~A~%" (get-output-stream-string output-stream)))
-    (ext::process-close process)
+	 (process (uiop:run-program  command :output output-stream)))
+    (when show-result
+      (format t "~A~%" (get-output-stream-string output-stream)))
+    (surf-hippo-ext::process-close process)
     nil))
 
 ;; LG 05.04.2012
@@ -117,13 +124,13 @@ SHOW-RESULT is T [default *SHOW-CSH-RESULT*]."
     * ... string: The string is added to the new symbol's name.
     * ... symbol: The name of the symbol is added to the new symbol's name.
     * ... expression of the form (:< e): e should evaluate to a string, symbol, or number; the characters of the value of e (as printed by princ) are
-					 concatenated into the new symbol's name. 
+					 concatenated into the new symbol's name.
     * ... expression of the form (:++ p): p should be a place expression (i.e., appropriate as the first argument to setf), whose value is an integer; the
-					  value is incremented by 1, and the new value is concatenated intot he new symbol's name. 
+					  value is incremented by 1, and the new value is concatenated intot he new symbol's name.
 
 If the :package specification is omitted, it defaults to the value of *package*. If p is nil, the symbol is interned nowhere. Otherwise, it should evaluate
 to a package designator (usually, a keyword whose name is the same of a package). For example, (build-symbol (:< x) "-" (:++ *x-num*)), when x = foo and
-*x-num* = 8, sets *x-num* to 9 and evaluates to FOO-9. If evaluated again, the result will be FOO-10, and so forth. 
+*x-num* = 8, sets *x-num* to 9 and evaluates to FOO-9. If evaluated again, the result will be FOO-10, and so forth.
 
 |#
 
@@ -209,7 +216,7 @@ to a package designator (usually, a keyword whose name is the same of a package)
       (if (or (consp val)
 	      (and (symbolp val)
 		   (not (keywordp val))))
-	  `(quote ,val) 
+	  `(quote ,val)
 	  val)))
 
 (defun unless-number-then-string (thing)
@@ -259,7 +266,7 @@ to a package designator (usually, a keyword whose name is the same of a package)
 	  number-sequence-p yes-or-no-p-default-no Y-OR-N-P-DEFAULT-NO quit *announce-shell-exec* *show-csh-result* shell-exec
 	  *wait-for-run-program* build-symbol quote-symbol-cons
 	  *abort-on-sim-error*
-	  sim-error
+	  ;;sim-error
 	  software-version create-output-symbol
 	  unless-number-then-string
 	  sim-warning

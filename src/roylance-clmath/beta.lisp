@@ -29,9 +29,6 @@
 |#
 
 
-(provide "BETA-FUNCTION")
-
-
 ;;;; Beta Function
 
 ;;; The beta function is B(a,b)

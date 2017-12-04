@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -218,7 +218,7 @@ with voltage in volts, a permeability term = 1.9466802e-2 gives figure 1 (in par
 
 (defmacro constant-field-equation-exponential-term-double (voltage valence)
   "Voltage (double-float) is in V. valence is single-float. This form is that used by Mcc-Hug-92."
-  `(kernel::%exp (- (* (the sf ,valence) *F/rt* (the df ,voltage)))))
+  `(exp (- (* (the sf ,valence) *F/rt* (the df ,voltage)))))
 
 (proclaim '(inline constant-field-equation))
 (defun constant-field-equation (voltage conc-in conc-out permeability valence &optional (gating-term 1.0))
@@ -257,7 +257,7 @@ current in nA. All arguments and returned value are single-floats. This form is 
   ;; VOLTAGE in mV, CONC-IN and CONC-OUT in mM, GATING-TERM in cm3/sec. ZF/RT in 1/volts, ZSQD-FF/RT
   ;; in couloumbs mole-1 volt-1. Returns nA. Used in channel and synapse evaluations.
   `(let* ((voltage-in-volts (* ,voltage 1.0e-3))
-	  (exp-term (kernel::%exp (- (* ,zf/rt voltage-in-volts))))
+	  (exp-term (exp (- (* ,zf/rt voltage-in-volts))))
 	  (a-conc-numerator (* 1.0e3 ,gating-term ,zsqd-ff/rt (- ,conc-in (* ,conc-out exp-term)))))
      (if (or (= 0.0 voltage-in-volts)
 	     (= 1.0 exp-term))		; This can show up even if volts /= 0 -> (KERNEL:%EXP (- (* 77.36033 (* 3.469446951953614d-17 0.001)))) 1.0d0
@@ -265,7 +265,7 @@ current in nA. All arguments and returned value are single-floats. This form is 
        (/ (* voltage-in-volts a-conc-numerator) (- 1 exp-term)))))
 
 ;; Review of units
-;;	
+;;
 ;; Faraday = 9.648e4 Coulombs/mole, GasConstant = 8.314 (Volts*Coulombs)/(DegreesKelvin*mole)
 ;;
 ;;
@@ -375,7 +375,7 @@ current in nA. All arguments and returned value are single-floats. This form is 
   (let ((ref-temp (element-reference-temp element))
 	(q10 (element-q10 element)))
     (q10-tau-factor (temperature-centigrade-to-kelvin ref-temp) *temperature* q10)))
-			    
+
 (proclaim '(inline q10-factor))
 (defun q10-factor (reference-temp temp q10 &optional (ignore-q10 *ignore-q10*))
   "q10 factor for rate constants (as temperature goes up, so does rate).  Temperatures in degrees K."
@@ -385,7 +385,7 @@ current in nA. All arguments and returned value are single-floats. This form is 
 (proclaim '(inline qten-tau-factor))
 (defun qten-tau-factor (reference-temp temp qten &optional (ignore-q10 *ignore-q10*))
   (q10-tau-factor reference-temp temp qten ignore-q10))
-		 
+
 (proclaim '(inline qten-rate-factor))
 (defun qten-rate-factor (reference-temp temp qten &optional (ignore-q10 *ignore-q10*))
   (q10-rate-factor reference-temp temp qten ignore-q10))
@@ -412,13 +412,13 @@ current in nA. All arguments and returned value are single-floats. This form is 
     (assign-new-temp-k-to-globals (temperature-centigrade-to-kelvin *temp-celcius*))
     (setq *LAST-SIMULATION-TEMPERATURE* *TEMPERATURE*
 	  *LAST-SIMULATION-TEMP-celcius* *TEMP-celcius*)
-  
+
     (cond-every
      ((not *fix-e-na*) (setq *e-k* (NERNST-POTENTIAL *NA-CONC-INTRA* *NA-CONC-extra* 1)))
      ((not *fix-e-k*) (setq *e-k* (NERNST-POTENTIAL *k-CONC-INTRA* *k-CONC-extra* 1)))
      ((not *fix-e-cl*) (setq *e-cl* (NERNST-POTENTIAL *cl-CONC-INTRA* *cl-CONC-extra* -1)))
      ((not *fix-e-ca*) (setq *e-ca* (NERNST-POTENTIAL *cA-CONC-INTRA* *cA-CONC-extra* 2))))
-    
+
     (setq NERNST-EQN-CONST*1000*TEMP (/ (* 1000.0 *Temperature*) FoverR))
     (setq Eca-Nernst-eqn-const*1000*temp
 	  (* 1000.0			;convert to millivolt units
@@ -427,13 +427,13 @@ current in nA. All arguments and returned value are single-floats. This form is 
 
     (setq *f/rt* (/ faraday (* *temperature* GasConstant)))
     (update-cell-type-ionic-parameters)
-  
+
     (set-synapses-parameters)
     (set-channels-parameters)
     (set-axons-parameters)
 
     (make-needed-v-particle-arrays t)
-  
+
     (make-needed-conc-particle-arrays t)
     (update-particle-type-q10s)
     (update-conc-particle-type-q10s)
@@ -488,7 +488,7 @@ nil, then it is ignored."
   ;; "Ignore the VOLTAGE argument and return RATE as a single-float."
   (declare (ignore voltage))
   (s-flt rate))
- 
+
 (defun squashed-exponential (voltage &key (k 1.0) (v-half 0.0) (base-rate 0.0) (max-rate -1.0))
   (scaled-exponential-soft-rate (s-flt voltage )
 				:steepness (s-flt k)
@@ -499,7 +499,7 @@ nil, then it is ignored."
 
 
 (defun squeezed-exponential (voltage &key (v-half 0.0) (k 1.0) (tau-max -1.0) (tau-min 0.0))
-  "N.B Deprecated. Use SQUEEZED-EXPONENTIAL-RATE for correct behaviour." 
+  "N.B Deprecated. Use SQUEEZED-EXPONENTIAL-RATE for correct behaviour."
 ;; Exponential rate function with minimum and maximum rates given by functions of TAU-MAX [default -1.0] and TAU-MIN [default
 ;; 0.0]. When TAU-MAX is non-positive, then the minimum rate is 0.0, otherwise 1/(TAU-MAX + 2*TAU-MIN); the maximum rate is 1/TAU-MIN. V-HALF [default 0.0] and the inverse
 ;; steepness K [default 1.0] are assumed to be in the same units as VOLTAGE, typically in mV. Returns single float value."
@@ -584,7 +584,7 @@ BASE-RATE and (BASE-RATE + SCALE), respectively. Note that the slope for VOLTAGE
 	      (min (* scale (+ 0.5 (/ (- voltage v-half) steepness)))
 		   scale)))))
 
-;; not used 
+;; not used
 (defun update-constant-field-equation-exponential-term-array ()
   (setq *constant-field-equation-exponential-term-array*
 	(make-array (list 3 *particle-look-up-table-length*) :element-type 'double-float))
@@ -592,7 +592,7 @@ BASE-RATE and (BASE-RATE + SCALE), respectively. Note that the slope for VOLTAGE
 	(loop for voltage double-float from *particle-look-up-table-min-voltage-double*
 	      by *particle-look-up-table-precision*
 	      for voltage-index fixnum from 0 to (1- (the fn *particle-look-up-table-length*)) do
-	      (setf (aref *constant-field-equation-exponential-term-array* valence-index voltage-index)	      
+	      (setf (aref *constant-field-equation-exponential-term-array* valence-index voltage-index)
 		    (exp (* (1+ valence-index) *F/RT* voltage -1.0d-3) ; (coulombs/mole) millivolts 1.0e-3 volts/millivolt
 					; DegKelvin (volts coulombs) / (degreesK mole)
 			 )))))

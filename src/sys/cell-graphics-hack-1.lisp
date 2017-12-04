@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -48,7 +48,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		 (:soma-histology-fixed-diameter-p nil)
 		 (:marker-diameter *default-marker-diameter*)
 		 (:soma-histology-fixed-diameter-pixels 10)
-	 
+
 		 ;; ** Histology graphics slots. **
 
 		 ;; Creating 2D projections from 3D structures and then displaying the projections onto the histology window is a
@@ -81,7 +81,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		 ;; actual drawing. This transformation is done with a 3x3 transformation matrix slot for each window, and allows
 		 ;; the SURF-HIPPO drawing functions to refer to data coordinates, ie microns, with the default putting the
 		 ;; anatomical origin at the center of the window.
-	  
+
 		 (:scale 3.0)		;microns per pixel
 		 (:current-xfrm nil)
 		 (:current-xfrm-rotates nil) ; so we can save some effort on transforms
@@ -95,11 +95,11 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 		 (:grape-size-reference :pixel)
 		 (:grape-size-microns *GRAPE-SIZE-microns*) (:grape-size-pixels *GRAPE-SIZE*)
-		 
-		 (:adjust-histology-window :automatic)    
-			   
+
+		 (:adjust-histology-window :automatic)
+
 		 ;; These values are in the coordinate frame of the window, ie the projection of the
-		 ;; possibly rotated contents. 
+		 ;; possibly rotated contents.
 		 (:max-x-contents 0.0)	;Maximum X value (microns) for the contents of the window.
 		 (:max-y-contents 0.0)	;Maximum Y value (microns) for the contents of the window.
 		 (:min-x-contents 0.0)	;Minimum X value (microns) for the contents of the window.
@@ -228,12 +228,12 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 #|
 (let ((line-style `(eval (o-formula (gvl :parent :line-style)))))
   `((:histology-scale-bar-body ,opal:line (:visible t) (:line-style line-style)))))
-|#     
+|#
 
 (defun add-histology-scale-bar (win)
   (reset-histology-scale-bar-um-length win)
   (opal:add-component (gv win :aggregate) (create-instance nil scale-bar) :where :front))
-  
+
 (defun add-rest-of-histology-stuff (win)
   (add-histology-scale-bar win)
   (add-histology-interactors win))
@@ -243,9 +243,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (let ((win (unless (or prototype create-new-win) (find-histology-window histology-pane-type name :exclude-auxiliary-type exclude-auxiliary-type)))
 	(version (if prototype (gv prototype :version) "")))
     (when (and exclude-auxiliary-type win (eq (gv win :auxiliary-type) exclude-auxiliary-type))
-      (setq win nil))    
-    (cond-every (width (setq width (min width (round (* 0.9 opal:*screen-width*)))))
-		(height (setq height (min height (round (* 0.9 opal:*screen-height*))))))
+      (setq win nil))
+    (cond-every (width (setq width (min width (round (* 0.9 gem::*screen-width*)))))
+		(height (setq height (min height (round (* 0.9 gem::*screen-height*))))))
     (unless win
       (setq win (create-histology-window :width width :height height :type histology-pane-type :prototype prototype))
       (s-value win :title (let ((base-title (concatenate-strings (string (or name histology-pane-type)) (when (> (length version) 0) "-") version)))
@@ -310,8 +310,8 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     win))
 
 (defun create-histology-window-setup (win width height)
-  (cond-every (width (s-value win :width (setq width (min width (round (* 0.9 opal:*screen-width*))))))
-	      (height (s-value win :height (setq height (min height (round (* 0.9 opal:*screen-height*)))))))
+  (cond-every (width (s-value win :width (setq width (min width (round (* 0.9 gem::*screen-width*))))))
+	      (height (s-value win :height (setq height (min height (round (* 0.9 gem::*screen-height*)))))))
   (s-value win :aggregate (create-instance nil opal:aggregate
 					   (:top (o-formula (gvl :window :top)))
 					   (:left (o-formula (gvl :window :left)))
@@ -364,12 +364,12 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     (s-value win :width (COERCE-TO-EVEN-INT (min (max *histology-window-min-width* (/ width scale))
 						 (if *override-screen-max*
 						     (max *histology-window-min-width* (/ width scale))
-						     (* 0.95 opal:*screen-width*))))))
+						     (* 0.95 gem::*screen-width*))))))
   (when height
     (s-value win :height (COERCE-TO-EVEN-INT (min (max *histology-window-min-height* (/ height scale))
 						  (if *override-screen-max*
 						      (max *histology-window-min-height* (/ height scale))
-						      (* 0.95 opal:*screen-height*))))))
+						      (* 0.95 gem::*screen-height*))))))
   (RESET-HISTOLOGY-SCALE-BAR-UM-LENGTH win))
 
 ;;; (describe 'opal:get-standard-font) ->
@@ -381,13 +381,13 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;;;    size   -- :small, :medium, :large, :very-large, or NIL (NIL == :medium)
 
 (defun add-string (string x y agg &key size face family dimensions-in-pixels
-			  (justification :LEFT) ; Or :RIGHT to specify right-justified text 
+			  (justification :LEFT) ; Or :RIGHT to specify right-justified text
 			  x-pixel y-pixel ; Using these will supersede x, y, and dimensions-in-pixels.
 			  background color background-color ;  opal:white
 			  font (x-pixel-offset 0) (y-pixel-offset 0))
   ;; This adds an instance of an opal:text to aggegrate of WIN, but takes useful parameters. Note that X and Y params are in window
   ;; coordinates according to the window's :SCALE slot (e.g. microns per pixel), referenced to the shifted center of WIN, unless
-  ;; DIMENSIONS-IN-PIXELS is non-NIL. 
+  ;; DIMENSIONS-IN-PIXELS is non-NIL.
   (let* ((win (gv agg :parent :window))
 	 (text (graphics-text string win :font font :color color :background-color background-color :background background :size size :face face :family family))
 	 (font-height (gv text :font :font-height))
@@ -430,7 +430,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   ;; Note that X1, X2, Y1, Y2, and thickness params are in window coordinates according to the window's :SCALE slot (e.g. microns
   ;; per pixel), referenced to the center of window [(X,Y) = (0,0) at window center]. Data args must be a single-float.
   (declare (ignore style))
-  (let* ((win (gv agg :parent :window)) 
+  (let* ((win (gv agg :parent :window))
 	 (line-style (get-add-line-line-style color stipple-percent
 					      (round (/ thickness (gv agg :parent :window :scale)))
 					      (graphics-text-linestyle (when (or color stipple-percent) (get-opal-color color stipple-percent)) win)))
@@ -511,7 +511,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	 (polyline (if element
 		     (create-instance nil dynamic-polyline (:element element) (:static-line-style line-style) (:static-fill static-fill))
 		     (create-instance nil opal:polyline (:constant t) (:line-style line-style) (:filling-style static-fill)))))
-    (s-value polyline :point-list (let (x y x-y-hist) 
+    (s-value polyline :point-list (let (x y x-y-hist)
 				    (loop while x-y-points do
 					  (setq x (car x-y-points))
 					  (setq x-y-points (cdr x-y-points))
@@ -599,14 +599,14 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (create-instance 'histology-element-menu-Interactor inter:button-Interactor (:continuous nil) (:start-where t) (:start-event :shift-control-leftdown))
 
-(defun histology-element-menu-inter-function (interactor final-obj-over)  
+(defun histology-element-menu-inter-function (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (histo-interactor-wrapper
    (let ((chosen-one (gv window :chosen-one)))
      (when (and (graphics-window-cells window) chosen-one)
        (overall-element-menu chosen-one window)))))
 
-(defun histology-window-menu-inter-function (interactor final-obj-over)  
+(defun histology-window-menu-inter-function (interactor final-obj-over)
   (declare (ignore final-obj-over))
   (histo-interactor-wrapper
    (let ((*standard-graphics-output* window))
@@ -632,7 +632,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	    (x-label "um")
 	    (y-label "um")
 	    (distance (when (gv window :last-pointer-xy)
-			(cartesian-distance-float (car x-y) (cadr x-y) (nth 0 (gv window :last-pointer-xy)) (nth 1 (gv window :last-pointer-xy)))))) 
+			(cartesian-distance-float (car x-y) (cadr x-y) (nth 0 (gv window :last-pointer-xy)) (nth 1 (gv window :last-pointer-xy))))))
        (update-running-comment window
 			       (format nil "X: ~a ~a~%Y: ~a ~a~A"
 				       (tidy-number-format (car x-y) :default-decimals 1) x-label
@@ -651,7 +651,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	    (x-label "um")
 	    (y-label "um")
 	    (distance (when (gv window :last-pointer-xy)
-			(cartesian-distance (car x-y) (cadr x-y) (nth 0 (gv window :last-pointer-xy)) (nth 1 (gv window :last-pointer-xy)))))) 
+			(cartesian-distance (car x-y) (cadr x-y) (nth 0 (gv window :last-pointer-xy)) (nth 1 (gv window :last-pointer-xy))))))
        (update-running-comment window
 			       (format nil "X: ~a ~a~%Y: ~a ~a~A"
 				       (tidy-number-format (car x-y) :default-decimals 1) x-label
@@ -716,5 +716,3 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (create-instance nil histology-soma-pointer (:Window win)))
 
 (defun clear-histology-windows () (clear-windows-of-mode :histology))
-
-

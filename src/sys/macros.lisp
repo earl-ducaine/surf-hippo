@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -32,7 +32,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defun return-value-units (function-name &optional (units nil units-supplied-p))
   ;;
-  ;; A way to assign units information to functions or global variables. Thus, for some function FOO that returns a numerical result: 
+  ;; A way to assign units information to functions or global variables. Thus, for some function FOO that returns a numerical result:
   ;;
   ;;   (return-value-units 'foo "some units string")
   ;;
@@ -71,11 +71,25 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   `(let ()
      ., body))
 
-(defmacro accumulate-setf (setfable increment) `(setf ,setfable (+ ,setfable ,increment)))
+(defmacro accumulate-setf (setfable increment)
+  `(setf ,setfable (+ ,setfable ,increment)))
 
-(defmacro deccumulate-setf (setfable decrement) `(setf ,setfable (- ,setfable ,decrement)))
+(defmacro deccumulate-setf (setfable decrement)
+  `(setf ,setfable (- ,setfable ,decrement)))
 
-;; modified from code/list.lisp for ASSOC on symbol keys (using EQ instead of EQL). In run-time environment, since these guys can be inline expanded.
+;;; Old CMUCL code
+;;;
+;;; APPLY-KEY saves us a function call sometimes.  This is not in and
+;;; (eval-when (compile eval) ...  because this is used in seq.lisp
+;;; and sort.lisp.
+(defmacro apply-key (key element)
+  `(if ,key
+       (funcall ,key ,element)
+       ,element))
+
+;; modified from code/list.lisp for ASSOC on symbol keys (using EQ
+;; instead of EQL). In run-time environment, since these guys can be
+;; inline expanded.
 (defmacro my-assoc-guts (test-guy)
   `(do ((alist alist (cdr alist)))
        ((endp alist))
@@ -84,9 +98,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defun my-assoc (item alist &key key test test-not)
   ;; Returns the cons in alist whose car is equal (by a given test or EQL) to the ITEM.
-  (cond (test (my-assoc-guts (funcall test item (lisp::apply-key key (caar alist)))))
-	(test-not (my-assoc-guts (not (funcall test-not item (lisp::apply-key key (caar alist))))))
-	(t (my-assoc-guts (eq item (lisp::apply-key key (caar alist)))))))
+  (cond (test (my-assoc-guts (funcall test item (apply-key key (caar alist)))))
+	(test-not (my-assoc-guts (not (funcall test-not item (apply-key key (caar alist))))))
+	(t (my-assoc-guts (eq item (apply-key key (caar alist)))))))
 
 (defun assoc-complete-guts (item alist)
 	 (declare (optimize (safety 0) (speed 3) (space 0)))
@@ -207,7 +221,7 @@ function TEST [default 'EQ]."
       (5 (* a a a a a))
       (6 (* a a a a a a))
       (7 (* a a a a a a a))
-      (0 0.0d0) 
+      (0 0.0d0)
       (t (let ((res 1.0d0))
 	   (declare (double-float res))
 	   (dotimes (i b)
@@ -219,7 +233,7 @@ function TEST [default 'EQ]."
   ;; NG's opaque version
   `(let ((a ,a-arg) (b ,b-arg))
     (declare (double-float a) (fixnum b))
-    (the df 
+    (the df
      (case b
        (1 (the df a))
        (2 (the df (* (the df a) (the df a))))
@@ -236,7 +250,7 @@ function TEST [default 'EQ]."
        (7 (let ((a**3 (* (the df a) (the df a) (the df a))))
 	    (declare (double-float a**3))
 	    (the df (* (the df a) a**3 a**3))))
-       (0 0.0d0) 
+       (0 0.0d0)
        (t (let ((res 1.0d0))
 	    (declare (double-float res))
 	    (dotimes (i b)
@@ -260,8 +274,3 @@ function TEST [default 'EQ]."
 	,@(loop for i from 0 to unrolling-factor
 		append body
 		collect `(incf ,variable))))))
-
-
-
-
-

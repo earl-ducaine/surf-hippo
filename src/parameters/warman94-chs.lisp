@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -34,8 +34,8 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 ;; Na current
 (channel-type-def
- '(na-wdy 
-   (gbar-density . 1500.0)		; 150mS/cm2  
+ '(na-wdy
+   (gbar-density . 1500.0)		; 150mS/cm2
    (e-rev . 65.0)
    (ion-permeabilities . ((NA 1.0)))
    (v-particles . ((nam-wdy 3) (nah-wdy 1)))))
@@ -103,7 +103,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;; E[Ca] = -25.8 ln([Ca_1]/2000)
 
 (channel-type-def
- '(ca-wdy 
+ '(ca-wdy
    (gbar-density . 100.0)		; 10mS/cm2
    (ion-permeabilities . ((cA 1.0)))
    (use-variable-e-rev . t)
@@ -111,7 +111,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 			    (ca-in2-wdy (1 0.024))))
 
    (CONC-INT-TYPE-E-REV-PARAMS . ((ca-in1-wdy (1 1))))
-	
+
    (v-particles . ((cas-wdy 2) (car-wdy 1)))))
 
 
@@ -125,7 +125,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
    (beta . (lambda (voltage)
 	     (let ((shifted-v (- voltage -12.0)))
 	       (/ (* 0.04 shifted-v)
-		  (- (exp (/ shifted-v 10)) 1)))))))	
+		  (- (exp (/ shifted-v 10)) 1)))))))
 
 (particle-type-def
  `(car-wdy
@@ -136,7 +136,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	     (/ 8 (+ (exp (/ (- voltage 68) -27)) 1))))))
 
 (channel-type-def
- '(ca-wdy-ext 
+ '(ca-wdy-ext
    (gbar-density . 100.0)		; 10mS/cm2
    (ion-permeabilities . ((cA 1.0)))
    (use-variable-e-rev . t)
@@ -221,7 +221,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (declare (optimize (speed 3) (space 0))
 	   (double-float conc-arg voltage))
   ;; CONC-ARG is in mM, while paper uses uM
-  (let* ((v-shift (- (* 40 (the df (log (* conc-arg 10000) 10))) ; the paper uses 1000, but the 
+  (let* ((v-shift (- (* 40 (the df (log (* conc-arg 10000) 10))) ; the paper uses 1000, but the
 		     105))
 	 (v-arg (/ (+ voltage v-shift 103) -12))
 	 (alpha (if (= (exp v-arg) 1)
@@ -244,15 +244,15 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     (let* ((v-shift (- (* 40 (the df (DF-REAL-LOG (the df (* conc-arg 1000)) 10.0d0))) 105))
 	   (v-arg (+ voltage v-shift 103))
 	   (alpha (if (= (exp v-arg) 1)
-		      -0.0077d0	
+		      -0.0077d0
 		      (/ (* -0.0077 v-arg)
 			 (- (exp (/ v-arg -12)) 1))))
 	   (beta (/ 1.7 (exp (/ (+ voltage v-shift 237) 30)))))
       (case return-rate
 	(:beta beta)
 	(:alpha alpha)
-	(t (/ alpha (+ alpha beta)))))))
-	
+	(t (/ alpha (+ alpha beta))))))
+
 (conc-particle-type-def
  `(kctc-wdy
    (class . :conc-volt)
@@ -292,7 +292,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;; k m channel
 
 (channel-type-def
- '(km-wdy 
+ '(km-wdy
    (gbar-density . 67.0)		; 6.7mS/cm2
    (e-rev . -80.0)
    (ion-permeabilities . ((k 1.0)))
@@ -330,11 +330,11 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
    (reference-temp . 35.0)
    (Fixed-boltzmann-reference-temperature . 35.0)))
 
-	
+
 ;; k a channel
 
 (channel-type-def
- '(ka-wdy 
+ '(ka-wdy
    (gbar-density . 1000.0)		; 100.0mS/cm2
    (e-rev . -80.0)
    (ion-permeabilities . ((k 1.0)))
@@ -363,7 +363,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 
 (channel-type-def
- '(ka-wdy-ext 
+ '(ka-wdy-ext
    (gbar-density . 1000.0)		; 100.0mS/cm2
    (e-rev . -80.0)
    (ion-permeabilities . ((k 1.0)))
@@ -398,7 +398,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 ;; k dr channel
 (channel-type-def
- '(kdr-wdy 
+ '(kdr-wdy
    (gbar-density . 80.0)		; 8.0mS/cm2
    (e-rev . -80.0)
    (ion-permeabilities . ((k 1.0)))
@@ -416,7 +416,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 
 (channel-type-def
- '(kdr-wdy-ext 
+ '(kdr-wdy-ext
    (gbar-density . 80.0)		; 8.0mS/cm2
    (e-rev . -80.0)
    (ion-permeabilities . ((k 1.0)))

@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -36,90 +36,89 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 ;; improvements to some macros and functions, appropriate for Garnet 3.0
 
-(in-package "OPAL")
+(in-package :opal)
 
-#|
-(defun do-total-update (invalid-objects invalid-xors invalid-copys a-window
-					window-agg buffer exposed-clip-mask
-					line-style-gc filling-style-gc)
-  (declare (optimize (speed 3) (safety 0)))
-  (let (exposed-bbox);; Exposed-bbox tells whether the window was
-    ;; just exposed and nothing else happened to it.
-    (unless (and (setq exposed-bbox (and (null invalid-objects)
-					 (null invalid-xors)
-					 (null invalid-copys)
-					 (g-value a-window :exposed-bbox)))
-		 buffer)
-      (if exposed-bbox 
-	(progn
-	  (bbox-to-clip-mask exposed-bbox exposed-clip-mask)
-	  (erase-bbox exposed-bbox a-window nil))
-	(if buffer
-	  (clear-buffer a-window)
-	  (gem:clear-area a-window)
-	  )
-	)
-      (dothings (invalid-objects-list invalid-objects invalid-xors invalid-copys)
-		(dolist (object invalid-objects-list)
-		  ;; See comment '**' above...
-		  (let ((obj-us-values (g-local-value object :update-slots-values))
-			(obj-update-info (the UPDATE-INFO (g-local-value object :update-info))))
-		    (g-value object :visible)
-		    (and obj-us-values
-			 (not (update-info-aggregate-p obj-update-info))
-			 (setf (aref obj-us-values 0) NIL))
-		    (setf (bbox-valid-p
-			   (update-info-old-bbox obj-update-info))
-			  NIL))
-		  (let ((info (the UPDATE-INFO (g-local-value object :update-info))))
-		    (if info (setf (update-info-invalid-p info) NIL)))))
-      (when (g-value window-agg :visible)
-	 (gem:set-clip-mask a-window (if exposed-bbox exposed-clip-mask :none) line-style-gc filling-style-gc)
-	 (update-method-aggregate window-agg update-info line-style-gc filling-style-gc exposed-bbox NIL not-exposed-bbox))
-      (free-list invalid-objects)
-      (free-list invalid-xors)
-      (free-list invalid-copys))))
+;; (defun do-total-update (invalid-objects invalid-xors invalid-copys a-window
+;; 					window-agg buffer exposed-clip-mask
+;; 					line-style-gc filling-style-gc)
+;;   (declare (optimize (speed 3) (safety 0)))
+;;   (let (exposed-bbox);; Exposed-bbox tells whether the window was
+;;     ;; just exposed and nothing else happened to it.
+;;     (unless (and (setq exposed-bbox (and (null invalid-objects)
+;; 					 (null invalid-xors)
+;; 					 (null invalid-copys)
+;; 					 (g-value a-window :exposed-bbox)))
+;; 		 buffer)
+;;       (if exposed-bbox
+;; 	(progn
+;; 	  (bbox-to-clip-mask exposed-bbox exposed-clip-mask)
+;; 	  (erase-bbox exposed-bbox a-window nil))
+;; 	(if buffer
+;; 	  (clear-buffer a-window)
+;; 	  (gem:clear-area a-window)
+;; 	  )
+;; 	)
+;;       (dothings (invalid-objects-list invalid-objects invalid-xors invalid-copys)
+;; 		(dolist (object invalid-objects-list)
+;; 		  ;; See comment '**' above...
+;; 		  (let ((obj-us-values (g-local-value object :update-slots-values))
+;; 			(obj-update-info (the UPDATE-INFO (g-local-value object :update-info))))
+;; 		    (g-value object :visible)
+;; 		    (and obj-us-values
+;; 			 (not (update-info-aggregate-p obj-update-info))
+;; 			 (setf (aref obj-us-values 0) NIL))
+;; 		    (setf (bbox-valid-p
+;; 			   (update-info-old-bbox obj-update-info))
+;; 			  NIL))
+;; 		  (let ((info (the UPDATE-INFO (g-local-value object :update-info))))
+;; 		    (if info (setf (update-info-invalid-p info) NIL)))))
+;;       (when (g-value window-agg :visible)
+;; 	 (gem:set-clip-mask a-window (if exposed-bbox exposed-clip-mask :none) line-style-gc filling-style-gc)
+;; 	 (update-method-aggregate window-agg update-info line-style-gc filling-style-gc exposed-bbox NIL not-exposed-bbox))
+;;       (free-list invalid-objects)
+;;       (free-list invalid-xors)
+;;       (free-list invalid-copys))))
 
-(defvar *debug-update-method-aggregate* nil)
+;; (defvar *debug-update-method-aggregate* nil)
 
 
-;; old
+;; ;; old
 
-(defmacro call-prototype-method (&rest args)
-  (let ((entry (gensym)))
-    `(let ((first-c-p-m (and (null *kr-send-parent*)
-			     (let ((,entry (slot-accessor *kr-send-self* *kr-send-slot*)))
-			       (or (null ,entry)
-				   (is-inherited (sl-bits ,entry)))))))
-      (multiple-value-bind (method new-parent)
-	  (find-parent *kr-send-self* *kr-send-slot*)
-	(when method
-	  (if first-c-p-m
-	    (multiple-value-setq (method *kr-send-parent*)
-	      (find-parent new-parent *kr-send-slot*))
-	    (setf *kr-send-parent* new-parent))
-	  (if method
-	    (let ((*kr-send-self* *kr-send-parent*))
-	      (funcall method ,@args))))))))
-;; 3.0
-(defmacro call-prototype-method (&rest args)
-  (let ((entry (gensym)))
-    `(locally (declare ,*special-kr-optimization*)
-       (let ((first-c-p-m (and (null *kr-send-parent*)
-			     (let ((,entry (slot-accessor *kr-send-self* *kr-send-slot*)))
-			       (or (null ,entry)
-				   (is-inherited (sl-bits ,entry)))))))
-      (multiple-value-bind (method new-parent)
-	  (find-parent *kr-send-self* *kr-send-slot*)
-	(when method
-	  (if first-c-p-m
-	    (multiple-value-setq (method *kr-send-parent*)
-	      (find-parent new-parent *kr-send-slot*))
-	    (setf *kr-send-parent* new-parent))
-	  (if method
-	    (let ((*kr-send-self* *kr-send-parent*))
-	      (funcall method ,@args)))))))))
-|#
+;; (defmacro call-prototype-method (&rest args)
+;;   (let ((entry (gensym)))
+;;     `(let ((first-c-p-m (and (null *kr-send-parent*)
+;; 			     (let ((,entry (slot-accessor *kr-send-self* *kr-send-slot*)))
+;; 			       (or (null ,entry)
+;; 				   (is-inherited (sl-bits ,entry)))))))
+;;       (multiple-value-bind (method new-parent)
+;; 	  (find-parent *kr-send-self* *kr-send-slot*)
+;; 	(when method
+;; 	  (if first-c-p-m
+;; 	    (multiple-value-setq (method *kr-send-parent*)
+;; 	      (find-parent new-parent *kr-send-slot*))
+;; 	    (setf *kr-send-parent* new-parent))
+;; 	  (if method
+;; 	    (let ((*kr-send-self* *kr-send-parent*))
+;; 	      (funcall method ,@args))))))))
+;; ;; 3.0
+;; (defmacro call-prototype-method (&rest args)
+;;   (let ((entry (gensym)))
+;;     `(locally (declare ,*special-kr-optimization*)
+;;        (let ((first-c-p-m (and (null *kr-send-parent*)
+;; 			     (let ((,entry (slot-accessor *kr-send-self* *kr-send-slot*)))
+;; 			       (or (null ,entry)
+;; 				   (is-inherited (sl-bits ,entry)))))))
+;;       (multiple-value-bind (method new-parent)
+;; 	  (find-parent *kr-send-self* *kr-send-slot*)
+;; 	(when method
+;; 	  (if first-c-p-m
+;; 	    (multiple-value-setq (method *kr-send-parent*)
+;; 	      (find-parent new-parent *kr-send-slot*))
+;; 	    (setf *kr-send-parent* new-parent))
+;; 	  (if method
+;; 	    (let ((*kr-send-self* *kr-send-parent*))
+;; 	      (funcall method ,@args)))))))))
+
 
 
 (in-package "OPAL")
@@ -132,8 +131,8 @@ It now seems that the Lisp code is significantly faster than the display (X?) ro
 	    (profile::profile replay-colorized-simulation)
 	    (time (replay-colorized-simulation :time-step .1 :start-time 0 :stop-time 300 :repetitions 1))
 	    (profile::report-time)(profile::unprofile))
-    Compiling LAMBDA NIL: 
-    Compiling Top-Level Form: 
+    Compiling LAMBDA NIL:
+    Compiling Top-Level Form:
 
     Evaluation took 44.32/11.8/0.51 of real/user/sys run time
       [Run times include 0.29 seconds GC run time]
@@ -183,7 +182,7 @@ It now seems that the Lisp code is significantly faster than the display (X?) ro
 	 `(setf (update-info-bits ,object)
 		(logior (the fixnum (update-info-bits ,object)) ,(ash 1 bit-position))))
 	((null value)
-	 ;; Value is NIL at compile time.	 
+	 ;; Value is NIL at compile time.
 	 `(setf (update-info-bits ,object)
 		(logand (the fixnum (update-info-bits ,object))
 			,(lognot (ash 1 bit-position)))))
@@ -238,7 +237,7 @@ It now seems that the Lisp code is significantly faster than the display (X?) ro
 	  (s-value dummy :item-values (aref (the (simple-array cons (* *)) item-array) rank rank2))
 	  (setf (aref (the (array opal::bbox (*)) bbox-array) rank rank2) (make-bbox))
 	  (setq src-bbox (aref (the (array opal::bbox (*)) bbox-array) rank rank2)))
-		
+
 	(progn
 	  (s-value dummy :rank rank)
 	  (s-value dummy :item-values (aref (the (simple-array cons (*)) item-array) rank))
@@ -369,57 +368,56 @@ It now seems that the Lisp code is significantly faster than the display (X?) ro
 	(s-value thing :width 0)
 	(s-value thing :height 0)))))
 
-#|
-(define-method :initialize opal:virtual-aggregate (gob)
-  (let ((dummy (create-instance nil (g-value gob :item-prototype)))
-	array-length)
-    ;; If dummy does not have :draw method, create one.
-    (when (and (not (g-value dummy :draw))
-	       (g-value dummy :update))
-      (s-value dummy :draw
-	 #'(lambda (dummy line-style-gc filling-style-gc drawable root-window)
-	     (update dummy (g-value dummy :update-info) line-style-gc filling-style-gc drawable root-window NIL NIL T))))	     
-    (s-value gob :invalid-object
-      (create-instance nil opal::virtual-invalid-object
-	(:parent gob)
-	(:make-update-think-i-have-changed 0)))
-    (s-value dummy :parent gob)
-    (s-value dummy :update-slots-values
-       (make-array (length (g-value dummy :update-slots)) :initial-element nil))
-    (s-value gob :dummy-item dummy)
-    (unless (g-value gob :item-array)
-      (s-value gob :item-array (make-array 0 :adjustable t :initial-element nil)))
-    (setq array-length (array-dimensions (g-value gob :item-array)))
-    (if (cdr array-length) ; TWO-DIMENSIONAL
-	(progn
-	  (s-value gob :add-item NIL)
-	  (s-value gob :remove-item NIL))
-	(setq array-length (car array-length)))
-    (s-value gob :array-length array-length)
-    (s-value gob :bbox-array (make-array array-length :element-type 'opal::bbox))
-    (when (numberp array-length) ;; one dimensional
-      (s-value gob :next-available-rank array-length))
-    (call-prototype-method gob)
-    (recalculate-virtual-aggregate-bboxes gob)
-    (update-slots-values-changed gob 0 (g-local-value gob :update-info))))
-|#
-#|  
-(define-method :draw opal:line (gob line-style-gc filling-style-gc drawable root-window)
-  (declare (optimize (safety 0) (speed 3) (space 0))
-	   (ignore filling-style-gc))
-  (let* ((xlib-gc-line (opal::opal-gc-gcontext line-style-gc))
-	 (update-vals  (g-local-value gob :update-slots-values))
-	 (lstyle       (aref (the (simple-array * (*)) update-vals) OPal::*line-lstyle*))
-	 (x-draw-fn    (get (aref (the (simple-array * (*)) update-vals) opal::*line-draw-function*) :x-draw-function)))
-  (when lstyle
-    (opal::set-line-style lstyle line-style-gc xlib-gc-line root-window x-draw-fn)
-    (xlib:draw-line drawable
-		    xlib-gc-line
-		    (aref (the (simple-array * (*)) update-vals) opal::*line-x1*)
-		    (aref (the (simple-array * (*)) update-vals) opal::*line-y1*)
-		    (aref (the (simple-array * (*)) update-vals) opal::*line-x2*)
-		    (aref (the (simple-array * (*)) update-vals) opal::*line-y2*)))))
-|#
+
+;; (define-method :initialize opal:virtual-aggregate (gob)
+;;   (let ((dummy (create-instance nil (g-value gob :item-prototype)))
+;; 	array-length)
+;;     ;; If dummy does not have :draw method, create one.
+;;     (when (and (not (g-value dummy :draw))
+;; 	       (g-value dummy :update))
+;;       (s-value dummy :draw
+;; 	 #'(lambda (dummy line-style-gc filling-style-gc drawable root-window)
+;; 	     (update dummy (g-value dummy :update-info) line-style-gc filling-style-gc drawable root-window NIL NIL T))))
+;;     (s-value gob :invalid-object
+;;       (create-instance nil opal::virtual-invalid-object
+;; 	(:parent gob)
+;; 	(:make-update-think-i-have-changed 0)))
+;;     (s-value dummy :parent gob)
+;;     (s-value dummy :update-slots-values
+;;        (make-array (length (g-value dummy :update-slots)) :initial-element nil))
+;;     (s-value gob :dummy-item dummy)
+;;     (unless (g-value gob :item-array)
+;;       (s-value gob :item-array (make-array 0 :adjustable t :initial-element nil)))
+;;     (setq array-length (array-dimensions (g-value gob :item-array)))
+;;     (if (cdr array-length) ; TWO-DIMENSIONAL
+;; 	(progn
+;; 	  (s-value gob :add-item NIL)
+;; 	  (s-value gob :remove-item NIL))
+;; 	(setq array-length (car array-length)))
+;;     (s-value gob :array-length array-length)
+;;     (s-value gob :bbox-array (make-array array-length :element-type 'opal::bbox))
+;;     (when (numberp array-length) ;; one dimensional
+;;       (s-value gob :next-available-rank array-length))
+;;     (call-prototype-method gob)
+;;     (recalculate-virtual-aggregate-bboxes gob)
+;;     (update-slots-values-changed gob 0 (g-local-value gob :update-info))))
+
+
+;; (define-method :draw opal:line (gob line-style-gc filling-style-gc drawable root-window)
+;;   (declare (optimize (safety 0) (speed 3) (space 0))
+;; 	   (ignore filling-style-gc))
+;;   (let* ((xlib-gc-line (opal::opal-gc-gcontext line-style-gc))
+;; 	 (update-vals  (g-local-value gob :update-slots-values))
+;; 	 (lstyle       (aref (the (simple-array * (*)) update-vals) OPal::*line-lstyle*))
+;; 	 (x-draw-fn    (get (aref (the (simple-array * (*)) update-vals) opal::*line-draw-function*) :x-draw-function)))
+;;   (when lstyle
+;;     (opal::set-line-style lstyle line-style-gc xlib-gc-line root-window x-draw-fn)
+;;     (xlib:draw-line drawable
+;; 		    xlib-gc-line
+;; 		    (aref (the (simple-array * (*)) update-vals) opal::*line-x1*)
+;; 		    (aref (the (simple-array * (*)) update-vals) opal::*line-y1*)
+;; 		    (aref (the (simple-array * (*)) update-vals) opal::*line-x2*)
+;; 		    (aref (the (simple-array * (*)) update-vals) opal::*line-y2*)))))
 
 (in-package "OPAL")
 
@@ -482,7 +480,7 @@ It now seems that the Lisp code is significantly faster than the display (X?) ro
        (multiple-value-bind (x2* y2*)
 			    (funcall p-to-r agg* (the fixnum (+ first* (the fixnum (third r*)) -1))
 				     (the fixnum (+ second* (the fixnum (fourth r*)) -1)))
-	 (declare (fixnum x1* x2* y1* y2*)) 
+	 (declare (fixnum x1* x2* y1* y2*))
 	 (setq x1* (the fixnum (if x1* (max 0 x1*) 0)))
 	 (setq y1* (the fixnum (if y1* (max 0 y1*) 0)))
 	 (setq x2* (the fixnum (if x2* (min x2* max-x2*) max-x2*)))
@@ -513,18 +511,18 @@ It now seems that the Lisp code is significantly faster than the display (X?) ro
     (gem:bit-blit a-window buffer x1 y1 (- x2 x1) (- y2 y1)
 		  drawable x1 y1)))
 
-#|
+
 ;;; Gives rank of item at point <x,y>.
-(define-method :point-to-rank opal:virtual-aggregate (gob x y)
-  (let ((item-array (g-value gob :item-array))
-        (point-in-item (g-value gob :point-in-item))
-        item)
-    (do ((rank (1- (g-value gob :next-available-rank)) (1- rank)))
-        ((< rank 0) (return nil))
-      (setq item (aref item-array rank))
-      (when (and item (funcall point-in-item gob item x y))
-        (return rank)))))
-|#
+;; (define-method :point-to-rank opal:virtual-aggregate (gob x y)
+;;   (let ((item-array (g-value gob :item-array))
+;;         (point-in-item (g-value gob :point-in-item))
+;;         item)
+;;     (do ((rank (1- (g-value gob :next-available-rank)) (1- rank)))
+;;         ((< rank 0) (return nil))
+;;       (setq item (aref item-array rank))
+;;       (when (and item (funcall point-in-item gob item x y))
+;;         (return rank)))))
+
 #|
 (define-method :point-to-component opal:virtual-aggregate (a-thing x y &key (type t))
   (when (or (eq type t)
@@ -644,110 +642,110 @@ It now seems that the Lisp code is significantly faster than the display (X?) ro
       ;; New line added because of new KR 2.0.10 -- ECP 6/23/92
       ;; Without this line, the Save window in garnetdraw does not update.
       (setf (update-info-invalid-p update-info) nil))))
-		
+
 ;; Major change is that we first look for a custom :update-function in the virtual aggregate's dummy-item, and immediately branch
 ;; to this if so. LBG
-#|
+
 ;; Debug
-(define-method :update opal:virtual-aggregate (gob update-info bbox-1 bbox-2 &optional (total-p NIL))
-  (declare (optimize (safety 0) (speed 3) (space 1))
-	   (ignore gob update-info bbox-1 bbox-2 total-p)))
-|#
+;; (define-method :update opal:virtual-aggregate (gob update-info bbox-1 bbox-2 &optional (total-p NIL))
+;;   (declare (optimize (safety 0) (speed 3) (space 1))
+;; 	   (ignore gob update-info bbox-1 bbox-2 total-p)))
+
 
 (defvar *debug-UPDATE-METHOD-VIRTUAL-AGGREGATE* nil)
 (export '(*debug-UPDATE-METHOD-VIRTUAL-AGGREGATE*))
 
-|#
-(define-method :update opal:virtual-aggregate (gob update-info bbox-1 bbox-2 &optional (total-p NIL))
-  (declare (optimize (safety 0) (speed 3) (space 1)))
-  (if (g-value gob :dummy-item :update-function) ; Check for a special update function for the prototype.
-    (funcall (g-value gob :dummy-item :update-function) gob update-info bbox-1 bbox-2 total-p)
-    (let* ((dummy (g-value gob :dummy-item))
-	   (dummy-slots-list (g-value dummy :update-slots))
-	   (dummy-update-slots-values (g-local-value dummy :update-slots-values))
-	   (dummy-vals-indx 0)
-	   item-bbox
-	   (invalid-object (g-value gob :invalid-object))
-	   (dirty-p (update-info-dirty-p update-info))
-	   (agg-bbox (update-info-old-bbox update-info))
-	   (array-size (g-value gob :array-length))
-	   (bbox-array (g-value gob :bbox-array))
-	   (item-array (g-value gob :item-array))
-	   (a-window (g-value gob :window))
-	 ;;; *** Temporary:
-	   (clip-mask (list (g-value gob :left)
-			    (g-value gob :top)
-			    (g-value gob :width)
-			    (g-value gob :height))))
-      (declare (fixnum dummy-vals-indx))
-      (s-value invalid-object :already-on-invalid-objects-list nil)
-      (when
-	  (or dirty-p
-	      total-p
-	      (and (bbox-valid-p agg-bbox)
-		   (bbox-intersects-either-p agg-bbox bbox-1 bbox-2)))
-	(when (and (null bbox-1) (null bbox-2) (listp clip-mask)
-		   (bbox-valid-p agg-bbox))
-	  (setq bbox-1 agg-bbox)
-	  (bbox-to-clip-mask agg-bbox clip-mask))
-	(if (numberp array-size);; one dimensional
-	    (1d-v-agg-update
-	     BBOX-1 BBOX-2 BBOX-ARRAY DUMMY DUMMY-SLOTS-LIST DUMMY-UPDATE-SLOTS-VALUES DUMMY-VALS-INDX GOB ITEM-ARRAY ITEM-BBOX a-window)
 
-	  (progn;; two dimensional
-	    (setq dummy-slots-list (cddr dummy-slots-list))
-	    (if (fifth clip-mask) (setq clip-mask (cddddr clip-mask)))
-	    (do-in-clip-rect (m n gob clip-mask)
-			     (s-value dummy :rank1 m)
-			     (s-value dummy :rank2 n)
-			     (s-value dummy :item-values (aref item-array m n))
-            ;;; faster than (opal::update-slots-values-changed dummy 2 update-info)
-			     (setq dummy-vals-indx 1)
-			     (dolist (slot dummy-slots-list)
-			       (incf dummy-vals-indx)
-			       (setf (aref (the simple-array dummy-update-slots-values) dummy-vals-indx)
-				     (g-value dummy slot)))
-			     (draw dummy a-window)))))
-      (setf (bbox-valid-p
-	     (update-info-old-bbox
-	      (the UPDATE-INFO
-                (g-value invalid-object :update-info))))
-	    nil)
-      (if dirty-p (setf (update-info-dirty-p update-info) NIL)))))
+;; (define-method :update opal:virtual-aggregate (gob update-info bbox-1 bbox-2 &optional (total-p NIL))
+;;   (declare (optimize (safety 0) (speed 3) (space 1)))
+;;   (if (g-value gob :dummy-item :update-function) ; Check for a special update function for the prototype.
+;;     (funcall (g-value gob :dummy-item :update-function) gob update-info bbox-1 bbox-2 total-p)
+;;     (let* ((dummy (g-value gob :dummy-item))
+;; 	   (dummy-slots-list (g-value dummy :update-slots))
+;; 	   (dummy-update-slots-values (g-local-value dummy :update-slots-values))
+;; 	   (dummy-vals-indx 0)
+;; 	   item-bbox
+;; 	   (invalid-object (g-value gob :invalid-object))
+;; 	   (dirty-p (update-info-dirty-p update-info))
+;; 	   (agg-bbox (update-info-old-bbox update-info))
+;; 	   (array-size (g-value gob :array-length))
+;; 	   (bbox-array (g-value gob :bbox-array))
+;; 	   (item-array (g-value gob :item-array))
+;; 	   (a-window (g-value gob :window))
+;; 	 ;;; *** Temporary:
+;; 	   (clip-mask (list (g-value gob :left)
+;; 			    (g-value gob :top)
+;; 			    (g-value gob :width)
+;; 			    (g-value gob :height))))
+;;       (declare (fixnum dummy-vals-indx))
+;;       (s-value invalid-object :already-on-invalid-objects-list nil)
+;;       (when
+;; 	  (or dirty-p
+;; 	      total-p
+;; 	      (and (bbox-valid-p agg-bbox)
+;; 		   (bbox-intersects-either-p agg-bbox bbox-1 bbox-2)))
+;; 	(when (and (null bbox-1) (null bbox-2) (listp clip-mask)
+;; 		   (bbox-valid-p agg-bbox))
+;; 	  (setq bbox-1 agg-bbox)
+;; 	  (bbox-to-clip-mask agg-bbox clip-mask))
+;; 	(if (numberp array-size);; one dimensional
+;; 	    (1d-v-agg-update
+;; 	     BBOX-1 BBOX-2 BBOX-ARRAY DUMMY DUMMY-SLOTS-LIST DUMMY-UPDATE-SLOTS-VALUES DUMMY-VALS-INDX GOB ITEM-ARRAY ITEM-BBOX a-window)
+
+;; 	  (progn;; two dimensional
+;; 	    (setq dummy-slots-list (cddr dummy-slots-list))
+;; 	    (if (fifth clip-mask) (setq clip-mask (cddddr clip-mask)))
+;; 	    (do-in-clip-rect (m n gob clip-mask)
+;; 			     (s-value dummy :rank1 m)
+;; 			     (s-value dummy :rank2 n)
+;; 			     (s-value dummy :item-values (aref item-array m n))
+;;             ;;; faster than (opal::update-slots-values-changed dummy 2 update-info)
+;; 			     (setq dummy-vals-indx 1)
+;; 			     (dolist (slot dummy-slots-list)
+;; 			       (incf dummy-vals-indx)
+;; 			       (setf (aref (the simple-array dummy-update-slots-values) dummy-vals-indx)
+;; 				     (g-value dummy slot)))
+;; 			     (draw dummy a-window)))))
+;;       (setf (bbox-valid-p
+;; 	     (update-info-old-bbox
+;; 	      (the UPDATE-INFO
+;;                 (g-value invalid-object :update-info))))
+;; 	    nil)
+;;       (if dirty-p (setf (update-info-dirty-p update-info) NIL)))))
 
 
-(defun 1d-v-agg-update (BBOX-1 BBOX-2 BBOX-ARRAY DUMMY DUMMY-SLOTS-LIST DUMMY-UPDATE-SLOTS-VALUES DUMMY-VALS-INDX GOB ITEM-ARRAY ITEM-BBOX a-window)
-  (declare (optimize (safety 1) (speed 3) (space 1))
-	   (fixnum dummy-vals-indx))
-  (dotimes (n (fn-gv gob :next-available-rank))
-    (declare (fixnum n))
-    (setq item-bbox (aref bbox-array n))
-    (when (and (bbox-valid-p item-bbox)
-	       (or (and bbox-1 (bbox-intersect-p bbox-1 item-bbox))
-		   (and bbox-2 (bbox-intersect-p bbox-2 item-bbox))))
-      (s-value dummy :rank n)
-      (s-value dummy :item-values (aref item-array n))
-            ;;; faster than (opal::update-slots-values-changed dummy 0 update-info)
-      (setq dummy-vals-indx -1)
-	
-      (dolist (slot dummy-slots-list)
-	(incf dummy-vals-indx)
-	(when (or  (= dummy-vals-indx 2) (= dummy-vals-indx 3))
-					; (format t "(g-value dummy slot) ~A~%" slot)
-	  )
-	(when 
-	    t ; (or t  (= n 0) (= dummy-vals-indx 2) (= dummy-vals-indx 3))
-					; (format t "(g-value dummy ~A) ~A~%" slot (g-value dummy slot))
-					; (setf (aref (the (simple-array *) dummy-update-slots-values) dummy-vals-indx) (g-value dummy slot))
-	  (setf (aref dummy-update-slots-values dummy-vals-indx) (g-value dummy slot))
+;; (defun 1d-v-agg-update (BBOX-1 BBOX-2 BBOX-ARRAY DUMMY DUMMY-SLOTS-LIST DUMMY-UPDATE-SLOTS-VALUES DUMMY-VALS-INDX GOB ITEM-ARRAY ITEM-BBOX a-window)
+;;   (declare (optimize (safety 1) (speed 3) (space 1))
+;; 	   (fixnum dummy-vals-indx))
+;;   (dotimes (n (fn-gv gob :next-available-rank))
+;;     (declare (fixnum n))
+;;     (setq item-bbox (aref bbox-array n))
+;;     (when (and (bbox-valid-p item-bbox)
+;; 	       (or (and bbox-1 (bbox-intersect-p bbox-1 item-bbox))
+;; 		   (and bbox-2 (bbox-intersect-p bbox-2 item-bbox))))
+;;       (s-value dummy :rank n)
+;;       (s-value dummy :item-values (aref item-array n))
+;;             ;;; faster than (opal::update-slots-values-changed dummy 0 update-info)
+;;       (setq dummy-vals-indx -1)
 
-	  ))
+;;       (dolist (slot dummy-slots-list)
+;; 	(incf dummy-vals-indx)
+;; 	(when (or  (= dummy-vals-indx 2) (= dummy-vals-indx 3))
+;; 					; (format t "(g-value dummy slot) ~A~%" slot)
+;; 	  )
+;; 	(when
+;; 	    t ; (or t  (= n 0) (= dummy-vals-indx 2) (= dummy-vals-indx 3))
+;; 					; (format t "(g-value dummy ~A) ~A~%" slot (g-value dummy slot))
+;; 					; (setf (aref (the (simple-array *) dummy-update-slots-values) dummy-vals-indx) (g-value dummy slot))
+;; 	  (setf (aref dummy-update-slots-values dummy-vals-indx) (g-value dummy slot))
 
-      ;; (break)
-      (draw dummy a-window)
-      )))
+;; 	  ))
 
-#|
+;;       ;; (break)
+;;       (draw dummy a-window)
+;;       )))
+
+
 
 (define-method :update opal:virtual-aggregate (gob update-info bbox-1 bbox-2 &optional (total-p NIL))
   (declare (optimize (safety 0) (speed 3) (space 1)))

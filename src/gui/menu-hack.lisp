@@ -1,35 +1,28 @@
 ;;; -*- Mode: LISP; Syntax: Common-Lisp; Package: WINDOWS-HACK; Base: 10 -*-
 
-#|
+;; The Surf-Hippo Neuron Simulator System
+;;
+;; This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
+;; Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
+;; Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
+;;
+;; Permission to use, copy, modify, and distribute this software and its documentation for any purpose
+;; and without fee is hereby granted, provided that this software is cited in derived published work,
+;; and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
+;; Project makes no representations about the suitability of this software for any purpose. It is
+;; provided "as is" without express or implied warranty.
+;;
+;; If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
+;; on the mailing list.
+;;
+;; Copyright (c) 1989 - 2003, Lyle J. Graham
 
-====================================================================================================
-			       The Surf-Hippo Neuron Simulator System
-====================================================================================================
+(in-package :windows-hack)
 
-This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
-Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
-Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
-Permission to use, copy, modify, and distribute this software and its documentation for any purpose
-and without fee is hereby granted, provided that this software is cited in derived published work,
-and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
-Project makes no representations about the suitability of this software for any purpose. It is
-provided "as is" without express or implied warranty.
-                                                                                 
-If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
-on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
-
-|#
-
-;; GUI Source file: menu-hack.lisp
-
-
-(IN-PACKAGE "WINDOWS-HACK")
-
-;;; This file contains some basic menu routines, inspired by the CHOOSE-VARIABLE-VALUES style of menus in the Symbolics window
-;;; system, and built upon the Garnet GUI toolset from CMU. This system requires that WINDOW-HACK be loaded.
+;;; This file contains some basic menu routines, inspired by the
+;;; CHOOSE-VARIABLE-VALUES style of menus in the Symbolics window
+;;; system, and built upon the Garnet GUI toolset from CMU. This
+;;; system requires that WINDOW-HACK be loaded.
 
 (defvar *motif-gui-p* t)		; Set to T for Motif look-and-feel.
 (defvar *use-motif-gui-background* nil)	; Trying to get motif window backgrounds to work.
@@ -55,14 +48,14 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	  (eval (list 'defvar sym value))
 	  collect sym)))
 (defun generate-and-set-special-vars (values)
-  (loop for value in values 
+  (loop for value in values
 	for sym in (list-of-dummys (length values))
 	do `(setf ,sym ,value)
 	collect sym))
 |#
 
 (defun generate-and-set-special-vars (values)
-  (loop for value in values 
+  (loop for value in values
 	for sym in (list-of-dummys (length values))
 	do (eval (list 'setf sym value))
 	collect sym))
@@ -103,7 +96,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (s-value gg::MOTIF-RADIO-BUTTON-TEXT-LABEL-PROTOTYPE :string (o-formula (let ((s (gv (kr-path 0 :parent) :string))) (GADGET-BUTTON-STRING-FUNCTION s))))
 
 (s-value gg::MOTIF-CHECK-BUTTON-TEXT-LABEL-PROTOTYPE :string (o-formula (let ((s (gv (kr-path 0 :parent) :string))) (GADGET-BUTTON-STRING-FUNCTION s))))
-				  
+
 (s-value gg::BESIDE-BUTTON-TEXT :string (o-formula (let ((s (gv (kr-path 0 :parent) :string))) (GADGET-BUTTON-STRING-FUNCTION s))))
 
 (s-value gg::MOTIF-RADIO-BUTTON-PANEL :strings (o-formula (mapcar #'(lambda (item-obj) (gadget-button-string-function item-obj)) (gvl :item-objs))))
@@ -133,7 +126,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (create-instance '*menu-win* basic-graphics-window (:visible nil) (:title "SH Menu") (:mode :menu)
 		 ;; Add these :left and :top formulae so that the first menu will be centered on the screen, and all others will
-		 ;; track the (updated) values of *MENU-LEFT* and *MENU-TOP*. 
+		 ;; track the (updated) values of *MENU-LEFT* and *MENU-TOP*.
 		 (:left (o-formula (or *menu-left* (round (/ (- *screen-width* (gvl :width)) 2)))))
 		 (:top (o-formula (or *menu-top* (round (/ (- *screen-height* (gvl :height)) 2))))))
 
@@ -141,7 +134,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		 (:title "SH Menu") (:icon-title (o-formula (gvl :title)))
 		 ;; (:left (o-formula (or *menu-left* (round (/ (- *screen-width* (gvl :width)) 2)))))
 		 ;; (:top (o-formula (or *menu-top* (round (/ (- *screen-height* (gvl :height)) 2)))))
-		 (:h-scroll-bar-p nil) (:scr-trill-p nil) (:mode :menu)) 
+		 (:h-scroll-bar-p nil) (:scr-trill-p nil) (:mode :menu))
 
 ;; Access the :value slot to initialize the formula in the slot and establish dependencies (Garnet Manual p.300).
 (gv *ss-win-w-bars* :value)
@@ -152,7 +145,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		 ; (:left (o-formula (or *menu-left* (round (/ (- *screen-width* (gvl :width)) 2)))))
 		 ; (:top (o-formula (or *menu-top* (round (/ (- *screen-height* (gvl :height)) 2)))))
 		 (:h-scroll-bar-p nil) (:scr-trill-p nil) (:mode :menu))
-		 
+
 ;; Access the :value slot to initialize the formula in the slot and establish dependencies (Garnet Manual p.300).
 (gv *motif-ss-win-w-bars* :value)
 
@@ -192,7 +185,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		      (aref (the (simple-array opal::schema (*)) array) index))
 	finally (return (create-instance nil prototype))))
 
-(defun ok-function (object value) 
+(defun ok-function (object value)
   (declare (ignore value object))
   (inter:interaction-complete))
 
@@ -220,7 +213,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 ;;Access the :value slot to initialize the formula in the slot and establish dependencies (Garnet Manual p.300).
 (gv *ok-button* :value)
-(gv *motif-ok-button* :value)		
+(gv *motif-ok-button* :value)
 
 (defvar *ok-buttons* (sequence-to-gen-array (loop for i from 1 to 50 collect (create-instance nil *ok-button*))))
 (defvar *motif-ok-buttons* (sequence-to-gen-array (loop for i from 1 to 50 collect (create-instance nil *motif-ok-button*))))
@@ -228,7 +221,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defun add-ok-button (win top-agg &key (label "OK"))
   ;; Adds a properly positioned OK button interactor to TOP-AGG. The width of the object is 43.
   (declare (optimize (safety 1) (speed 3) (space 0)))
-  (s-value win :menu-p t)		; This should get all menus. 
+  (s-value win :menu-p t)		; This should get all menus.
   (let ((ok-button
 	 (if *motif-gui-p*
 	   (retrieve-menu-thing *motif-ok-buttons* *motif-ok-button*)
@@ -248,7 +241,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defun update-*ok-button* (win)
   (declare (optimize (safety 1) (speed 3) (space 0)))
-  (s-value *ok-button* :left (- (fn-gv win :width) 70))
+  (s-value *ok-button* :left (- (gv win :width) 70))
   (s-value *ok-button* :parent nil)
   *ok-button*)
 
@@ -256,7 +249,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun abort-function (object value) 
+(defun abort-function (object value)
   (declare (ignore value object))
   (inter:interaction-complete)
   (break))
@@ -273,7 +266,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		 (:selection-function #'abort-function))
 
 ;;Access the :value slot to initialize the formula in the slot and establish dependencies (Garnet Manual p.300).
-(gv *abort-button* :value)		
+(gv *abort-button* :value)
 
 (defvar *abort-buttons* (sequence-to-gen-array (loop for i from 1 to 50 collect (create-instance nil *abort-button*))))
 
@@ -294,7 +287,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defun update-*abort-button* (win)
   (declare (optimize (safety 1) (speed 3) (space 0)))
-  (s-value *abort-button* :left (- (fn-gv win :width) 70))
+  (s-value *abort-button* :left (- (gv win :width) 70))
   (s-value *abort-button* :parent nil)
   *abort-button*)
 
@@ -317,7 +310,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (create-instance 'clear-all-button clear-or-select-all-button
 		 (:string "Clear All")
 		 (:top-offset 35)
-		 (:selection-function #'(lambda (object value) 
+		 (:selection-function #'(lambda (object value)
 					  (declare (ignore value))
 					  (s-value (gv object :panel) :value nil)
 					  (s-value object :value nil)
@@ -326,7 +319,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (create-instance 'select-all-button clear-or-select-all-button
 		 (:string "Select All")
 		 (:top-offset 60)
-		 (:selection-function #'(lambda (object value) 
+		 (:selection-function #'(lambda (object value)
 					  (declare (ignore value))
 					  (s-value (gv object :panel) :value (remove "CANCEL" (gv object :panel :items)))
 					  (s-value object :value nil)
@@ -366,10 +359,10 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 				 (gv select-all-button :height))))
     (add-select-all-button win top-agg panel)
     (add-clear-all-button win top-agg panel)))
-		 
+
 (create-instance '*x-button-panel* garnet-gadgets:x-button-panel (:left 10) (:font (o-formula *menu-font*)) (:toggle-p t))
 ;; Access the :value slot to initialize the formula in the slot and establish dependencies (Garnet Manual p.300).
-(gv *x-button-panel* :value)		
+(gv *x-button-panel* :value)
 
 (defmacro global-var-from-menu-list (global-var-menu-list) `(car ,global-var-menu-list))
 
@@ -475,7 +468,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		  (:top top) (:left 10) (:label-offset 10)
 		  (:font (o-formula *menu-font*))
 		  (:label-string (return-comment-string-or-var global-var-menu-list))
-		  (:selection-function 
+		  (:selection-function
 		   #'(lambda (scrolling-labeled-box-object value)
 		       (set (gv scrolling-labeled-box-object :variable) (read-from-string value))
 		       (s-value scrolling-labeled-box-object :original-value
@@ -527,13 +520,13 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 					   (t (float car-value))))))))
     (s-value gadget :top top)
     (s-value gadget :label-string (return-comment-string-or-var global-var-menu-list))
-    (s-value gadget :original-value value)				  
+    (s-value gadget :original-value value)
     (s-value gadget :variable (global-var-from-menu-list global-var-menu-list))
     (when *motif-gui-p*
       (s-value gadget :width 0)(gv gadget :value)
       (s-value gadget :width (+ (gv gadget :label-text :width) *MOTIF-LABELED-BOX-FLOAT-FIELD-WIDTH*)))
     (gv gadget :value) ; Access the :value slot to initialize the formula in the slot and establish dependencies (Garnet Manual p.300).
-    (s-value gadget :value value)		 
+    (s-value gadget :value value)
     gadget))
 
 (defvar *menu-general-comment-line-right-margin* 20)
@@ -561,7 +554,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 					    (:constant nil) (:font (o-formula *menu-comment-font*)))))
 	  (s-value text-gadget :string (o-formula
 					(if (gvl :parent :width)
-					    (let ((num-dashes (1- (floor (/ 
+					    (let ((num-dashes (1- (floor (/
 									  (/ (- (gvl :parent :width) (opal:string-width (gvl :font) (gvl :message))) 2)
 									  (opal:string-width (gvl :font) (string pad-char)))))))
 					      (concatenate 'string
@@ -715,7 +708,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	finally (return (create-instance nil motif-check-panel-choose-button-agg))))
 
 (defun x-panel-choose-button (global-var-menu-list &optional (top 20))
-  ;; Operates on a list e.g. - 
+  ;; Operates on a list e.g. -
   ;;  `(*things-included "Include the following:" :x-choose ("First Thing" "Second Thing" "Nothing"))
   ;; old version
   (let* ((agg (create-instance nil opal:aggregate))
@@ -731,7 +724,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 				  (:direction :horizontal)
 				  (:rank-margin (get-rank-margin global-var-menu-list))
 				  (:selection-function #'(lambda (x-button-object value) (set (gv x-button-object :variable) value))))))
-    (arrange-choose-button-label-and-gadget-top global-var-menu-list gadget label top) 
+    (arrange-choose-button-label-and-gadget-top global-var-menu-list gadget label top)
     (opal:add-components agg label gadget)
     ;;Access the :value slot to initialize the formula and establish dependencies (Garnet Manual p.300).
     (gv gadget :value)
@@ -781,7 +774,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     (format t "items ~s~%" (nth 3 global-var-menu-list) )
     (loop for item in (gv agg :panel :items)
 	  do (opal::remove-item (gv agg :panel) item))
-    (loop for item in (nth 3 global-var-menu-list) 
+    (loop for item in (nth 3 global-var-menu-list)
 	  do (opal::add-item (gv agg :panel) item))
     (opal::notice-items-changed (gv agg :panel))
     (gv agg :panel :height)
@@ -845,7 +838,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 			       (t (gv prototype :left))))
 		  (:direction (if (member :vertical global-var-menu-list) :vertical :horizontal))
 		  (:rank-margin (get-rank-margin global-var-menu-list)))))
-    (arrange-choose-button-label-and-gadget-top global-var-menu-list gadget label top) 
+    (arrange-choose-button-label-and-gadget-top global-var-menu-list gadget label top)
     (when label (opal:add-components agg label))
     (opal:add-components agg gadget)
     ;;Access the :value slot to initialize the formula and establish dependencies (Garnet Manual p.300).
@@ -853,7 +846,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     (s-value gadget :value (symbol-value (global-var-from-menu-list global-var-menu-list)))
     agg))
 
-(defun arrange-choose-button-label-and-gadget-top (global-var-menu-list gadget label top)  
+(defun arrange-choose-button-label-and-gadget-top (global-var-menu-list gadget label top)
   (if (member :label-left global-var-menu-list)
       (let (thicker-one thinner-one)
 	(if (> (gv gadget :height) (gv label :height))
@@ -874,7 +867,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		  nil (if *motif-gui-p* garnet-gadgets:motif-option-button garnet-gadgets:option-button)
 		  (:items colors)
 		  (:variable (global-var-from-menu-list global-var-menu-list))
-		  (:font (o-formula *menu-font*)) (:left 10) (:top (+ (if label (gv label :height) 0) top 5)))))		  
+		  (:font (o-formula *menu-font*)) (:left 10) (:top (+ (if label (gv label :height) 0) top 5)))))
     (when label (opal:add-components agg label))
     (opal:add-components agg gadget)
     ;;Access the :value slot to initialize the formula and establish dependencies (Garnet Manual p.300).
@@ -914,7 +907,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 										    (equal value (gv comp :value)))
 									  do (s-value comp :value nil))))))))
 			    (setq height (+ height (+ *menu-entry-v-spacing (gv gadget :height))))
-			    gadget))) 
+			    gadget)))
 		   (win (get-regular-menu-window height 10 (GET-win-TITLE-STRING label)))
 		   (top-agg (gv win :aggregate)))
 	      (opal:add-component top-agg (create-instance nil opal:text (:visible t) (:top 10) (:string key-label) (:left 10) (:font key-label-font)))
@@ -927,7 +920,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 									    (:string (string (gv menu-entry :key)))
 									    (:left 10) (:font key-label-font)))
 			       :width))))
-		(process-color-choose-menu-entries-and-color-keys menu-entries keys-and-their-colors text-width))	    
+		(process-color-choose-menu-entries-and-color-keys menu-entries keys-and-their-colors text-width))
 	      (s-value win :width (+ (gv (car menu-entries) :left) (gv (car menu-entries) :width) 80))
 	      (add-ok-button win top-agg)
 	      (s-value win :height (+ (gv win :aggregate :height) *menu-height-fudge*))
@@ -935,8 +928,8 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 					; (opal:update win t)
 	      (inter:wait-interaction-complete win)
 	      (setq keys-and-their-colors
-		    (loop for menu-entry in menu-entries 
-			  for key-value in keys-and-their-colors 
+		    (loop for menu-entry in menu-entries
+			  for key-value in keys-and-their-colors
 			  collect (list (car key-value) (string-to-opal-color (gv menu-entry :value)))))
 	      (when (or can-quit-w/o-all-keys-assigned
 			(loop for key-value in keys-and-their-colors thereis (cadr key-value)))
@@ -948,7 +941,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
       (if return-only-single-color (cadar keys-and-their-colors) keys-and-their-colors))))
 
 (defun process-color-choose-menu-entries-and-color-keys (menu-entries keys-and-their-colors text-width)
-  (loop for menu-entry in menu-entries  
+  (loop for menu-entry in menu-entries
 	for key-value in keys-and-their-colors do
 	(s-value menu-entry :left (+ 20 text-width))
 	(let ((button-list (gv MENU-entry :text-button-list))
@@ -985,7 +978,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 											    when (and (not (eq comp object)) (equal value (gv comp :value)))
 											    do (s-value comp :value nil))))))))
 			  (setq top (+ top (+ *menu-entry-v-spacing (gv gadget :height))))
-			  gadget))) 
+			  gadget)))
 		 (win (get-menu-window top label))
 		 (top-agg (gv win :aggregate)))
 	    (opal:add-component top-agg	(create-instance nil opal:text (:font key-label-font) (:visible t) (:top 10) (:left 10) (:string key-label)))
@@ -1016,7 +1009,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (let ((extra-text ""))
     (loop while t do
 	  (let* ((top 10)
-		 (text (concatenate 'string text (when text (format nil "~%")) extra-text)) 
+		 (text (concatenate 'string text (when text (format nil "~%")) extra-text))
 		 (menu-entries
 		  (loop for key-value in keys-and-their-values
 			collecting
@@ -1031,7 +1024,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 				       (:constant t) ;(:font  (o-formula *menu-font*))
 				       (:left (o-formula (gvl :parent :max-text-width)))
 				       (:top top) (:direction :horizontal) (:rank-margin rank-margin)
-				       (:selection-function 
+				       (:selection-function
 					#'(lambda (object value)
 					    (loop for comp in (gv object :parent :components)
 						  when (and (not (eq comp object))
@@ -1040,9 +1033,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 			  (setq top (+ top (+ *menu-entry-v-spacing (gv gadget :height))))
 			  (gv gadget :value)
 			  (s-value gadget :value (cadr key-value))
-			  gadget))) 
+			  gadget)))
 		 (win (create-instance nil *menu-win*
-				       (:visible t) 
+				       (:visible t)
 				       (:title (GET-win-TITLE-STRING label))
 				       (:icon-title "SH Menu")
 				       (:aggregate (create-instance nil opal:aggregate))))
@@ -1054,7 +1047,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		  do (opal:add-component top-agg menu-entry)
 		  maximize
 		  (gv
-		   (opal:add-component top-agg 
+		   (opal:add-component top-agg
 				       (create-instance nil opal:text
 							(:visible t) (:top (gv menu-entry :top))
 							(:string (string
@@ -1073,7 +1066,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	    (add-ok-button win top-agg)
 	    (opal:update win t)
 	    (inter:wait-interaction-complete win)
-    
+
 	    ;; Kludge since the menus tend to walk over to the left
 	    (setq *menu-top* (max 10 (gv win :top))
 		  *menu-left* (max 10 (gv win :left)))
@@ -1091,7 +1084,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   keys-and-their-values)
 
 (defun reorder-value-list-from-keys-menu (key-value-list &key (label "Choose Ordering of List Variables") unassigned-values text (ok-to-leave-out-values t))
-  (loop for key in 
+  (loop for key in
 	(reorder-list-menu-core (loop for key-value in key-value-list collect (car key-value))
 				:unassigned-values unassigned-values :label label :text text :ok-to-leave-out-values ok-to-leave-out-values)
 	collect (cadr (find key key-value-list :key 'car :test 'equal))))
@@ -1104,7 +1097,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 				      :unassigned-values unassigned-values :label label :text text :ok-to-leave-out-values ok-to-leave-out-values)
 	      collect (cadr (find key key-value-list :key 'car :test 'equal))))
       (reorder-list-menu-core list :label label :unassigned-values unassigned-values :text text :ok-to-leave-out-values ok-to-leave-out-values)))
- 
+
 (defun reorder-list-menu-core (list &key (label "Choose Ordering of List Variables") unassigned-values text (ok-to-leave-out-values t))
   (unless text
     (when ok-to-leave-out-values (setq text "Unselected items will be left out of new list")))
@@ -1122,7 +1115,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 			       '< :key 'cadr)
 			 collect (car sorted-key-val))))))
 
-      
+
 (defun labeled-box-thing-set-button (var-list &optional (top 20))
   (let ((value (symbol-value (car var-list))))
     (cond ((T-OR-NIL-P value) (x-boolean-set-button var-list top))
@@ -1154,14 +1147,14 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     ;;
     (when (equal (schar text 0) #\newline) (setq text (concatenate-strings " " text)))
     (opal::set-text text-gadget (list (list (cons text (gv text-gadget :current-font)))))
-    (s-value text-gadget :text-width (if (and (> (fn-gv text-gadget :width) (fn-gv win :width))
-					      (< (fn-gv win :width) 150))
+    (s-value text-gadget :text-width (if (and (> (gv text-gadget :width) (gv win :width))
+					      (< (gv win :width) 150))
 					 150
-					 (fn-gv win :width)))
+					 (gv win :width)))
     (s-value text-gadget :top (gv win :height))
     (opal:add-component top-agg text-gadget)
-    (s-value win :height (the fn (+ (fn-gv win :height) (fn-gv text-gadget :height))))
-    (s-value win :width (max (fn-gv win :width) (+ 15 (fn-gv text-gadget :width))))
+    (s-value win :height (the fn (+ (gv win :height) (gv text-gadget :height))))
+    (s-value win :width (max (gv win :width) (+ 15 (gv text-gadget :width))))
     (gv text-gadget :height)))
 
 (defun get-menu-entry (var-list top)
@@ -1182,7 +1175,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defun vertical-space-for-menu-entry (menu-entry)
   (the fn (+ (the fn *menu-entry-v-spacing)
-	     (the fn (max (fn-gv menu-entry :height)
+	     (the fn (max (gv menu-entry :height)
 			  (the fn (if (gv menu-entry :label-text)
 				      (gv menu-entry :label-text :height)
 				      0)))))))
@@ -1252,7 +1245,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	  (mapcar #'(lambda (comp)
 		      (kr::recompute-formula comp :left)
 		      ;; Make sure to center all :comment lines. Don't know why this is not handled automatically by the :left o-formulae!
-		      (kr::recompute-formula comp :text-width)) 
+		      (kr::recompute-formula comp :text-width))
 		  (gv top-agg :components))
 	  (add-ok-button win top-agg)
 	  (fix-window-size win)
@@ -1269,7 +1262,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   ;;
   ;;      (GLOBAL-VARIABLE TYPE-KEYWORD)
   ;;
-  ;; NIL entries in VAR-LISTS will be ignored. If there is a string in a VAR-LIST, 
+  ;; NIL entries in VAR-LISTS will be ignored. If there is a string in a VAR-LIST,
   ;;
   ;;      (GLOBAL-VARIABLE "Comment string" TYPE-KEYWORD)
   ;;
@@ -1277,7 +1270,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   ;;
   ;; The TYPE-KEYWORD can be :NUMBER :FLOAT :INTEGER :FIXNUM :COMMENT :BOOLEAN :CHOOSE :X-CHOOSE :STRING :SYMBOL
   ;;
-  ;; If TYPE-KEYWORD = :STRING, then the GLOBAL-VARIABLE will be reinitialized to its print-name string.  
+  ;; If TYPE-KEYWORD = :STRING, then the GLOBAL-VARIABLE will be reinitialized to its print-name string.
   ;; If TYPE-KEYWORD = :SYMBOL, then the GLOBAL-VARIABLE will be reinitialized to a symbol based on its print-name.
   ;; :COMMENT just takes a single comment string.
   ;;
@@ -1340,7 +1333,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	  (when image (show-image image :win win :image-left image-left :image-top image-top :update nil :VERTICAL-SIDE-BORDER (+ (or menu-text-height 0) -15))))
 	(loop for comp in (gv top-agg :components) do
 	      (kr::recompute-formula comp :left)
-	      (kr::recompute-formula comp :text-width))	; Make sure to center all :comment lines. Don't know why this is not handled automatically by the :left o-formulae!  
+	      (kr::recompute-formula comp :text-width))	; Make sure to center all :comment lines. Don't know why this is not handled automatically by the :left o-formulae!
 	(add-ok-button win top-agg)
 	(fix-window-size win)
 	(resurrect-opal-win win :raise t :visible t :show t :update t :deiconify t)
@@ -1348,10 +1341,10 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 
 (defun choose-variable-values-menu-entries (var-lists top width)
-  (let ((menu-entries (loop for var-list in (no-nils (if (consp (car var-lists)) var-lists (list var-lists))) 
-			    collect (let ((menu-entry (get-menu-entry var-list top)))	
+  (let ((menu-entries (loop for var-list in (no-nils (if (consp (car var-lists)) var-lists (list var-lists)))
+			    collect (let ((menu-entry (get-menu-entry var-list top)))
 				      (setq top (the fn (+ top (vertical-space-for-menu-entry menu-entry)))
-					    width (max width (fn-gv menu-entry :width)))
+					    width (max width (gv menu-entry :width)))
 				      menu-entry))))
     (values menu-entries top width)))
 
@@ -1366,8 +1359,8 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     (s-value win :menu-p t)		; overkill
     (inter:wait-interaction-complete (or (gv win :window) win))
     ;; kludge since the menus tend to walk over to the left
-    (setq *menu-top* (max 10 (fn-gv win :top))
-	  *menu-left* (max 10 (fn-gv win :left))))
+    (setq *menu-top* (max 10 (gv win :top))
+	  *menu-left* (max 10 (gv win :left))))
   (when (opal-obj-exists top-agg) (remove-and-free-buttons top-agg))
   (when (opal-obj-exists win) (opal:destroy win))
   nil)
@@ -1410,7 +1403,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (let ((labels (loop for count from 1 to (length list)
 		      collect (or (nth (1- count) label-list) (format nil "List element ~A" count)))))
     (loop for count from 1
-	  for label in labels 
+	  for label in labels
 	  collect (list label (format nil "~D" count)) into menu-list
 	  collect (format nil "~D" count) into all-values
 	  finally
@@ -1452,7 +1445,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	       (when only-keywords (format nil "~%Only function keyword values appear here.~%~%"))
 	       (limit-string-span
 		"Note that entries which appear to be boolean (and set to NIL) may in fact be
-either args w/o a default value or args that do not appear in the current values." 
+either args w/o a default value or args that do not appear in the current values."
 		70)
 	       ;; (format nil "~% ** This edit is not 100% tested ** Verify the results independently **")
 	       ))
@@ -1470,11 +1463,12 @@ either args w/o a default value or args that do not appear in the current values
 (defvar *suppress-lambda-form-compiler-messages* t "When compiling unamed functions (lambda forms) that appear in TYPE-DEFs, suppress all compiler messages.")
 
 (defun compile-or-extract-function-or-number (function-candidate &optional car-is-not-function)
-  ;; This is able to parse a simple list whose car is 'LAMBDA and compile the function, thus avoiding the #'(lambda (arg)...) syntax, 
-  ;; although this format is parsed too. If FUNCTION-CANDIDATE is a number just return that value.
-  (when *suppress-lambda-form-compiler-messages* (proclaim '(OPTIMIZE (EXTENSIONS:INHIBIT-WARNINGS 3))))
-  (let* ((lisp::*compile-print* (not *suppress-lambda-form-compiler-messages*))
-	 (lisp::*compile-verbose* (not *suppress-lambda-form-compiler-messages*))
+  ;; This is able to parse a simple list whose car is 'LAMBDA and
+  ;; compile the function, thus avoiding the #'(lambda (arg)...)
+  ;; syntax, although this format is parsed too. If FUNCTION-CANDIDATE
+  ;; is a number just return that value.
+  (let* ((*compile-print* (not *suppress-lambda-form-compiler-messages*))
+	 (*compile-verbose* (not *suppress-lambda-form-compiler-messages*))
 	 (result
 	  (typecase function-candidate
 	    (function (compile nil function-candidate))
@@ -1488,7 +1482,6 @@ either args w/o a default value or args that do not appear in the current values
 			 (compile nil function-candidate))
 		     function-candidate)))
 	    (t (extract-function-from-atom function-candidate)))))
-    (when *suppress-lambda-form-compiler-messages* (proclaim '(OPTIMIZE (EXTENSIONS:INHIBIT-WARNINGS 1))))
     result))
 
 ;; Just do this so that we can trace COMPILE-OR-EXTRACT-FUNCTION-OR-NUMBER.
@@ -1509,10 +1502,11 @@ either args w/o a default value or args that do not appear in the current values
 	       (float :float)
 	       (t :boolean))))))
 
-(defun function-type (function-name) (third (lisp::type-specifier (c::get-info-value function-name 1))))
+(defun function-type (function-name)
+  (type-of function-name))
 
 (export 'function-type)
-  
+
 (defun extract-all-args (arglist &optional current-argvs)
   ;; Parse the current args according to the function description.
   (let ((nothing-found t) key-found optional-found)
@@ -1531,7 +1525,7 @@ either args w/o a default value or args that do not appear in the current values
 			(or (car current-argvs)
 			    (when (consp arg-descriptor) (cadr arg-descriptor)))) ; Default value
 	  into optional-args and do (setq current-argvs (cdr current-argvs))
-	  
+
 	  else when key-found collect
 	  (list (if (consp arg-descriptor) (car arg-descriptor) arg-descriptor) ; Get the symbol-var
 		(when (consp arg-descriptor) (cadr arg-descriptor)))
@@ -1551,15 +1545,23 @@ either args w/o a default value or args that do not appear in the current values
 			     :key 'car))))))
 
 (defun extract-funspec-args (funspec &optional current-argvs return-as-single-list)
-  ;; Returns values (reg-args optional-args key-args)
-  (let ((current-argvs (or current-argvs (when (consp funspec) (cdr funspec))))
-	(function (extract-function funspec)))
-    (unless (or (not function) (eval:interpreted-function-p function))
-      (multiple-value-bind (reg-args optional-args key-args)
-	  (extract-all-args (read-from-string (lisp::%function-arglist function)) current-argvs)
-	(if return-as-single-list
-	  (no-nils (concatenate 'list reg-args (concatenate 'list optional-args key-args)))
-	  (values reg-args optional-args key-args))))))
+  ;; not implemented
+  (error "this function hasn't been implemented yet"))
+
+
+
+;; old CMUCL only
+;;
+;; (defun extract-funspec-args (funspec &optional current-argvs return-as-single-list)
+;; Returns values (reg-args optional-args key-args)
+;; (let ((current-argvs (or current-argvs (when (consp funspec) (cdr funspec))))
+;; 	(function (extract-function funspec)))
+;;   (unless (or (not function) (eval:interpreted-function-p function))
+;;     (multiple-value-bind (reg-args optional-args key-args)
+;; 	  (extract-all-args (read-from-string (lisp::%function-arglist function)) current-argvs)
+;; 	(if return-as-single-list
+;; 	  (no-nils (concatenate 'list reg-args (concatenate 'list optional-args key-args)))
+;; 	  (values reg-args optional-args key-args))))))
 
 #|
 ;; Doesn't work
@@ -1571,84 +1573,116 @@ either args w/o a default value or args that do not appear in the current values
       (cadr (system:%primitive header-ref function system:%function-entry-type-slot)))))
 |#
 
+;; not implemented
 (defun function-required-args (funspec)
-  (let ((function (extract-function funspec)))
-    (when function
-      (loop for symbol in (read-from-string (lisp::%function-arglist function))
-	    until (member symbol LAMBDA-LIST-KEYWORDS) collect symbol))))
+  (error "this function hasn't been implemented yet"))
 
+
+;; old CMUCL only
+;;
+;; (defun function-required-args (funspec)
+;;   (let ((function (extract-function funspec)))
+;;     (when function
+;;       (loop for symbol in (read-from-string (lisp::%function-arglist function))
+;; 	    until (member symbol LAMBDA-LIST-KEYWORDS) collect symbol))))
+
+;; not implemented
 (defun macro-required-args (funspec)
-  (let ((function (macro-function funspec)))
-    (when function
-      (loop for symbol in (read-from-string (lisp::%function-arglist function))
-	    until (member symbol LAMBDA-LIST-KEYWORDS) collect symbol))))
+  (error "this function hasn't been implemented yet"))
+
+;; old CMUCL only
+;;
+;; (defun macro-required-args (funspec)
+;;   (let ((function (macro-function funspec)))
+;;     (when function
+;;       (loop for symbol in (read-from-string (lisp::%function-arglist function))
+;; 	    until (member symbol LAMBDA-LIST-KEYWORDS) collect symbol))))
 
 (defun setfable-p (symbol)
+  ;; if it's macro we have to assume setf isn't bound.
   (if (macro-function symbol)
-    (setfable-p (car (macroexpand (cons symbol (MACRO-REQUIRED-ARGS symbol)))))
-    (fboundp `(setf ,symbol))))
+      nil
+    ;;(setfable-p (car (macroexpand (cons symbol (MACRO-REQUIRED-ARGS symbol)))))
+      (fboundp `(setf ,symbol))))
 
 (defvar *edit-function-menu-doc-string-width* 90)
 
+
+;; not implemented
 (defun edit-function-args (funspec &optional current-argvs &key label extra-text only-keywords)
-  ;; Returns a list of arguments ARG-LIST with keywords in format that can be evaluated by -
-  ;;
-  ;;   (eval (cons function arg-list))
-  ;;
-  (let ((function (extract-function funspec)))
-    (cond ((eval:interpreted-function-p function)
-	   (format t "~A is an interpreted function, so I'm not going to edit it...." function))
-	  (function
-	   (let* ((function-name (lisp::%function-name function))
-		  (doc-string (limit-string-span (documentation function-name 'function)
-						 *edit-function-menu-doc-string-width*))
-		  (label (or label (format nil "Edit ~A Function Args" function-name))))
-	     (multiple-value-bind (reg-args optional-args key-args)
-		 (extract-funspec-args funspec current-argvs)
-	       (let* ((all-argvs
-		       (if only-keywords key-args
-			   (concatenate 'list reg-args (concatenate 'list optional-args key-args))))
-		      (menu-vars (generate-and-set-special-vars (loop for argv in all-argvs collect (when (consp argv) (cadr argv))))))
-		 (loop for thing in all-argvs for i from 1 for menu-var in menu-vars
-		       when (and (not only-keywords) optional-args (= i (1+ (length reg-args))))
-		       collect '(:comment "&OPTIONAL arguments:") into menu-list
-		       when (and key-args (not only-keywords) (= i (+ 1 (length optional-args) (length reg-args))))
-		       collect '(:comment "&KEY arguments:") into menu-list
-		       collect (list menu-var (format nil "~s" (if (consp thing) (car thing) thing))
-				     (get-menu-entry-type-keyword (and (consp thing) (cadr thing))))
-		       into menu-list
-		       finally (choose-variable-values menu-list :label label :text (function-arg-menu-text extra-text doc-string only-keywords)))
-		 (loop for thing in all-argvs
-		       for thingv in (loop for menu-var in menu-vars collect (symbol-value menu-var))
-		       when (find-key-word optional-args (if (consp thing) (car thing) thing))
-		       collect thingv into out 
-		       else when (find-key-word key-args (if (consp thing) (car thing) thing))
-		       collect (read-from-string (format nil ":~A" (if (consp thing) (car thing) thing)))
-		       into out and collect thingv into out
-		       else collect thingv into out
-		       finally (return out)))))))))
+  (error "this function hasn't been implemented yet"))
+
+;; old CMUCL only
+;;
+;; (defun edit-function-args (funspec &optional current-argvs &key label extra-text only-keywords)
+;;   ;; Returns a list of arguments ARG-LIST with keywords in format that can be evaluated by -
+;;   ;;
+;;   ;;   (eval (cons function arg-list))
+;;   ;;
+;;   (let ((function (extract-function funspec)))
+;;     (cond ((eval:interpreted-function-p function)
+;; 	   (format t "~A is an interpreted function, so I'm not going to edit it...." function))
+;; 	  (function
+;; 	   (let* ((function-name (lisp::%function-name function))
+;; 		  (doc-string (limit-string-span (documentation function-name 'function)
+;; 						 *edit-function-menu-doc-string-width*))
+;; 		  (label (or label (format nil "Edit ~A Function Args" function-name))))
+;; 	     (multiple-value-bind (reg-args optional-args key-args)
+;; 		 (extract-funspec-args funspec current-argvs)
+;; 	       (let* ((all-argvs
+;; 		       (if only-keywords key-args
+;; 			   (concatenate 'list reg-args (concatenate 'list optional-args key-args))))
+;; 		      (menu-vars (generate-and-set-special-vars (loop for argv in all-argvs collect (when (consp argv) (cadr argv))))))
+;; 		 (loop for thing in all-argvs for i from 1 for menu-var in menu-vars
+;; 		       when (and (not only-keywords) optional-args (= i (1+ (length reg-args))))
+;; 		       collect '(:comment "&OPTIONAL arguments:") into menu-list
+;; 		       when (and key-args (not only-keywords) (= i (+ 1 (length optional-args) (length reg-args))))
+;; 		       collect '(:comment "&KEY arguments:") into menu-list
+;; 		       collect (list menu-var (format nil "~s" (if (consp thing) (car thing) thing))
+;; 				     (get-menu-entry-type-keyword (and (consp thing) (cadr thing))))
+;; 		       into menu-list
+;; 		       finally (choose-variable-values menu-list :label label :text (function-arg-menu-text extra-text doc-string only-keywords)))
+;; 		 (loop for thing in all-argvs
+;; 		       for thingv in (loop for menu-var in menu-vars collect (symbol-value menu-var))
+;; 		       when (find-key-word optional-args (if (consp thing) (car thing) thing))
+;; 		       collect thingv into out
+;; 		       else when (find-key-word key-args (if (consp thing) (car thing) thing))
+;; 		       collect (read-from-string (format nil ":~A" (if (consp thing) (car thing) thing)))
+;; 		       into out and collect thingv into out
+;; 		       else collect thingv into out
+;; 		       finally (return out)))))))))
 
 (defun setup-edited-function (funspec &key label extra-text)
-  (concatenate 'list
-	       (list (lisp::%function-name (extract-function funspec)))
-	       (function-required-args funspec)
-	       (edit-function-args funspec nil :label label :extra-text extra-text :only-keywords t)))
+  (error "this function hasn't been implemented yet"))
+
+;; old CMUCL only
+;;
+;; (defun setup-edited-function (funspec &key label extra-text)
+;;   (concatenate 'list
+;; 	       (list (lisp::%function-name (extract-function funspec)))
+;; 	       (function-required-args funspec)
+;; 	       (edit-function-args funspec nil :label label :extra-text extra-text :only-keywords t)))
 
 (defun document-function-args (funspec)
-  (let ((current-argvs (when (consp funspec) (cdr funspec)))
-	(function (extract-function funspec)))
-    (cond ((eval:interpreted-function-p function)
-	   (format t "~A is an interpreted function." function))
-	  (function
-	   (format t "~A args: " (lisp::%function-name function))
-	   (multiple-value-bind (reg-args optional-args key-args)
-	       (extract-funspec-args funspec current-argvs)
-	     (let ((symbol-values (concatenate 'list reg-args (concatenate 'list optional-args key-args))))
-	       (loop for symbol-value in symbol-values
-		     for arg-count from 1
-		     do (format t "~s ~s" (car symbol-value) (cadr symbol-value))
-		     when (< arg-count (length symbol-values))
-		     do (format t ", "))))))))
+  (error "this function hasn't been implemented yet"))
+
+;; old CMUCL only
+;;
+;; (defun document-function-args (funspec)
+;;   (let ((current-argvs (when (consp funspec) (cdr funspec)))
+;; 	(function (extract-function funspec)))
+;;     (cond ((eval:interpreted-function-p function)
+;; 	   (format t "~A is an interpreted function." function))
+;; 	  (function
+;; 	   (format t "~A args: " (lisp::%function-name function))
+;; 	   (multiple-value-bind (reg-args optional-args key-args)
+;; 	       (extract-funspec-args funspec current-argvs)
+;; 	     (let ((symbol-values (concatenate 'list reg-args (concatenate 'list optional-args key-args))))
+;; 	       (loop for symbol-value in symbol-values
+;; 		     for arg-count from 1
+;; 		     do (format t "~s ~s" (car symbol-value) (cadr symbol-value))
+;; 		     when (< arg-count (length symbol-values))
+;; 		     do (format t ", "))))))))
 
 (defun find-key-word (key-word-value-list word)
   (loop for key-word-value in key-word-value-list
@@ -1663,7 +1697,7 @@ either args w/o a default value or args that do not appear in the current values
 				     &key (label "Choose Some Items") text
 				     (num-items-for-select-and-clear-all-buttons  4)
 				     only-one-choice (punt-if-only-one-entry t) do-all-at-once (max-per-menu 10)
-				     rank-margin (direction :vertical) (max-height 440)) 
+				     rank-margin (direction :vertical) (max-height 440))
   ;; '((key value)...(key value)) -> The KEYs appear in the menu, and a list of the values corresponding to the chosen keys is returned.
   (let* ((list-of-key-values
 	  (loop for key-value in list-of-key-values
@@ -1681,7 +1715,7 @@ either args w/o a default value or args that do not appear in the current values
 				      collect (car key-value)))
 			      :label label :text text :max-height max-height
 			      :num-items-for-select-and-clear-all-buttons num-items-for-select-and-clear-all-buttons
-			      :do-all-at-once do-all-at-once :only-one-choice only-one-choice :punt-if-only-one-entry punt-if-only-one-entry 
+			      :do-all-at-once do-all-at-once :only-one-choice only-one-choice :punt-if-only-one-entry punt-if-only-one-entry
 			      :max-per-menu max-per-menu :rank-margin rank-margin :direction direction)))
     (loop for key-value in list-of-key-values
 	  when (and key-value (member (car key-value) (if only-one-choice (list chosen-keys) chosen-keys)))
@@ -1703,7 +1737,7 @@ either args w/o a default value or args that do not appear in the current values
 	      do (push item sub-items)
 	      when (or (= total-count (length items))
 		       (and (not do-all-at-once) (= count max-per-menu))
-		       (= count *absolute-max-items-per-menu*)) 
+		       (= count *absolute-max-items-per-menu*))
 	      do (unless (or first-time (go-ahead-menu (format nil "~a - continue (~d left)?" label (- (length items) (- total-count count)))))
 		   (return result))
 	      (setq first-time nil)
@@ -1881,7 +1915,9 @@ either args w/o a default value or args that do not appear in the current values
      `((dummy1 ,question :boolean)
        ,(when enable-abort-option '(dummy2 "Abort this thread to top level" :boolean)))
      :label (if (stringp label) label ""))
-    (when dummy2 (sim-error (format nil "Willfully aborting from the go-ahead menu invoked by ~A" (kernel:find-caller-name))))
+    (when dummy2
+      (sim-error
+       (format nil "Willfully aborting from the go-ahead menu")))
     dummy1))
 
 (defun notification (&optional (message "Hey, pay attention!") (label "Notification"))
@@ -1920,10 +1956,10 @@ either args w/o a default value or args that do not appear in the current values
 
 (defun get-integer (&optional (default 0) maximum minimum (menu-value-label "") menu-title menu-text)
   (get-number default maximum minimum menu-value-label menu-title menu-text :integer))
-  
+
 (defun get-float (&optional (default 0.0) maximum minimum (menu-value-label "") menu-title menu-text)
   (get-number default maximum minimum menu-value-label menu-title menu-text :float))
-  
+
 (defun choose-dash-patterns (&optional (default 0) (title "Line style Dash pattern"))
   (let ((dummy1 (princ-to-string default))
 	(patterns (mapcar 'princ-to-string *line-styles-dash-patterns*)))
@@ -1952,9 +1988,9 @@ either args w/o a default value or args that do not appear in the current values
   (setq *menu-font* (font-menu *menu-font* "Setting general menu font")
 	*menu-text-font* (font-menu *menu-text-font* "Setting menu text font")
 	*menu-button-font* (font-menu *menu-button-font* "Setting menu button font")))
-       
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    
+
 (export '(
 
 	  MENU-FONT-MENU EDIT-STRING-LIST EDIT-LIST EDIT-FUNCTION-ARGS choose-dash-patterns CHOOSE-LIST-VALUES-FROM-KEYS choose-variable-values CHOOSE-LIST-VALUES
@@ -1963,17 +1999,16 @@ either args w/o a default value or args that do not appear in the current values
 	  REORDER-LIST-MENU
 	  SIMPLE-TEXT-MENU
 	  ASK-FOR-ELEMENT-MODIFICATIONS
-	  
+
 	  NOTIFICATION GET-MENU-ENTRY-TYPE-KEYWORD
 	  *menu-top* *menu-left* *menu-win* *ss-win-w-bars* *MOTIF-GUI-P*
 
-	  FIND-KEY-WORD key-values-from-symbol-list add-ok-button LIST-ALL-HASH-NAMES	  
-	  
+	  FIND-KEY-WORD key-values-from-symbol-list add-ok-button LIST-ALL-HASH-NAMES
+
 	  GET-NUMBER GET-FLOAT get-integer REORDER-VALUE-LIST-FROM-KEYS-MENU xclusive-choose-button CHOOSE-LIST-VALUES-CORE
-	  
+
 	  *enable-precision-float-menus*
 	  setup-edited-function EXTRACT-FUNCTION EXTRACT-FUNCTION-FROM-ATOM COMPILE-OR-EXTRACT-FUNCTION-OR-NUMBER *SUPPRESS-LAMBDA-FORM-COMPILER-MESSAGES*
 	  EXTRACT-ALL-ARGS DOCUMENT-FUNCTION-ARGS GENERATE-AND-SET-SPECIAL-VARS extract-funspec-args function-required-args MACRO-REQUIRED-ARGS
 	  setfable-p
 	  ))
-

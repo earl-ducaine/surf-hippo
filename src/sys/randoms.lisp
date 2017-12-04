@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -176,18 +176,14 @@ LAMBDA (must be a single float)."
 	  collect (nth choice-index indices) into out
 	  do (setq indices (remove (car (last out)) indices))
 	  finally (return out))))
-    
+
 ;; should recode this using an array....
 (defun shuffled-list (list)
   "Return of scrambled version of LIST."
   (loop for index in (SHUFFLED-INDICES (length list)) collect (nth index list)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;     REFERENCE-RANDOM-STATE Functions
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; reference-random-state functions
 (defun save-reference-random-state (&optional filename)
   (let ((filename (cond (filename filename)
 			((probe-file (concatenate-strings *Surf-user-dir* "random-state"))
@@ -196,7 +192,7 @@ LAMBDA (must be a single float)."
     (with-open-stream
      (stream (open filename :direction :output :if-exists :supersede))
      (print (make-random-state t) stream)
-     (format t "Random state written to ~A" (ext:unix-namestring stream))
+     (format t "Random state written to ~A" (namestring stream))
      nil)))
 
 (defun get-reference-random-state (&optional filename)
@@ -209,8 +205,6 @@ LAMBDA (must be a single float)."
     (with-open-stream (stream (open filename :direction :input))
 		      (setq *random-state* (read stream)) nil)
     *random-state*))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (proclaim '(inline get-random-phase-sequence-phase))
 (defun get-random-phase-sequence-phase (freq low-cutoff high-cutoff)
@@ -409,7 +403,7 @@ most 100. VERBOSE-PLOT-TITLES [default T] enables spectrum information added to 
 	collect x into erf-x
 	finally
 	(setq *erf-array-argument* (d-flt-array erf-x)
-	      *erf-array* (d-flt-array erf))))			   
+	      *erf-array* (d-flt-array erf))))
 
 (defun normal-random-number ()
   "Return a double-float random number taken from a normal distribution with mean of 0 and variance of 0.5."
@@ -435,7 +429,7 @@ most 100. VERBOSE-PLOT-TITLES [default T] enables spectrum information added to 
 	    (declare (float u v))))
 	 (scaled-normal (the double-float (* (sqrt (the (double-float 0.0d0 *) variance)) normal))))
     (if (= mean 0) scaled-normal (+ scaled-normal mean))))
-    
+
 (defun test-normal-random-number (mean variance)
   (let ((mean (d-flt mean))
 	(variance (d-flt variance)))
@@ -444,7 +438,7 @@ most 100. VERBOSE-PLOT-TITLES [default T] enables spectrum information added to 
 		    :x-axis-tick-skip 11
 		    :x-are-fns nil
 		    :width 500 :height 300
-		    
+
 		    :bin-min (+ mean (* -4 (sqrt variance)))
 		    :bin-max (+ mean (* 4 (sqrt variance)))
 		    :bin-width (/ (* 8 (sqrt variance)) 50)
@@ -482,11 +476,11 @@ most 100. VERBOSE-PLOT-TITLES [default T] enables spectrum information added to 
 (proclaim '(inline SF-RANDOM-NOT-ZERO))
 (defun SF-RANDOM-NOT-ZERO (x)
   "Returns a random value, of type single-float, between 0.0 and x. The returned value is guaranteed to be different from 0.0 and x.
-Argument x must be of type single-float." 
+Argument x must be of type single-float."
   (declare (optimize (safety 0) (speed 3) (space 0) (compilation-speed 0))
 	   (single-float x))
-  (do ((y (kernel:%random-single-float (ext:truly-the sf x) *random-state*)
-	  (kernel:%random-single-float (ext:truly-the sf x) *random-state*)))
+  (do ((y (random (the sf x) *random-state*)
+	  (random (the sf x) *random-state*)))
       ((not (zerop y)) y)
     (declare (single-float y))))
 
@@ -496,8 +490,8 @@ Argument x must be of type single-float."
 Argument x must be of type double-float."
   (declare (optimize (speed 3) (safety 0) (space 1) (compilation-speed 0))
 	   (double-float x))
-  (do ((y (kernel:%random-double-float (ext:truly-the df x) *random-state*)
-	  (kernel:%random-double-float (ext:truly-the df x) *random-state*)))
+  (do ((y (random (the df x) *random-state*)
+	  (random (the df x) *random-state*)))
       ((not (zerop y)) y)
     (declare (double-float y))))
 
@@ -507,8 +501,8 @@ is guaranteed to be different from 0.0 and x. The properly optimized function is
   (declare (optimize (speed 3) (safety 0) (space 1) (compilation-speed 0))
 	   (type (or double-float single-float) x))
   (typecase x
-    (single-float (SF-RANDOM-NOT-ZERO (ext:truly-the sf x)))
-    (double-float (DF-RANDOM-NOT-ZERO (ext:truly-the df x)))))
+    (single-float (SF-RANDOM-NOT-ZERO (the sf x)))
+    (double-float (DF-RANDOM-NOT-ZERO (the df x)))))
 
 (defun RANDOM-NTH (list &optional (total 1))
   "Returns TOTAL [rounded, default 1] elements picked randomly from LIST, without replacement."
@@ -530,7 +524,7 @@ is guaranteed to be different from 0.0 and x. The properly optimized function is
   (if (>= 1 fraction 0)
     (RANDOM-NTH list (* fraction (length list)))
     (sim-error (format nil "RANDOM-NTH-FRACTION: The value of FRACTION (~A) must be between 0 and 1, inclusived!" fraction))))
-	      
+
 ;;;  RANDOM-SUBSEQ
 ;;; - Returns a randomly chosen sub-list in given list
 ;;; - Sub-list is of length 'number'
@@ -550,7 +544,7 @@ is guaranteed to be different from 0.0 and x. The properly optimized function is
 	(progn
 	  (let ((provlist (copy-list liste)))
 	    (declare (cons provlist))
-	    (loop for k of-type fixnum below number 
+	    (loop for k of-type fixnum below number
 		  for l of-type fixnum downfrom longueur
 		  collect (let ((elemt (nth (random (the (integer 1 524287) l)) provlist)))
 			    (setq provlist (delete elemt provlist :test 'equal))
@@ -575,7 +569,7 @@ is guaranteed to be different from 0.0 and x. The properly optimized function is
 	  (progn
 	    (let ((provlist (copy-list liste)))
 	      (declare (cons provlist))
-	      (loop for k of-type fixnum below number 
+	      (loop for k of-type fixnum below number
 		    for l of-type fixnum downfrom longueur
 		    collect (let ((elemt (nth (random (the (integer 1 524287) l)) provlist)))
 			      (setq provlist (delete elemt provlist :test 'equal))
@@ -586,7 +580,7 @@ is guaranteed to be different from 0.0 and x. The properly optimized function is
   (declare (optimize (safety 1) (speed 3) (space 0))
            (fixnum nb-pick nb-avail))
   (if (< nb-pick nb-avail)
-      (loop for k of-type fixnum below nb-pick 
+      (loop for k of-type fixnum below nb-pick
             for l of-type fixnum downfrom nb-avail
             do (let* ((index (random (the (integer 1 524287) l)))
                       (prov-synapse (aref (the (simple-array cell (*)) array) (+ k index))))
@@ -595,10 +589,3 @@ is guaranteed to be different from 0.0 and x. The properly optimized function is
                  (setf (aref (the (simple-array * (*)) array) k)
                        prov-synapse))
             finally (return nb-pick))))
-
-
-
-
-
-
-   

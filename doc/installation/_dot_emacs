@@ -36,8 +36,12 @@
 (global-set-key "\C-z" 'slime-selector) ; Control-z r will go to REPL buffer
 (slime-setup '(slime-fancy slime-asdf))
 (put 'upcase-region 'disabled nil)
-;; Arglists of some functions are quite long and they may not fit on the screen in one line, there are two ways to display them.
-;; This will make the minbuffer change its height automatically to accommodate several lines of text.
+
+;; Arglists of some functions are quite long and they may not fit on
+;; the screen in one line, there are two ways to display them.  This
+;; will make the minbuffer change its height automatically to
+;; accommodate several lines of text.
+
 (setq slime-autodoc-use-multiline-p t)
 
 

@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -27,7 +27,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;;; SYS Source file: trees.lisp
 
 ;; Functions for creating cell dendrite geometries, for consolidating trees and various tree related utilities. Also see files such as element-functions-2.lisp
-    
+
 
 (in-package "SURF-HIPPO")
 
@@ -52,7 +52,7 @@ associated with CELL"
 
 (defun trunk-3/2s-info (&optional (cell (cells)))
   "Prints out the 2/3 root of the sum of the dendritic trunk diameters raised to the 3/2."
-  (loop for cell in (coerce-to-list (element-cell cell)) do 
+  (loop for cell in (coerce-to-list (element-cell cell)) do
 	(format t "Cell ~A [sum(d^3/2)]^2/3 trunks: ~,2fum~%"
 		(cell-name cell) (expt (loop for seg in (trunk-segments cell)
 					     sum (expt (segment-diameter seg) (/ 3 2))) (/ 2 3)))))
@@ -120,7 +120,7 @@ names specified in the segment sublists."
 				   (node2-z (s-flt (nth 4 segment-data)))
 				   (diameter (if (nth 5 segment-data) (s-flt (nth 5 segment-data)) (the sf default-diameter)))
 				   (seg (create-segment distal-node-ref proximal-node-ref cell-name
-							:diameter diameter 
+							:diameter diameter
 							:relative-location (list (* xy-factor (the sf node2-x))
 										 (* xy-factor (the sf node2-y))
 										 (* z-factor (the sf node2-z))))))
@@ -157,7 +157,7 @@ The orientations of the PROXIMAL-PHI and PROXIMAL-THETA arguments are as follows
                                         |/
                            -------------/------------X
                                        /|
-                                      / |  ------> Proximal Theta 
+                                      / |  ------> Proximal Theta
                                      /  |          and Phi = 0.0
                                     /   |
                                  Z /    |
@@ -221,7 +221,7 @@ The orientations of the PROXIMAL-PHI and PROXIMAL-THETA arguments are as follows
 (defun make-segment-chain (proximal-cell-element chain-name total-segs seg-length seg-diam &key (proximal-phi 0.0) (proximal-theta 0.0) synapse-types synapse-segs)
   (create-segment-chain proximal-cell-element chain-name total-segs seg-length seg-diam
 			:proximal-phi proximal-phi :proximal-theta proximal-theta :synapse-types synapse-types :synapse-segs synapse-segs))
-			
+
 (defun MAKE-SOMA-SEGMENT-CHAIN-FAST (soma chain-name total-segs seg-length seg-diam synapse-types synapse-segs &key (proximal-phi 0.0) (proximal-theta 0.0))
   (make-segment-chain soma chain-name total-segs seg-length seg-diam
 		      :synapse-types synapse-types :synapse-segs synapse-segs :proximal-phi proximal-phi :proximal-theta proximal-theta))
@@ -241,7 +241,7 @@ level branch).  The bifurcation angle at a given branch level is given by:
 
 where DEPTH is the number of bifurcations distal to the present one.
 "
-  (tree-control-internal parent-element depth branch-depth 
+  (tree-control-internal parent-element depth branch-depth
 			 :length length :diameter diameter :branch-diameter-decrement branch-diameter-decrement :branch-angle-decrement branch-angle-decrement))
 
 (defun tree-control-internal (parent-element depth branch-depth &key (diameter 1.0) (branch-diameter-decrement 0.8) (length 50.0) direction (branch-angle-decrement 0.02))
@@ -266,7 +266,7 @@ where DEPTH is the number of bifurcations distal to the present one.
 			parent-element
 			*segment*))
 	       (node2 (if *use-simple-names*
-			(gensym)		
+			(gensym)
 			(concatenate-strings parent-node-name "-" leftright (princ-to-string (the fn (1+ branch-number))) "-seg"))))
 	  (cond ((and (= branch-number 0) (eq direction 'left))
 		 (setq theta (* pi-single (- branch-angle-decrement) depth)))
@@ -393,7 +393,7 @@ where DEPTH is the number of bifurcations distal to the present one.
     (if (if branch
 	  (if level (> level count) t)
 	  (> level count))
-      (typecase cell-or-seg 
+      (typecase cell-or-seg
 	(cell
 	 (loop for element in (soma-segments cell-or-seg)
 	       nconcing (proximal-dendrite-list element level count branch)))
@@ -455,7 +455,7 @@ where DEPTH is the number of bifurcations distal to the present one.
   (let ((cell (element cell 'cell)))
     (loop for seg in (if cell (cell-segments cell) (segments))
 	  when (> (length (distal-segments seg)) 1)
-	  nconcing (loop for seg in (distal-segments seg) collect (segment-name seg)))))	      
+	  nconcing (loop for seg in (distal-segments seg) collect (segment-name seg)))))
 
 (defun plot-lambda-histo (&key bin-width (width 800) (height 400))
   (let* ((lambdas (mapcar 'SEGMENT-ELECTROTONIC-LENGTH
@@ -475,7 +475,7 @@ where DEPTH is the number of bifurcations distal to the present one.
 		    :win (if (and win (go-ahead-menu "Use new histogram window" (format nil "Sending Plot to ~A" (g-value win :title)) nil))
 			   (get-plot-window :histogram title nil :create-new-plot-windows t)
 			   win)
-		    :bin-min 0 
+		    :bin-min 0
 		    ;; :x-max max
 		    :comment (format nil "Total number of segments: ~D" number-segs)
 		    ;; :comment-position :upper-right
@@ -515,7 +515,7 @@ If T use the calculated electrotonic length of a candidate consolidation of a se
   (if segments
     (loop for seg in segments thereis (pre-processed-segment-zero-length-p seg))
     (loop for seg being the hash-value of (SEGMENT-HASH-TABLE) thereis (pre-processed-segment-zero-length-p seg))))
-  
+
 (defun destroy-zero-length-segments (&optional segments-list process-circuit)
   (let ((segments nil)
 	(destroyed-segments 0))
@@ -576,11 +576,11 @@ If T use the calculated electrotonic length of a candidate consolidation of a se
 			 (consolidate-cell-tree :cell cell :single-step dummy5
 						:MAXIMUM-ELECTROTONIC-LENGTH *MAXIMUM-ELECTROTONIC-LENGTH*
 						:USE-STRICT-LAMBDA-CRITERIUM *USE-STRICT-LAMBDA-CRITERIUM*)))))))))
-						
+
 (defun consolidate-cell-tree (&key (cell *cell*) single-step starting-segment
 				   (MAXIMUM-ELECTROTONIC-LENGTH *MAXIMUM-ELECTROTONIC-LENGTH*) (USE-STRICT-LAMBDA-CRITERIUM *USE-STRICT-LAMBDA-CRITERIUM*))
   "Consolidate the dendritic tree of CELL.
-Successive segment pairs are consolidated using MAXIMUM-ELECTROTONIC-LENGTH and USE-STRICT-LAMBDA-CRITERIUM, moving distally and starting from STARTING-SEGMENT, 
+Successive segment pairs are consolidated using MAXIMUM-ELECTROTONIC-LENGTH and USE-STRICT-LAMBDA-CRITERIUM, moving distally and starting from STARTING-SEGMENT,
 if supplied, otherwise starting from the trunk segments of the CELL soma. If SINGLE-STEP is T, then the function stops after the first pair of segments are consolidated.
 The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consolidation."
   (declare (optimize (safety 1) (speed 3) (space 1)))
@@ -617,7 +617,7 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
    ((not (stringp proximal-name)) (setq proximal-name (format nil "~A" proximal-name)))
    ((not (stringp distal-name)) (setq distal-name (format nil "~A" distal-name))))
   ;; The CANDIDATE consolidated name is created from the left part of PROXIMAL-NAME and the right part of DISTAL-NAME, where the sections are delimited by
-  ;; *SEGMENT-CONSOLIDATION-CHAR*. 
+  ;; *SEGMENT-CONSOLIDATION-CHAR*.
   (let ((candidate
 	 (concatenate-strings
 	  (the SIMPLE-BASE-STRING (string-head proximal-name
@@ -638,7 +638,7 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 (defun move-node-slightly (amount node)
   (let ((factor (+ 1 amount)))
     (setf (node-relative-location node) (mapcar '* (node-relative-location node) (list factor factor factor)))))
-		      
+
 (defun move-distal-seg-slightly-if-coincident (seg distal-seg)
   (when (equal (or (segment-dummy-proximal-node-location seg) (node-relative-location (segment-node-1 seg)))
 	       (node-relative-location (segment-node-2 distal-seg)))
@@ -674,7 +674,7 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 	    (when *use-strict-lambda-criterium*
 	      (move-distal-seg-slightly-if-coincident seg distal-seg)
 	      (setq new-length		; The new segment length is determined by the endpoints of the original pair.
-		    (the sf (compute-segment-length 
+		    (the sf (compute-segment-length
 			     (or (segment-dummy-proximal-node-location seg) (node-relative-location (segment-node-1 seg)))
 			     (node-relative-location (segment-node-2 distal-seg)))))
 	      (setq d1l1 (the sf (* (segment-diameter seg) (segment-length seg)))
@@ -703,7 +703,7 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 	      (unless *use-strict-lambda-criterium*
 		(move-distal-seg-slightly-if-coincident seg distal-seg)
 		(setq new-length	; The new segment length is determined by the endpoints of the original pair.
-		      (the sf (compute-segment-length 
+		      (the sf (compute-segment-length
 			       (or (segment-dummy-proximal-node-location seg) (node-relative-location (segment-node-1 seg)))
 			       (node-relative-location (segment-node-2 distal-seg))))
 		      d1l1 (the sf (* (segment-diameter seg) (segment-length seg)))
@@ -780,19 +780,19 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 	 (segment-name-offset (hash-table-count (SEGMENT-HASH-TABLE)))
 	 (cell (create-cell cell-name :cell-type cell-type))
 	 (soma (create-soma :cell cell :diameter *gm-soma-diameter))
-	 (GM-DENDRITE-DESCRIPTION  *GM-DENDRITE-DESCRIPTION*) 
+	 (GM-DENDRITE-DESCRIPTION  *GM-DENDRITE-DESCRIPTION*)
 	 (gm-branch-point-description  *gm-branch-point-description*)
 	 (list-w-branchs
 	  (loop for dendrite in  GM-DENDRITE-DESCRIPTION
 		collect (list (nth 0 dendrite) ; seg name
 			      (nth 1 dendrite) ; length
 			      (nth 2 dendrite) ; diam
-			      (when (= 2 (nth 5 dendrite))	
+			      (when (= 2 (nth 5 dendrite))
 				(cddr (car gm-branch-point-description))))
 		into result
 		do (when (= 2 (nth 5 dendrite)) (setq gm-branch-point-description (cdr gm-branch-point-description)))
 		finally (return result)))
-	 
+
 	 (soma-branch-count 0)
 	 (source-list
 	  (loop for dendrite in GM-DENDRITE-DESCRIPTION
@@ -807,7 +807,7 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 	 (soma-branch-index 0))
     (setq *segment-name-offset* segment-name-offset)
     (loop for dendrite in source-list
-	  do 
+	  do
 	  (create-segment (+ segment-name-offset (nth 0 dendrite))
 			  (if (eq 'soma (car (last dendrite)))
 			      (soma-name soma)
@@ -862,7 +862,7 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 
 ;; IT'S "T" LIKE TRUNK, "O" LIKE OBLIQUE, "B" LIKE BASAL, AND "D" LIKE DISTAL
 
-;; function for add channels in the soma with precise density 
+;; function for add channels in the soma with precise density
 
 (defun add-channel-in-element-with-density (element chtype-iv-density-list &optional (name-prefix ""))
   (loop for cell-elt-name in (coerce-to-list element)
@@ -875,7 +875,7 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 
 (defun add-channel-in-element-with-density-motif (motif position chtype-iv-density-list cell)
   ;; motif (ex: motif = "o" and position = 0  for segment like "o121")
-  (add-channel-in-element-with-density  
+  (add-channel-in-element-with-density
    (loop for seg in (cell-segments cell) when (equal (string (char (segment-name seg) position)) motif) collect seg)
    chtype-iv-density-list))
 
@@ -956,8 +956,8 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 				:label "Loadable Circuit Description Filename")
 	(unless dummy2
 	  (when (write-file-overwrite-authorization dummy1)
-	    (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-	    (when (probe-file (ext:unix-namestring pathname-directory nil))
+	    (unix-mkdir (namestring pathname-directory nil) #o777)
+	    (when (probe-file (namestring pathname-directory nil))
 	      (when convert-to-simple-names (rename-segments-simple (somas-and-segments cells nil)))
 	      (with-open-stream (stream (open dummy1 :direction :output :if-does-not-exist :create))
 				(format stream ";;; -*- Package: SURF; Mode: LISP -*-~%~%")
@@ -975,7 +975,7 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 			do (setq tree (push-segment-tree-list-component 'soma element tree (cell-name cell))))
 		  tree)
 	into trees
-	finally 
+	finally
 	(format stream
 		" (let (")
 	(loop for tree-name in tree-names
@@ -999,7 +999,7 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
  				  finally (return out))
 			    (if (= count (length tree)) ")" (format nil "~%")))
 		    finally
-		    (format stream (if (= tree-count (length trees)) 
+		    (format stream (if (= tree-count (length trees))
 				     "))~%"  ")~%"))))
 	(format stream "~%")
 	(loop for tree-name in tree-names
@@ -1008,11 +1008,11 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 		      "  (create-tree~%")
 	      (format stream
 		      "   (create-soma ~%")
-	      (format stream		    
+	      (format stream
 		      "    :cell (create-cell ~s~%" (cell-name cell))
-	      (format stream		    
+	      (format stream
 		      "                       :origin '~a~%" (cell-origin cell))
-	      (format stream		    
+	      (format stream
 		      "                       :cell-type ~a~s)~%"
 		      (if (symbolp (cell-type-name (cell-type cell))) "'" "")
 		      (cell-type-name (cell-type cell)))
@@ -1073,12 +1073,12 @@ The circuit is processed with PROCESS-CIRCUIT-STRUCTURE at the end of the consol
 
 (defun add-cell-name-to-name (name cell-name)
   "When the string made of CELL-NAME prepended to \"-\" is not found at the head of NAME, then return string made of CELL-NAME, \"-\" and NAME. Both NAME and
-CELL-NAME may be strings, numbers or symbols." 
+CELL-NAME may be strings, numbers or symbols."
   (let* ((name-string (format nil "~A" name))
 	 (cell-name-string (format nil "~A" cell-name))
 	 (cell-name-string-length (length cell-name-string))
 	 (cell-name-prefix (if (eq #\- (elt cell-name-string (1- cell-name-string-length))) cell-name-string (format nil "~A-" cell-name-string))))
-    (if (or (>= (length cell-name-prefix) (length name-string)) 
+    (if (or (>= (length cell-name-prefix) (length name-string))
 	    (not (string= cell-name-prefix name-string :end2 (1+ cell-name-string-length))))
 	(format nil "~a~a" cell-name-prefix name) name)))
 
@@ -1123,7 +1123,7 @@ CELL-NAME may be strings, numbers or symbols."
 		   do (document-element type) (terpri))))
       (CIRCUIT-DESCRIPTION-HEADER cell)
       (when include-membrane-elts (doc-types (nconc (synapse-types) (channel-types))))
-      (doc-types (cell-types)) 
+      (doc-types (cell-types))
       (loop for cell in cells do (document-cell-structure cell circuit-dump) (terpri)
 	    (when include-membrane-elts
 	      (mapcar #'(lambda (ch) (document-channel ch circuit-dump)) (channels cell))
@@ -1147,7 +1147,7 @@ CELL-NAME may be strings, numbers or symbols."
 		 :diameter ,(soma-diameter (cell-soma cell))))
        ',(mapcar (lambda (seg) (segment-tree-list-component (proximal-cell-element seg) seg circuit-dump)) (cell-segments cell))))
     nil))
-    
+
 (defun document-circuit (&key (cells (cells)) separate-files include-membrane-elts convert-to-simple-names)
   (let ((cells (elements cells 'cell)))
     (if (and separate-files (> (length cells) 1))
@@ -1196,4 +1196,3 @@ CELL-NAME may be strings, numbers or symbols."
 	  tree))
 
 |#
-

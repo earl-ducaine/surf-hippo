@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -82,7 +82,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 	   :image (create-instance nil *main-menu-image*) :text (main-menu-text help-string) :label "Surf-Hippo Main Menu")
 	  (setq help-string nil)
 	  unless (or *automatic-run* *modify-stimulus* dummy1 dummy2 dummy3 dummy5 dummy6 dummy7 dummy10 dummy12 dummy14 dummy15)
-	  do (return nil)		
+	  do (return nil)
 	  when dummy12 do
 	  (setq help-string (format nil "~%** Read the User Manual in ~A. **~%** Type \"h\" over output windows for help. **~%" (concatenate-strings *surf-home* "doc/")))
 	  (format t "~A~%~%" help-string)
@@ -114,14 +114,14 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 	  ;; Propagate parameters to the circuit elements. The optional T arg is to consider *RECHECK-CIRCUIT-ELEMENTS-PARAMETERS* .
 	  (when (or dummy1 dummy3) (set-circuit-elements-parameters t))
 	  when (or *automatic-run* (and *circuit-loaded* dummy10)) do (return t))))
-      
+
 (defun overall-parameter-menu ()
   ;; Set up the overall simulation parameters. Loads circuit.
-  (let (dummy1 dummy2 dummy3 dummy4 dummy6 dummy5 dummy6 dummy7 dummy8 dummy9 dummy10 dummy11  
+  (let (dummy1 dummy2 dummy3 dummy4 dummy5 dummy6 dummy7 dummy8 dummy9 dummy10 dummy11
 	       )
     (setq dummy2 nil			; (not *circuit-loaded*)
-	  dummy6 nil 
-	  )	
+	  dummy6 nil
+	  )
     (choose-variable-values
      `(;(dummy2 "Load circuit function or file" :boolean)
        ;(dummy8 "Load generic Lisp file" :boolean)
@@ -142,7 +142,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
      (dummy1 (NUMERICAL-PARAMETERS-MENU))
      (dummy6 (globals-menu))
      ;; (dummy2 (load-circuit-menu))
-     (dummy10 (colorize-and-sparse-data-menu))     
+     (dummy10 (colorize-and-sparse-data-menu))
      (dummy11 (linear-corrected-vclp :use-menu t)))))
 
 (defun load-circuit-or-files-menu ()
@@ -364,7 +364,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 	   ((not *voltage-plot-min*) (setq *voltage-plot-min* -90.0))
 	   ((not *voltage-plot-max*) (setq *voltage-plot-max* -40.0)))
 	  (dendrite-plot-parameters-menu)))))
-  
+
 (defun dendrite-plot-parameters-menu ()
   (choose-variable-values
     '((*voltage-plot-min* :number)
@@ -380,7 +380,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 (defvar *last-edited-synapse-type* nil)
 (defvar *last-edited-channel-type* nil)
 
-(defun edit-circuit-elements-menu ()			
+(defun edit-circuit-elements-menu ()
   (unless (element *last-edited-channel-type*) (setq *last-edited-channel-type* nil))
   (unless (element *last-edited-synapse-type*) (setq *last-edited-synapse-type* nil))
   (let (dummy1 dummy2 dummy3 dummy4 dummy5 dummy7 (dummy8 t) dummy9 dummy11 dummy12 dummy13 dummy14 dummy15 dummy16 dummy17
@@ -396,8 +396,8 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 									    (intern (element-name *last-edited-synapse-type*))
 									    (element-name *last-edited-synapse-type*)))
 	       dummy1 nil dummy2 nil dummy3 nil dummy5 nil dummy7 nil dummy8 nil dummy9 nil
-	       dummy11 nil dummy12 nil dummy13 nil dummy14 nil dummy15 nil dummy16 nil dummy17 nil 
-	       dummy18 :nothing dummy19 :nothing dummy20 nil dummy21 nil 
+	       dummy11 nil dummy12 nil dummy13 nil dummy14 nil dummy15 nil dummy16 nil dummy17 nil
+	       dummy18 :nothing dummy19 :nothing dummy20 nil dummy21 nil
 	       menu-list '((:comment "Temperature Parameters")
 			   (*Temp-celcius* "Temperature [deg C]" :number)
 			   (*ignore-q10* :boolean)))
@@ -431,12 +431,12 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 	   (when (blocked-channel-types)
 	     (push `(:comment ,(format nil "Blocked types: ~A" (concatenate-string-list (coerce-to-list (element-name (blocked-channel-types)))	:string-spacer " " :string-count-to-add-linefeed 4)))
 		   menu-list))
-	   (when (non-unity-channel-type-IV-MODULATION-p) 
+	   (when (non-unity-channel-type-IV-MODULATION-p)
 	     (push `(dummy18 ,(format nil "Manipulate channel type GBAR modulation~A:"
 				      (when (channel-TYPES-WITH-NON-UNITY-IV-MODULATION)
 					(format nil "~%[Currently modulated types ~A]" (element-names (channel-TYPES-WITH-NON-UNITY-IV-MODULATION)))))
 			     :choose (:apply-modulation-to-gbar :reset-modulation :nothing) :vertical) menu-list))
-	   (when (non-unity-synapse-type-IV-MODULATION-p) 
+	   (when (non-unity-synapse-type-IV-MODULATION-p)
 	     (push `(dummy19 ,(format nil "Manipulate synapse type GBAR modulation~%~A:" (element-names (synapse-TYPES-WITH-NON-UNITY-IV-MODULATION)))
 			     :choose (:apply-modulation-to-gbar :reset-modulation :nothing)) menu-list)))
 	 (when *synapse*
@@ -508,13 +508,13 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 (defun MENU-FOR-CHANNEL-BLOCKING ()
   (let ((blocked-types (select-hash-values-menu	(CHANNEL-TYPE-HASH-TABLE) "Select Channel Types To Block"
 						:selection-key 'channel-type-blocked :rank-margin 2 :do-all-at-once t :inclusion-key 'instance-in-cell)))
-    (loop for type being the hash-value of (CHANNEL-TYPE-HASH-TABLE) 
+    (loop for type being the hash-value of (CHANNEL-TYPE-HASH-TABLE)
 	  do (setf (channel-type-blocked type) (true-p (or (member (channel-type-name type) blocked-types)))))))
 
 (defun MENU-FOR-SYNAPSE-BLOCKING ()
   (let ((blocked-types (select-hash-values-menu	(SYNAPSE-TYPE-HASH-TABLE) "Select Synapse Types To Block"
 						:selection-key 'synapse-type-blocked :rank-margin 2 :do-all-at-once t :inclusion-key 'instance-in-cell)))
-    (loop for type being the hash-value of (SYNAPSE-TYPE-HASH-TABLE) 
+    (loop for type being the hash-value of (SYNAPSE-TYPE-HASH-TABLE)
 	  do (setf (synapse-type-blocked type) (true-p (or (member (synapse-type-name type) blocked-types)))))))
 
 (defun menu-for-concentrations ()
@@ -554,7 +554,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
   (delete-duplicates (loop for type-list in *parameters* collect (string (car type-list))) :from-end t))
 
 (defun menu-for-type-choose-names (filtered-library-types already-chosen-type-names exclude-type-names type-model-name label text)
-  (choose-list-values 
+  (choose-list-values
    (loop for element-name in filtered-library-types unless (member element-name exclude-type-names :test 'equal) collect element-name)
    already-chosen-type-names
    :do-all-at-once t :rank-margin 1 :direction :horizontal :PUNT-IF-ONLY-ONE-ENTRY nil
@@ -581,10 +581,10 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 
 (defun ion-permeabilities-ion-value (ion permeabilities)
   (loop for ion-perm in permeabilities when (eq (car ion-perm) ion) do (return (cadr ion-perm)) finally (return 0.0)))
-  
+
 (defun edit-ion-permeabilities (elt)
   (let* (ion-permeabilities-ok
-	 (element (element-type elt)) 
+	 (element (element-type elt))
 	 (ion-permeabilities (element-slot element :ion-permeabilities))
 	 (dummy1 (ion-permeabilities-ion-value 'na ion-permeabilities))
 	 (dummy2 (ion-permeabilities-ion-value 'k ion-permeabilities))
@@ -660,7 +660,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
    (when *plot-path-nodes* (go-ahead-menu "Clear previous plotted path nodes"))))
 
 (defun constant-current-menu (cell-elements)
-  (loop for constant-current-element in 
+  (loop for constant-current-element in
 	(choose-list-values-from-keys
 	 (loop for cell-element in cell-elements when cell-element collect (list (element-name cell-element) cell-element))
 	 nil :label "Select Cell Elements" :text "Edit constant current injection")
@@ -675,7 +675,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
      :label (format nil "Edit Constant Current @ ~A" (element-name target-elt)))
     (if dummy1 (add-constant-current-to-element target-elt dummy2) (CLEAR-ELEMENT-CONSTANT-CURRENT target-elt))))
 
-(defun OVERALL-ELEMENT-MENU (target-elt &optional win) ; This is for somas or segments. 
+(defun OVERALL-ELEMENT-MENU (target-elt &optional win) ; This is for somas or segments.
   (when (cell-element-p target-elt)
     (let* (dummy1
 	   dummy2 (dummy5 :none) dummy6 dummy8 dummy9 dummy10 dummy11 dummy12
@@ -822,7 +822,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 				    (let ((*standard-output* (make-string-output-stream)))
 				      (print-element elt)
 				      (get-output-stream-string *standard-output*))))
-		     (t (print-element elt)))))))    
+		     (t (print-element elt)))))))
 
 (defun get-associated-elements (target-elt &optional (include-target t) include-cell include-types)
   (let* ((target-elt (element target-elt))
@@ -862,7 +862,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 (defun plot-elements-of-target-element-menu (target-elt)
   ;; If there is a synapse here, allow plotting of the synapse origin, if it exists.
   (let (element-list pre-synaptic-flags post-synaptic-flags)
-    (loop for elt in (get-associated-elements target-elt) do 
+    (loop for elt in (get-associated-elements target-elt) do
 	  (when (synapse-p elt)
 	    (if (not (equal (synapse-cell-element elt) target-elt)) ; target-elt must be pre-synaptic to someone
 	      (progn
@@ -887,7 +887,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 		  when (equal (if (electrode-p elt) 'ELECTRODE (type-of elt)) type)
 		  collect elt into filtered-element-list
 		  and collect pre-synaptic-flag into filtered-pre-synaptic-flags and collect post-synaptic-flag into filtered-post-synaptic-flags
-		  finally 
+		  finally
 		  (loop for element in filtered-element-list
 			for pre-synaptic-flag in filtered-pre-synaptic-flags
 			for post-synaptic-flag in filtered-post-synaptic-flags
@@ -899,7 +899,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 					    (check-for-soma-with-tree-for-dendrite-current-plot element plot-list-info)
 					    (check-particle-data-slot-for-markov element plot-list-info)
 					    (= (length (plot-list-info-tables plot-list-info)) 1)
-					    (loop for table in (plot-list-info-tables plot-list-info) 
+					    (loop for table in (plot-list-info-tables plot-list-info)
 						  thereis (and (eq element-table table)
 							       (or t (not (eq element-table (SYNAPSE-HASH-TABLE)))
 								   (not (eq (plot-list-info-structure-slot plot-list-info) 'Event))
@@ -928,7 +928,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 	      (when (cell-element-p target-elt)
 		(REMOVE-ENTRY-FROM-*PLOT-NODE-ELEMENTS* (element-name target-elt))))
 	    (choose-plot-data)))))
-	  
+
 (defun numerical-parameters-menu ()
   (let ((dummy1 (cond (*use-time-list* :use_step_list)
 		      (*use-fixed-step* :use_fixed_step)
@@ -954,7 +954,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 	     (*enable-user-breakpoint-list* :boolean)
 	     ("Parameters for Fixed Time Step" :comment)
 	     (*user-step*		; "Fixed time step [ms]:"
-	      :number) 
+	      :number)
 	     ("Parameters for Using Time Step List" :comment)
 	     (*auto-refresh-last-sim-reverse-time-list* "Update time step reference list using last simulation" :boolean)
 	     ;; ("Synapse evaluation parameters" :comment)
@@ -986,7 +986,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
      (*num-graphics-windows-columns* "Number of graphics windows columns" :integer))
    :label "Edit Graphics Windows Parameters")
   (setup-plot-tiling))
-     
+
 (defun debugging-parameters-menu ()
   (choose-variable-values
    `((*use-max-iterations* :boolean)
@@ -1020,7 +1020,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
      )
    :label "Debugging Parameters"))
 
-  
+
 (defun globals-menu ()
   (let (dummy1 dummy2 dummy3 dummy4 dummy5 dummy6 dummy7)
     (choose-variable-values
@@ -1088,7 +1088,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
     ;; Redo particle arrays since the precision has changed.
     ;; (unless (= dummy1 *particle-look-up-table-precision*) (make-needed-v-particle-arrays t))
     ))
-	       
+
 (defun circuit-file-browser ()
   (or *automatic-run*
       (let ((path (file-browser "Circuit File Browser"
@@ -1123,7 +1123,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
     (when path
       (setq *lisp-file-directory* (directory-namestring path))
       (load path))))
-	
+
 (defun doc-file-browser ()
   (let ((path (file-browser "Documentation File Browser"
 			    (if (> (length *doc-file*) 0) (pathname *doc-file*) (concatenate-strings *surf-home* "doc/"))
@@ -1142,7 +1142,7 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
   (loop for thing in (element
 		      (choose-list-values (element-name (LIST-OF-ALL-THINGS type)) nil
 					  ; :do-all-at-once t
-					  :max-per-menu 30 
+					  :max-per-menu 30
 					  :rank-margin 5 :direction :vertical :label (format nil "Select ~a names to change" type))
 		      type)
 	do (let ((dummy1 (element-name thing type)))

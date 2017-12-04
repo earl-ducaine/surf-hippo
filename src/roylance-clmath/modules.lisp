@@ -28,8 +28,6 @@
 
 (in-package "USER")
 
-(provide "MODULES")
-
 (export '(
 	  module-pathname-get
 	  module-pathname-put
@@ -195,13 +193,7 @@
       (dolist (path paths)
 	(module-load name path)))))
 
-(defun module-provide (name)
-  ;; we could remember a name-pathname association here
-  (provide name))
-
-
 ;;;; The Database
-
 ;;; should acquire this data from a few canonical places
 
 (module-namestring "ACCT-BOM"              "R2" "/homes/glr/acct/bom")

@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -38,7 +38,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defun sphere-diameter-from-capacitance (capacitance &optional (specific-capacitance 1.0))
   "Returns the diameter in microns of a sphere with CAPACITANCE in pF, assuming a SPECIFIC-CAPACITANCE in uF/cm2 [default 1]."
-  (sphere-diameter-from-area 
+  (sphere-diameter-from-area
    (* 1e8				; um2/cm2
       (/ (* capacitance			; pF
 	    1e-6)			; uF/pF
@@ -46,11 +46,11 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	 ))))
 
 (defun sphere-area (radius-microns)
-  "Sphere surface area is in um2 - RADIUS-MICRONS is in micrometers."  
+  "Sphere surface area is in um2 - RADIUS-MICRONS is in micrometers."
   (* 4.0 pi-single radius-microns radius-microns))
 
 (defun sphere-area-cm2 (radius-microns)
-  "Sphere surface area is in cm2 - RADIUS-MICRONS is in micrometers."  
+  "Sphere surface area is in cm2 - RADIUS-MICRONS is in micrometers."
   (* 1.0e-8 (sphere-area radius-microns)))
 
 (defun sphere-area-from-diameter (diameter)
@@ -91,7 +91,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (cond ((= 0 num) 0.0)
 	((> num 0) 1.0)
 	(t -1.0)))
-    
+
 ;; ************* ************* ************* *************
 ;;
 ;;   Trigonometric and Complex Number Related Functions
@@ -130,14 +130,14 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   ;; Return the logarithm of the double float NUMBER in the double float BASE.
   (declare (optimize (speed 3) (space 0))
 	   (double-float number base))
-  (the df (/ (the df (kernel::%log number))
-	     (the df (kernel::%log base)))))
+  (the df (/ (the df (log number))
+	     (the df (log base)))))
 
 (defun df-real-ln (number)
   ;; Return the natural logarithm of the double float NUMBER.
   (declare (optimize (speed 3) (space 0))
 	   (double-float number))
-  (the df (kernel::%log number)))
+  (the df (log number)))
 
 (defun log-10 (number) (log number 10))
 
@@ -197,28 +197,28 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (proclaim '(inline single-float-min))
 (defun single-float-min (number1 number2)
-  (declare (optimize (safety 1) (speed 3) (space 0)) 
+  (declare (optimize (safety 1) (speed 3) (space 0))
 	   (single-float number1 number2))
   (if (< number1 number2) number1 number2))
 
 (proclaim '(inline single-float-max))
 (defun single-float-max (number1 number2)
-  (declare (optimize (safety 1) (speed 3) (space 0)) 
+  (declare (optimize (safety 1) (speed 3) (space 0))
 	   (single-float number1 number2))
   (if (> number1 number2) number1 number2))
 
 (proclaim '(inline double-float-min))
 (defun double-float-min (number1 number2)
-  (declare (optimize (safety 1) (speed 3) (space 0)) 
+  (declare (optimize (safety 1) (speed 3) (space 0))
 	   (double-float number1 number2))
   (if (< number1 number2) number1 number2))
 
 (proclaim '(inline double-float-max))
 (defun double-float-max (number1 number2)
-  (declare (optimize (safety 1) (speed 3) (space 0)) 
+  (declare (optimize (safety 1) (speed 3) (space 0))
 	   (double-float number1 number2))
   (if (> number1 number2) number1 number2))
-  
+
 ;;; These are for avoiding over or underflows in calls to exp.
 (defconstant exp-upper-arg (float (floor (log most-positive-single-float))))
 (defconstant exp-lower-arg -30.0)	; empirical
@@ -258,7 +258,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (declare (optimize (safety 1) (speed 3) (space 0))
 	   (double-float arg))
   (cond ((> arg exp-upper-arg-double) (notify-exp-limit arg) EXP-UPPER-DOUBLE)
-	((> arg exp-lower-arg-double) (kernel::%exp arg))
+	((> arg exp-lower-arg-double) (exp arg))
 	(t (notify-exp-limit arg) EXP-lower-DOUBLE)))
 
 (defun in-btwn (lower num upper) (and (<= lower num) (< num upper)))
@@ -273,7 +273,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (declare (optimize (safety 1) (speed 3) (space 0))
 	   (single-float number))
   (max number 0.0))
-    
+
 (defun close-to (first-float second-float &optional (resolution 0.001))
   ;; Returns T if the arguments are equal at the level of RESOLUTION.
   (declare (optimize (safety 1) (speed 3) (space 1)))
@@ -290,9 +290,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defun clear-3-by-3-array (array)
   (declare (optimize (safety 1) (speed 3) (space 1))
 	   (type (simple-array single-float (3 3)) array))
-  (dotimes (i 3)	
+  (dotimes (i 3)
     (declare (fixnum i))
-    (dotimes (j 3)	
+    (dotimes (j 3)
       (declare (fixnum j))
       (setf (aref array i j) 0.0))))
 
@@ -300,7 +300,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (declare (optimize (safety 1) (speed 3) (space 1))
 	   (type (simple-array single-float (3 3)) array))
   (clear-3-by-3-array array)
-  (dotimes (i 3)	
+  (dotimes (i 3)
     (declare (fixnum i))
     (setf (aref array i i) 1.0))
   array)
@@ -308,11 +308,11 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defun copy-3-by-3-array (from-array to-array)
   (declare (optimize (safety 1) (speed 3) (space 1))
 	   (type (simple-array single-float (3 3)) from-array to-array))
-  (dotimes (i 3)	
+  (dotimes (i 3)
     (declare (fixnum i))
-    (dotimes (j 3)	
+    (dotimes (j 3)
       (declare (fixnum j))
-      (setf (aref to-array i j) 
+      (setf (aref to-array i j)
 	    (aref from-array i j)))))
 
 (defun abtoc (a b c)
@@ -337,7 +337,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 #|
 Geert-Jan
--- 
+--
 Geert-Jan van Opdorp
 AI-Engineering
 Amsterdam, The Netherlands
@@ -358,7 +358,7 @@ geert@aie.nl
 
 #|
 Strictly speaking, I suppose you do not need to provide for the possibility of
-the same element occurring more than once (:count 1 and remove-duplicates), 
+the same element occurring more than once (:count 1 and remove-duplicates),
 since, if I remember correctly, for a permutation you assume that all elements
 are distinct. Still, it seems a small price to pay for adding generality.
 
@@ -366,13 +366,13 @@ Cheers,
 
 Yo
 
--- 
+--
 ------------------------------------------------------------------------------
           _
           V                    Johan Peeters
  -------------------           Alcatel Broadband Systems
  |  A L C A T E L  |           Excelsiorlaan 44-46 - 1930 Zaventem - Belgium
- -------------------           Phone: +32 2 718 7119 - Fax: +32 2 718 7000 
+ -------------------           Phone: +32 2 718 7119 - Fax: +32 2 718 7000
   	 BBS		       Email: peeterjo@bsg.bel.alcatel.be
 
 ------------------------------------------------------------------------------
@@ -402,7 +402,3 @@ Yo
    (loop for x from -20.0 to 20.0 collect
 	 (loop for y from -20.0 to 20.0 collect
 	       (* x y)))))
-
-
-
-

@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -128,7 +128,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;; conses half as much.
 
 (defun histology-pix-from-xy-vals-limit (pixel-value) (fixnum-max *histology-pixels-min-limit* (fixnum-min *histology-pixels-max-limit* pixel-value)))
-	    
+
 ;;; X-Y-HISTOLOGY-WIN - Translates from data coordinates to histology window coordinates in which the origin is at the center of
 ;;; the window.  Separate transforms are needed for x and y since the origin of an opal:window is at the upper left hand corner,
 ;;; thus requiring a flipping of the y values. The scale factor is in units of microns per pixel, and the x and y args are in
@@ -150,7 +150,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	   (type KR::SCHEMA win))
   (histology-pix-from-xy-vals-limit
    (the (signed-byte 32)
-	(kernel:%unary-round (+ half-win-width
+	(round (+ half-win-width
 				(+ (* x-scaled (the sf (gv win :current-xfrm-0-0)))
 				   (* y-scaled (the sf (gv win :current-xfrm-1-0)))
 				   (the sf (gv win :current-xfrm-2-0))))))))
@@ -162,7 +162,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	   (type KR::SCHEMA win))
   (histology-pix-from-xy-vals-limit
    (the (signed-byte 32)
-	(kernel:%unary-round (- half-win-height
+	(round (- half-win-height
 				(+ (* x-scaled (the sf (gv win :current-xfrm-0-1)))
 				   (* y-scaled (the sf (gv win :current-xfrm-1-1)))
 				   (the sf (gv win :current-xfrm-2-1))))))))
@@ -174,8 +174,8 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	   (type KR::SCHEMA win))
   (histology-pix-from-xy-vals-limit
    (the (signed-byte 32)
-	(kernel:%unary-round (+ half-win-width (+ x-scaled (the sf (gv win :current-xfrm-2-0))))))))
-   
+	(unary-round (+ half-win-width (+ x-scaled (the sf (gv win :current-xfrm-2-0))))))))
+
 (proclaim '(inline non-rotated-histo-y-from-y))
 (defun non-rotated-histo-y-from-y (half-win-height y-scaled win)
   (declare (optimize (safety 1) (speed 3) (space 1))
@@ -183,7 +183,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	   (type KR::SCHEMA win))
   (histology-pix-from-xy-vals-limit
    (the (signed-byte 32)
-	(kernel:%unary-round (- half-win-height (+ y-scaled (the sf (gv win :current-xfrm-2-1))))))))
+	(round (- half-win-height (+ y-scaled (the sf (gv win :current-xfrm-2-1))))))))
 
 (proclaim '(inline x-y-histology-win-values-with-dims))
 (defun x-y-histology-win-values-with-dims (x y half-win-width half-win-height win)
@@ -201,7 +201,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (proclaim '(inline x-y-histology-win-values))
 (defun x-y-histology-win-values (x y win)
-  ;; The same as X-Y-HISTOLOGY-WIN but returns X Y as VALUES. 
+  ;; The same as X-Y-HISTOLOGY-WIN but returns X Y as VALUES.
   (declare (optimize (safety 1) (speed 3) (space 1))
 	   (values fixnum)
 	   (type single-float x y))
@@ -226,7 +226,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     (declare (type (simple-array single-float (* *)) xfrm)
 	     (single-float scale))
     (let* ((half-height (schema-half-height-fn win))
-	   (half-width (schema-half-width-fn win)) 
+	   (half-width (schema-half-width-fn win))
 	   (x (/
 	       (+
 		(* (- (- half-height (aref xfrm 2 1)) y-pix)
@@ -301,8 +301,8 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun get-win-view-plane-x-y (3D-coords win) (list (get-win-view-plane-x 3D-coords win) (get-win-view-plane-y 3D-coords win)))
-  
-(defun get-win-view-plane-x-y-from-x-y-z (x y z win) (list (get-win-view-plane-x-from-x-y-z x y z win) (get-win-view-plane-y-from-x-y-z x y z win)))  
+
+(defun get-win-view-plane-x-y-from-x-y-z (x y z win) (list (get-win-view-plane-x-from-x-y-z x y z win) (get-win-view-plane-y-from-x-y-z x y z win)))
 
 (proclaim '(inline x-y-histology-win-from-view))
 (defun x-y-histology-win-from-view (data-location win)
@@ -367,7 +367,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	       (loop for thickness fixnum from *minimum-segment-thickness* to *maximum-segment-thickness* do
 		     (when (= 0 thickness)
 		       (setf (aref color-fill-styles-array color-index) (get-opal-color-to-fill color))
-		       (setf (aref colors-array color-index) color))			
+		       (setf (aref colors-array color-index) color))
 		     (setf (aref color-line-styles-array thickness color-index)
 			   (create-instance nil opal:line-style (:constant nil) (:foreground-color color) (:line-thickness thickness))))))))
 
@@ -416,5 +416,3 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defun access-*fill-styles*-for-soma-voltage (soma)
   (declare (optimize (safety 1) (speed 3) (space 1)))
   (aref *cell-fill-styles* (color-styles-voltage-index (get-soma-voltage-df soma))))
-
-

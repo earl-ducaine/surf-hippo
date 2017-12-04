@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -71,7 +71,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;;  MAJOR PLOTTING FUNCTIONS
 ;;
 ;; PLOT-XY-DATA, PLOT-TIMED-DATA, PLOT-POINTS, PLOT-SCATTER, PLOT-HISTOGRAM,
-;; PLOT-POLAR-DATA, PLOT-POLAR-SIMPLE-ARRAY, PLOT-POLAR-VECTORS 
+;; PLOT-POLAR-DATA, PLOT-POLAR-SIMPLE-ARRAY, PLOT-POLAR-VECTORS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun PLOT-XY-DATA-non-nil-data-p (XY-DATA-LISTS)
@@ -116,7 +116,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (export 'parse-interleaved-xy-list)
 
 #|
-(defun add-xy-data-to-plot-agg (win plot-agg xy-data-lists RELEVANT-LABELS line-styles same-line-style scatter polar connect-data-points connect-ends linear-regression) 
+(defun add-xy-data-to-plot-agg (win plot-agg xy-data-lists RELEVANT-LABELS line-styles same-line-style scatter polar connect-data-points connect-ends linear-regression)
   ;; For PLOT-XY-DATA
   (loop for xy-data-list in xy-data-lists
 	for curve-num from 0 do
@@ -348,7 +348,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     (t (nth (if (= (length data-group-x-lists) 1) 0 trace-reference) data-group-x-lists))))
 
 (defun parse-line-styles-for-plot (line-styles win waterfall use-same-line-style num-curves-per-group)
-  (let ((temp-styles (cond 
+  (let ((temp-styles (cond
 		      ((consp line-styles) line-styles)
 		      ((consp (g-value win :plot-line-style-family)) (g-value win :plot-line-style-family))
 		      (t (coerce-to-list
@@ -387,7 +387,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 ;; :AXES-TYPE can be either NIL (axes type unchanged for plotting to an old window, with the default :STANDARD) :SIMPLE,
 ;; :STANDARD or :NONE. You can also enable X or Y axes with the :X-AXIS-P and :Y-AXIS-P arguments (both default to T).
- 
+
 ;; When the :AUTO-WF-SETUP argument is non-NIL, then a waterfall plot will be made with the traces stacked vertically
 ;; (spaced by the largest amplitude trace), the trace labels centered vertically to the right of each trace, and the
 ;; simple axes set in the lower left corner.
@@ -534,7 +534,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		     &key (title "XY Data") win width height left top ; Pixels.
 		       x-lists y-lists interleaved-xy-data
 		       (x-axis-tick-mark-skip nil x-axis-tick-mark-skip-suppplied) (y-axis-tick-mark-skip nil y-axis-tick-mark-skip-suppplied)
-		       data-type		; Optional. May be used to select plot windows according to some aspect of the data. 
+		       data-type		; Optional. May be used to select plot windows according to some aspect of the data.
 		       prompt-for-overlay (overlay *overlay-plots*) (accomodate-overlays *accomodate-overlays*)
 		       (preserve-plot-layout *preserve-plot-layout*) preserve-win-attributes preserve-win-dims
 		       (update t) (resurrect t) (visible t)
@@ -542,7 +542,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		       ;;
 		       (canonic-label "DATA") (x-label "") (y-label "")
 		       x-label-h-position x-label-v-position ; :below :above
-		       invert-y-axis-label y-label-v-position (y-label-h-position :left) 
+		       invert-y-axis-label y-label-v-position (y-label-h-position :left)
 		       ;;
 		       x-are-fns y-are-fns x-axis-coeff y-axis-coeff
 		       (x-axis-prefix nil x-axis-prefix-supplied-p) (x-axis-suffix nil x-axis-suffix-supplied-p)
@@ -566,7 +566,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		       ;;
 		       update-fixed-gap use-fixed-top-gap (fixed-top-gap 0) use-fixed-bottom-gap (fixed-bottom-gap 0) use-fixed-right-gap (fixed-right-gap 0) use-fixed-left-gap (fixed-left-gap 0)
 		       ;;
-		       (draw-grid *default-plot-grid-p*) grid-line-style 
+		       (draw-grid *default-plot-grid-p*) grid-line-style
 		       (label-traces *label-plot-traces*)
 		       (x-data-offset 0.0) (y-data-offset 0.0) (x-trace-offset 0.0) (y-trace-offset 0.0)
 		       fix-to-unity-mag-if-so session-name
@@ -582,9 +582,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 Data from files:
 
-XY-DATA-REF = \"pathname\" 
+XY-DATA-REF = \"pathname\"
 
-            or 
+            or
 
               (\"pathname\" \"pathname\" ...)
 
@@ -689,7 +689,7 @@ XY-DATA-REF = '((x1 y1 x1 y1 ...)
 		      (y-label "") y-label-v-position (y-label-h-position :left)
 
 		      (draw-grid *default-plot-grid-p*)
-		      
+
 		      (x-origin-tick nil) (y-origin-tick t)
 		      line-styles
 
@@ -697,7 +697,7 @@ XY-DATA-REF = '((x1 y1 x1 y1 ...)
 		      axes-type		; (:standard :simple :none)
 		      x-scale-l% x-scale-t% y-scale-t%
 		      (simple-axis-x-value-p t) (simple-axis-y-value-p t)
-		      
+
 		      (label-traces t)
 		      update-fixed-gap
 		      use-fixed-top-gap (fixed-top-gap 0)
@@ -707,7 +707,7 @@ XY-DATA-REF = '((x1 y1 x1 y1 ...)
 		      use-same-line-style
 		      polar connect-ends waterfall
 		      session-name comment (upper-right-comment "") (comment-position *default-comment-position*)
-		      left top (width 400) (height 400) 
+		      left top (width 400) (height 400)
 		      x-inc y-inc y-min y-max x-min x-max  x-origin y-origin)
   "For plotting a set or sets of XY points.
 The data format of LIST-OF-POINT-LISTS is
@@ -721,7 +721,7 @@ If TRANSPOSE-POINTS [default NIL], then for each pair (x y) the values are inter
    (x-list-y-list-from-xy-point-list list-of-point-lists transpose-points)
    label-list
    :win win :title title		; :scale scale
-   :overlay overlay :prompt-for-overlay prompt-for-overlay :accomodate-overlays accomodate-overlays  
+   :overlay overlay :prompt-for-overlay prompt-for-overlay :accomodate-overlays accomodate-overlays
    :preserve-plot-layout preserve-plot-layout :preserve-win-attributes preserve-win-attributes
    :preserve-win-dims preserve-win-dims
    :connect-data-points connect-data-points
@@ -746,7 +746,7 @@ If TRANSPOSE-POINTS [default NIL], then for each pair (x y) the values are inter
    :width width :height height :left left :top top
    :line-styles line-styles :use-same-line-style use-same-line-style
    :label-traces label-traces
-   :polar polar :connect-ends connect-ends :waterfall waterfall 
+   :polar polar :connect-ends connect-ends :waterfall waterfall
    :x-symbol-width x-symbol-width :upper-right-comment upper-right-comment :comment comment
    :comment-position comment-position
    :y-symbol-width y-symbol-width :session-name session-name
@@ -763,14 +763,14 @@ If TRANSPOSE-POINTS [default NIL], then for each pair (x y) the values are inter
 		     (scatter-symbol-borderp t) (fill-scatter t)
 		     plot-POLYLINE-as-multipoint
 		     even-quadrant-diagonal odd-quadrant-diagonal linear-regression
-		     (x-label "") x-label-v-position x-label-h-position 
+		     (x-label "") x-label-v-position x-label-h-position
 		     (y-label "") y-label-v-position (y-label-h-position :left)
 		     (draw-grid *default-plot-grid-p*)
 		     (x-origin-tick nil)(y-origin-tick t)
 		     line-styles
 		     x-axis-prefix x-axis-suffix
 		     y-axis-prefix y-axis-suffix
-					 
+
 		     x-are-fns y-are-fns
 		     axes-type		; (:standard :simple :none)
 		     x-scale-l% x-scale-t% y-scale-t%
@@ -781,20 +781,20 @@ If TRANSPOSE-POINTS [default NIL], then for each pair (x y) the values are inter
 		     use-fixed-bottom-gap (fixed-bottom-gap 0)
 		     use-fixed-right-gap (fixed-right-gap 0)
 		     use-fixed-left-gap (fixed-left-gap 0)
-					
+
 		     (label-traces t)
 		     use-same-line-style
-					 
+
 		     comment (upper-right-comment "") (comment-position *default-comment-position*)
 		     session-name
-		     left top (width 400) (height 400) 
+		     left top (width 400) (height 400)
 		     x-inc y-inc y-min y-max x-min x-max  x-origin y-origin)
   (plot-points list-of-point-lists label-list
 	       :win win :title title ; :scale (or scale (and win (g-value win :scale)))
-	       :overlay overlay :prompt-for-overlay prompt-for-overlay :accomodate-overlays accomodate-overlays  
+	       :overlay overlay :prompt-for-overlay prompt-for-overlay :accomodate-overlays accomodate-overlays
 	       :preserve-plot-layout preserve-plot-layout :preserve-win-attributes preserve-win-attributes
 	       :preserve-win-dims preserve-win-dims
-	       
+
 	       :connect-data-points connect-data-points
 	       :scatter scatter :scatter-symbol scatter-symbol :x-symbol-width x-symbol-width :y-symbol-width (or y-symbol-width x-symbol-width)
 	       :scatter-symbol-borderp scatter-symbol-borderp :fill-scatter fill-scatter
@@ -809,7 +809,7 @@ If TRANSPOSE-POINTS [default NIL], then for each pair (x y) the values are inter
 
 	       :x-axis-prefix x-axis-prefix :x-axis-suffix x-axis-suffix
 	       :y-axis-prefix y-axis-prefix :y-axis-suffix y-axis-suffix
-	       
+
 	       :x-origin-tick x-origin-tick :y-origin-tick y-origin-tick
 	       :line-styles line-styles :use-same-line-style use-same-line-style
 	       :label-traces label-traces
@@ -839,7 +839,7 @@ If TRANSPOSE-POINTS [default NIL], then for each pair (x y) the values are inter
     (print (/ (loop for len in list summing len) (length list)))
     (print max)))
 
-(defun plot-histogram-data (y-data-list bin-min bin-max 
+(defun plot-histogram-data (y-data-list bin-min bin-max
 			    &key
 			    y-inc (y-min 0.0) y-max x-origin y-origin (x-origin-tick t) (y-origin-tick t) x-are-fns (y-are-fns t)
 			    (title "Histogram Data") title-position data-type (x-label "") (y-label "")
@@ -852,14 +852,14 @@ If TRANSPOSE-POINTS [default NIL], then for each pair (x y) the values are inter
 			    (simple-axis-x-value-p t) (simple-axis-y-value-p t)
 			    update-fixed-gap use-fixed-top-gap (fixed-top-gap 0) use-fixed-bottom-gap (fixed-bottom-gap 0)
 			    use-fixed-right-gap (fixed-right-gap 0) use-fixed-left-gap (fixed-left-gap 0)
-			    font comment (comment-position *default-comment-position*) (upper-right-comment "") 
+			    font comment (comment-position *default-comment-position*) (upper-right-comment "")
 			    left top (width 400) (height 400)
 			    win)
   ;; Y-DATA-LIST = list of the actual histogram values.
   ;; Histogram are constructed with vertical bars whose left edges are defined by the X entries in Y-DATA-LIST, and whose widths
   ;; are defined by BIN-WIDTH. If either X-AXIS-TICK-SKIP or X-AXIS-TICK-MARK-SKIP is NIL [default], then reasonable values will be
   ;; chosen automatically.
-  
+
   (let ((win (or win (get-plot-window :xy data-type overlay :title title :mode :histogram :left left :top top
 				      :accomodate-overlays (unless prompt-for-overlay accomodate-overlays) :prompt-for-overlay prompt-for-overlay))))
     (s-values win simple-axis-x-value-p simple-axis-y-value-p (y-axis-tick-mark-length 5) (x-axis-tick-mark-length 2))
@@ -897,7 +897,7 @@ If TRANSPOSE-POINTS [default NIL], then for each pair (x y) the values are inter
 		    :x-label x-label :x-label-v-position x-label-v-position :x-label-h-position x-label-h-position
 		    :y-label y-label :y-label-v-position y-label-v-position :y-label-h-position y-label-h-position
 		    :x-inc x-inc :x-min-spec x-min :x-max-spec x-max
-		    :x-are-fns x-are-fns :y-are-fns y-are-fns 
+		    :x-are-fns x-are-fns :y-are-fns y-are-fns
 		    :y-inc y-inc :y-min-spec y-min :y-max-spec y-max))
       (let ((plot-agg (get-plot-agg win 'data-plot t))
 	    (stipple-percent (or (g-value win :stipple-percent) (unless (g-value win :bar-border-p) 50)))
@@ -921,19 +921,19 @@ If TRANSPOSE-POINTS [default NIL], then for each pair (x y) the values are inter
 
 #|
 (plot-histogram '(10 10 10 20 100 ) :bins 100)
-PRINTVARS: MAX 100.0, MIN 10, BINS 100, BIN-WIDTH 0.909, 
+PRINTVARS: MAX 100.0, MIN 10, BINS 100, BIN-WIDTH 0.909,
 #k<KR-DEBUG:PLOT-WINDOW-78280>
 * (plot-histogram '(100 100 100 200 1000 ) :bins 100)
-PRINTVARS: MAX 100.0, MIN 10, BINS 100, BIN-WIDTH 1, 
+PRINTVARS: MAX 100.0, MIN 10, BINS 100, BIN-WIDTH 1,
 #k<KR-DEBUG:PLOT-WINDOW-78280>
 * (plot-histogram '(100 100 100 200 1000 ) :bins 100 :x-are-fns nil)
-PRINTVARS: MAX 1000.0, MIN 100, BINS 100, BIN-WIDTH 10, 
+PRINTVARS: MAX 1000.0, MIN 100, BINS 100, BIN-WIDTH 10,
 #k<KR-DEBUG:PLOT-WINDOW-78280>
 * (plot-histogram '(100 100 100 200 1000 ) :bins 100 :x-are-fns nil)
 |#
 
 
-			    
+
 ;; A histogram is constructed based on the values in SEQUENCE
 (defun plot-histogram (sequence &key font comment win
 		       bin-min bin-max bin-width bins
@@ -1017,7 +1017,7 @@ PRINTVARS: MAX 1000.0, MIN 100, BINS 100, BIN-WIDTH 10,
   ;; rtheta-lists ( ((r r r ...) (t t t ...)) ... )
   (plot-xy-data
    (loop for rtheta-list in rtheta-lists
-	 collect 
+	 collect
 	 (loop for r in (car rtheta-list)
 	       for theta in (cadr rtheta-list)
 	       collect (* r (if theta-in-degrees-p (cos-degrees theta) (cos theta))) into x-list
@@ -1027,7 +1027,7 @@ PRINTVARS: MAX 1000.0, MIN 100, BINS 100, BIN-WIDTH 10,
    :x-axis-tick-mark-skip axis-tick-mark-skip
    :y-axis-tick-mark-skip axis-tick-mark-skip
 
-   :connect-data-points connect-data-points  
+   :connect-data-points connect-data-points
    :win win :title title :comment comment :comment-position comment-position
    :width width :height height
    :x-label-v-position x-label-v-position
@@ -1066,7 +1066,7 @@ PRINTVARS: MAX 1000.0, MIN 100, BINS 100, BIN-WIDTH 10,
    :x-label-h-position x-label-h-position
    :y-label-v-position y-label-v-position
    :y-label-h-position y-label-h-position
-   
+
    :overlay overlay
    :polar-circles-p polar-circles-p :polar t :connect-data-points t :connect-ends t :scatter scatter
    :y-label r-label
@@ -1142,8 +1142,8 @@ window menu if needed."
 		      (filename (format nil "~A~A" pathname-directory dummy1)))
 		 (setq *plot-code-directory* pathname-directory)
 		 (when (write-file-overwrite-authorization filename)
-		   (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-		   (when (probe-file (ext:unix-namestring pathname-directory nil))
+		   (unix-mkdir pathname-directory)
+		   (when (probe-file pathname-directory)
 		     (with-open-stream (*standard-output* (open filename :direction :output :if-does-not-exist :create))
 				       (write-window-plot-form win))
 		     (format t ";; File ~a written~%" filename))))))))
@@ -1180,7 +1180,7 @@ window menu if needed."
 					       :y-base dummy4
 					       :position dummy5
 					       :overlay-index dummy6)))))
-			      
+
 (defun add-trace-analysis-to-plot (&optional win &key append-to-existing-comment return-strings trace (y-base 0.0) (position :upper-right) (overlay-index 0))
   "Adds analysis result of traces in plotting WIN [if NIL then a menu is given] at POSITION [default :UPPER-RIGHT], including integral relative to
 Y-BASE [default 0], maximum and minimum. Chosen traces are determined by the TRACE [default NIL] and OVERLAY-INDEX [default 0] arguments, as described
@@ -1190,7 +1190,7 @@ for the function EXTRACT-PLOT-WINDOW-DATA. If RETURN-STRINGS is T then a list of
 			   (:all (list-of-nums (plot-window-overlays win) 0 1))
 			   (t (coerce-to-list overlay-index))))
 	       (strings
-		(concatenate-string-list 
+		(concatenate-string-list
 		 (loop for overlay in overlays nconcing
 		       (multiple-value-bind (data labels)
 			   (extract-plot-window-data win trace overlay)
@@ -1204,7 +1204,7 @@ for the function EXTRACT-PLOT-WINDOW-DATA. If RETURN-STRINGS is T then a list of
 	  (add-comment win strings :append-to-old-comment append-to-existing-comment :position position)
 	  strings) into out
 	finally (when return-strings (return out))))
-	 
+
 (defun plot-trace-analysis-string (data-list label time-base y-base)
   (format nil "~AInt ~,2e~A, Max ~,2e, Min ~,2e"
 	  (if label (format nil "~A: " label) "")
@@ -1212,7 +1212,7 @@ for the function EXTRACT-PLOT-WINDOW-DATA. If RETURN-STRINGS is T then a list of
 	  (if (and y-base (/= y-base 0)) (format nil "[~,2e]" y-base) "")
 	  (max-of-list data-list)
 	  (min-of-list data-list)))
-  
+
 (defun integrate-plot-window-data (&key win trace x-max x-min (y-base 0.0) average)
   (values-list
    (loop for xy-lists in (extract-plot-window-data win trace)
@@ -1232,7 +1232,7 @@ for the function EXTRACT-PLOT-WINDOW-DATA. If RETURN-STRINGS is T then a list of
   "Extract one or more plot data lists from WIN. Prompts for non-specfied WIN. For overlayed plots, retrieves the overlay according to OVERLAY-INDEX,
 default 0, referenced from the last overlay. Returns as values DATA and LABELS. DATA is of the form:
 
-        (((x-list) (y-list)) ... ((x-list) (y-list))) 
+        (((x-list) (y-list)) ... ((x-list) (y-list)))
 
 If TRACE is nil then the first trace is returned. Otherwise, if TRACE is an integer or a list of integers, then the traces corresponding to those
 numbers [starting from 1] are returned.  If TRACE is :ALL, then all data lists are included. If TRACE is :MENU, the default, then a menu for the
@@ -1265,8 +1265,8 @@ traces is given."
 			 (number (list-of-nums (length (extract-plot-window-y-list win trace overlay-index)) 0 x))))))))
 	(values (loop for x in x-data for y in y-data
 		      collect (list x y))
-		(when (>= (length labels) (length x-data))  
-		  (loop for x in x-data 
+		(when (>= (length labels) (length x-data))
+		  (loop for x in x-data
 			for label in labels
 			collect label)))))))
 
@@ -1295,14 +1295,14 @@ traces is given."
 	(vertical-border (round (or border vertical-border)))
 	(side-border-new (round
 			  (if (and left-border right-border)
-			      (/ (+ left-border right-border) 2)			  
+			      (/ (+ left-border right-border) 2)
 			      (or border side-border))))
 	(element-aspect-ratio (s-flt element-aspect-ratio)))
 
     (unless win (setq win (get-plot-window :2dplot nil overlay :title title :mode :2dplot :width width :height height :preserve-win-dims t)))
     (when win
-      (s-value win :x-axis-p x-axis-p) 			   
-      (s-value win :y-axis-p y-axis-p) 			   
+      (s-value win :x-axis-p x-axis-p)
+      (s-value win :y-axis-p y-axis-p)
       (s-value win :x-axis-tick-skip x-axis-tick-skip)
       (s-value win :x-axis-tick-mark-skip x-axis-tick-mark-skip)
       (s-value win :y-axis-tick-skip y-axis-tick-skip)
@@ -1375,7 +1375,7 @@ traces is given."
   (density-plot (make-2d-histo-array x-data y-data x-incs y-incs
 				     :x-min x-min :x-max x-max :y-min y-min :y-max y-max
 				     :increment increment :print-out-max-mins print-out-max-mins)
-		:title title :border border :width width :height height 
+		:title title :border border :width width :height height
 		:invert (not white-is-maximum-p)
 		:z-min 0 :z-max z-max :x-min x-min :x-max x-max :y-min y-min :y-max y-max
 		:element-aspect-ratio element-aspect-ratio
@@ -1393,7 +1393,7 @@ traces is given."
 	  plot-xy-data plot-timed-data
 	  PLOT-POINTS
 	  plot-scatter
-	  BASIC-HISTO 
+	  BASIC-HISTO
 	  plot-histogram-data
 	  plot-histogram
 	  plot-histogram-list

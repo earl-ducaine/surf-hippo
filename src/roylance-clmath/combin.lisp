@@ -18,8 +18,6 @@
 
 (in-package "USER")
 
-(provide "COMBINATORICS")
-
 ;; lbg 9-6-95
 #|
 (eval-when (compile load eval)
@@ -143,7 +141,7 @@
 
 ;;; There are n! ways to arrange all the objects
 ;;; Break into two groups
-;;;   there are k! ways to arrange one 
+;;;   there are k! ways to arrange one
 ;;;         and (n-k)! ways to arrange the other
 
 (defun choose-naive (n k)
@@ -152,7 +150,7 @@
 
 ;;; Minimize the number of multiplies
 ;;;
-;;;                 10 9 8   7 6 5 4 3 2 1 
+;;;                 10 9 8   7 6 5 4 3 2 1
 ;;;   eg 10 C 3 =   ----------------------
 ;;;                 (3 2 1) (7 6 5 4 3 2 1)
 ;;;

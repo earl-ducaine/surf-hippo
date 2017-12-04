@@ -29,8 +29,6 @@
 
 (in-package "USER")
 
-(provide "STATISTICS")
-
 ;; lbg 9-6-95
 #|
 
@@ -584,7 +582,7 @@
 ;;;        0 = (+ (* (+ n/2 1) (/ x))  -1/2)
 ;;;        x = (+ n 2)
 
-#| diked out --- 
+#| diked out ---
 
 (defun chi-square-0-random-number (n x)
   (* (expt x (1- (/ (float n) 2.0)))
@@ -633,7 +631,7 @@
 ;;;   so
 ;;;    I[1-x](b,a) = 1 - I[x](a,b)
 ;;;
-;;; therefore 
+;;; therefore
 ;;;   A(t, v) = I[1-x](1/2, v/2)
 ;;;
 (defun t-two-sided (tt n)
@@ -667,7 +665,7 @@
 
 ;;; LET g(x) = (expt (+ (/ (^ X 2) n) 1) (* -0.5 (+ n 1)))
 ;;; max x x g(x) = (* x x (expt (+ (/ (^ X 2) n) 1) (* -0.5 (+ n 1))))
-;;; or max log = 
+;;; or max log =
 ;;;   (+ (* 2 (log x)) (* -0.5 (+ n 1) (log (+ (/ (^ X 2) n) 1))))
 ;;; derivative = 0
 ;;; (+ (* 2 (/ x)) (* -0.5 (+ n 1) (/ (+ (/ (^ X 2) n) 1)) (/ (* 2 X) n)))
@@ -758,7 +756,7 @@
 
 ;;; -- Ratio of Uniform Deviates Method
 
-;;; LET g(x) = 
+;;; LET g(x) =
 ;;;   (* (expt x (- v1/2 1)) (expt (+ v2 (* v1 x)) (* -0.5 (+ v1 v2))))
 ;;; max x x g(x) =
 ;;;   (* (expt x (+ v1/2 1)) (expt (+ v2 (* v1 x)) (* -0.5 (+ v1 v2))))
@@ -782,7 +780,7 @@
 
 ;;; ugly !! v2 > 2 -- why ???
 
-#| diked out --- 
+#| diked out ---
 
 (defun f-0-random-number (v1 v2 x)
   (* (expt x (- (/ (float v1) 2.0) 1.0))

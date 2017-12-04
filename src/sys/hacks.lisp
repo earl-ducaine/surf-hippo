@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -52,7 +52,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	  when (member segment branch) do (return branch))))
 
 (defun identify-branch (element) (branch element))
-  
+
 (defun look-at-branchs ()
   "Print out branch structure of circuit."
   (dolist (branch *branch-list*)
@@ -79,7 +79,7 @@ point."
 	(let* ((segments-in-branch (length branch))
 	       (elts
 		(loop for segment in (reverse branch)
-		      for count from 0 
+		      for count from 0
 		      when
 		      (if ends
 			  (or (= 0 count) (= (1- (length branch)) count))
@@ -89,7 +89,7 @@ point."
 		      nconcing
 		      (if (eq element-type 'segment)
 			  (list segment)
-			  (delete-duplicates  
+			  (delete-duplicates
 			   (loop for elt in (node-elements (segment-node-2 segment))
 				 when (eq element-type (type-of elt))
 				 collect elt))))))
@@ -139,7 +139,7 @@ point."
 ;; ************* ************* ************* *************
 
 (create-instance 'break-into-simulation-window-interactor inter:button-Interactor
-		 (:continuous nil) (:start-where t) 
+		 (:continuous nil) (:start-where t)
 		 ;; LG fix 01.09.2016 CMUCL 20 reads :CONTROL-LATIN_CAPITAL_G instead of :CONTROL-G
 		 ;; (:start-event :control-\c)
 		 (:start-event '(:control-\c :CONTROL-LATIN_SMALL_LETTER_C))
@@ -225,8 +225,13 @@ point."
 |#
 
 (defun simulation-trial-message (trial &optional num-trials message)
-  "Useful for printing out iteration numbers. Insert this in the iteration loops in user defined simulation functions."
-  (format *error-output* "~A: Trial: ~A" (di:debug-function-name (di:frame-debug-function (di:frame-down (di::top-frame)))) trial)
+  "Useful for printing out iteration numbers. Insert this in the
+   iteration loops in user defined simulation functions."
+  (format *error-output* "Trial: ~A"
+	  ;; (di:debug-function-name
+	  ;;  (di:frame-debug-function
+	  ;;   (di:frame-down (di::top-frame))))
+	  trial)
   (when num-trials (format *error-output* " (out of ~A)" num-trials))
   (when message (format t " ~A~%" message))
   (format *error-output* "~%"))
@@ -240,14 +245,8 @@ point."
   )
 
 (defun announce-gc (bytes-in-use)
-  (cond-every
-   ;; This also gives the (COMMON-LISP::SUB-SERVE-EVENT NIL 0) bug?
-   ;; (*beep-after-gc* (progn (inter:beep) (inter:beep)))
-   (ext::*gc-verbose* (format t "~&[GC threshold exceeded with ~:D bytes in use.  ~
-    Commencing GC.]~%" bytes-in-use))
-   (*gc-announce-text* (gc-announce-to-window bytes-in-use))
-   (*log-gc-to-file* (log-gc-to-file bytes-in-use)))
-  (finish-output))
+  ;; noop
+  )
 
 (defun gc-announce-to-window (bytes-in-use)
   (let ((announce-string (format nil "GC threshold exceeded with ~:D bytes in use. Commencing GC." bytes-in-use)))
@@ -262,17 +261,17 @@ point."
       (format t "~a~%"  announce-string))))
 
 (defun announce-gc-done (bytes-retained bytes-freed new-threshold)
-  (cond-every
-   (ext::*gc-verbose* (format t "[GC will next occur when at least ~:D bytes are in use.]~%" new-threshold))
-   (*gc-announce-text* (gc-done-announce-to-window bytes-retained bytes-freed new-threshold))
-   ((> new-threshold *gc-bytes-retained-warning-threshold*) (gc-bytes-retained-warning-threshold new-threshold))
-   (*log-gc-to-file* (log-gc-done-to-file bytes-retained bytes-freed new-threshold))
-   ;; Source of (COMMON-LISP::SUB-SERVE-EVENT NIL 0) bug?
-   ;; (*beep-after-gc* (inter:beep))
-   ;; And this doesn't work
-   ;;  (*beep-after-gc* (progn (system:beep) (system:beep)))
-   )
-  (finish-output))
+  ;; noop
+  )
+  ;; (cond-every
+  ;;  ((> new-threshold *gc-bytes-retained-warning-threshold*) (gc-bytes-retained-warning-threshold new-threshold))
+  ;;  (*log-gc-to-file* (log-gc-done-to-file bytes-retained bytes-freed new-threshold))
+  ;;  ;; Source of (COMMON-LISP::SUB-SERVE-EVENT NIL 0) bug?
+  ;;  ;; (*beep-after-gc* (inter:beep))
+  ;;  ;; And this doesn't work
+  ;;  ;;  (*beep-after-gc* (progn (system:beep) (system:beep)))
+  ;;  )
+  ;; (finish-output))
 
 (defun gc-done-announce-to-window (bytes-retained bytes-freed new-threshold)
   (let ((announce-string
@@ -307,7 +306,7 @@ point."
   (when (> (LENGTH-ELEMENT-OUTPUT-DATA) 0)
     (format t "     The length of all the simulation data lists is ~D.~%" (LENGTH-ELEMENT-OUTPUT-DATA))
     (format t "     Use CLEAR-ELEMENT-OUTPUT-DATA to clear these.~%"))
-	 
+
   (format t "~%")
   (format t "  You may want to consider saving vital stuff~%")
   (format t "  and punting LISP (quit-sh) to be safe.~%~%")
@@ -319,8 +318,8 @@ point."
 (defun log-gc-done-to-file (bytes-retained bytes-freed new-threshold)
   (let* ((pathname-directory (get-surf-data-directory))
 	 (log-filename (format nil "~Agc.log" pathname-directory)))
-    (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-    (when (probe-file (ext:unix-namestring pathname-directory nil))
+    (mkdir (namestring pathname-directory nil) #o777)
+    (when (probe-file (namestring pathname-directory nil))
       (with-open-stream (stream (open log-filename :direction :output :IF-DOES-NOT-EXIST :CREATE :if-exists :append))
 	(format stream "GC finished - bytes retained ~:D, bytes freed ~:D, new-threshold ~:D ~%"
 		bytes-retained bytes-freed new-threshold)))))
@@ -328,8 +327,8 @@ point."
 (defun log-gc-to-file (bytes-in-use)
   (let* ((pathname-directory (get-surf-data-directory))
 	 (log-filename (format nil "~Agc.log" pathname-directory)))
-    (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-    (when (probe-file (ext:unix-namestring pathname-directory nil))
+    (unix-mkdir (namestring pathname-directory nil) #o777)
+    (when (probe-file (namestring pathname-directory nil))
       (with-open-stream (stream (open log-filename :direction :output :IF-DOES-NOT-EXIST :CREATE :if-exists :append))
 	(format stream "GC threshold exceeded with ~:D bytes in use. Commencing GC.~%" bytes-in-use)))))
 
@@ -343,7 +342,7 @@ point."
 ;;(defun COMMON-LISP::DEFAULT-GC-NOTIFY-before (bytes-in-use)
 ;;  (format t "new gc with ~a~%" bytes-in-use))
 
-;; 09.11.00 These bindings seem to avoid the SUB-SERVE-EVENT bug. 
+;; 09.11.00 These bindings seem to avoid the SUB-SERVE-EVENT bug.
 ;(defun COMMON-LISP::DEFAULT-GC-NOTIFY-before (bytes-in-use) nil)
 ;(defun COMMON-LISP::DEFAULT-GC-NOTIFY-AFTER (bytes-retained bytes-freed new-threshold) nil)
 ;;
@@ -351,6 +350,3 @@ point."
 ;;(setq ext:*gc-notify-before* #'COMMON-LISP::DEFAULT-GC-NOTIFY-before)
 ;;;;(setq ext:*gc-notify-after* #'ext::DEFAULT-GC-NOTIFY-AFTER)
 ;;(setq ext:*gc-notify-after* #'COMMON-LISP::DEFAULT-GC-NOTIFY-AFTER)
-
-
-(SETQ ext::*GC-VERBOSE* nil)

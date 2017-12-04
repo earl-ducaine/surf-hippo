@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -46,7 +46,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defun find-first-non-zero-element (array) (1st-non-zero-elt-index array))
 
 (defun find-last-non-zero-element (array) (last-non-zero-elt-index array))
-  
+
 (defun float-array-support (array)
   (let ((first (1st-non-zero-elt-index array)))
     (if first (- (1+ (last-non-zero-elt-index array)) first) 0)))
@@ -56,7 +56,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	   (type VEC-FLT from-array to-array)
 	   (fixnum first))
   (unless last (setq last (1- (length from-array))))
-  (do ((i first (1+ (the fn i)))) 
+  (do ((i first (1+ (the fn i))))
       ((= (the fn i) (the fn last)))
     (setf (aref to-array i) (aref from-array i))))
 
@@ -112,16 +112,16 @@ where Tn = (NTH n TIME-SPEC).
 	     when (> count 0)
 	     do (when (zerop (- time last-t))
 		  (sim-error (format nil "The ~:R interval of the time specification for DIFFERENTIATE-WAVE has a zero duration!" count)))
-	     and collect (/ (- value last-x) (- time last-t)) into out 
+	     and collect (/ (- value last-x) (- time last-t)) into out
 	     do (setq last-x value
 		      last-t time)
 	     finally (return out))
 	  (loop for value in wave
 	     for count from 0
-	     when (> count 0) collect (/ (- value last-x) time-spec) into out 
+	     when (> count 0) collect (/ (- value last-x) time-spec) into out
 	     do (setq last-x value)
 	     finally (return out))))))
-	
+
 (defun differentiate-float-wave (wave &optional (time-spec 1.0) array-output)
   "As for DIFFERENTIATE-WAVE, but requires single float values (and is more efficient).
 When ARRAY-OUTPUT is T [default NIL] returns the result in an array, otherwise a list."
@@ -148,7 +148,7 @@ When ARRAY-OUTPUT is T [default NIL] returns the result in an array, otherwise a
 	    do (when (and consp-time-spec (zerop (- time last-t)))
 		 (sim-error (format nil "The ~:R interval of the time specification for DIFFERENTIATE-FLOAT-WAVE has a zero duration!" count)))
 	      (setq diff-value (/ (- value last-x) (if consp-time-spec (- time last-t) time)))
-	    and when array-output do (setf (aref output-array count) diff-value) else collect diff-value into output 
+	    and when array-output do (setf (aref output-array count) diff-value) else collect diff-value into output
 	    do				; (format t "last-x ~A, value ~A, count ~A~%" last-x value count)
 	      (setq last-x value
 		    last-t time)
@@ -159,7 +159,7 @@ When ARRAY-OUTPUT is T [default NIL] returns the result in an array, otherwise a
 	    when consp-time-spec do (setq time (car time-spec) time-spec (cdr time-spec))
 	    when (> count 0)
 	    do (setq diff-value (/ (- value last-x) (if consp-time-spec (- time last-t) time)))
-	    and when array-output do (setf (aref output-array count) diff-value) else collect diff-value into output 
+	    and when array-output do (setf (aref output-array count) diff-value) else collect diff-value into output
 	    do (setq last-x value
 		     last-t time)
 	    finally (return (or output-array output))))))))
@@ -218,7 +218,7 @@ grid of DT, and ELEMENT is ignored."
 Result is a list of interpolated positive threshold crossing times obtained from the voltage of the soma or segment associated with ELEMENT of MODEL-TYPE,
 according to the SPIKE-THRESHOLD [mV] and SUPRA-THRESHOLD-DURATION-MIN. All times are in milliseconds, and referenced from the time that the voltage last went above
 SPIKE-THRESHOLD. If DATA-LIST is supplied, the sampled data is taken directly from this list, and the ELEMENT argument is ignored. The time base is given by TIME-BASE
-[default given by the function CURRENT-SIM-PLOT-TIME-LIST], after processing by the function EXPAND-TIME-REFERENCE." 
+[default given by the function CURRENT-SIM-PLOT-TIME-LIST], after processing by the function EXPAND-TIME-REFERENCE."
   (declare (optimize (safety 1) (speed 3) (space 1)))
   (flet ((interpolate-for-spike-threshold-time (time last-time voltage last-voltage spike-threshold)
 	   (declare (single-float time last-time voltage last-voltage spike-threshold))
@@ -279,7 +279,7 @@ Remaining arguments are as for the function SPIKE-TIMES. Returns as values two l
 	 (spike-times (or SPIKE-TIMES
 			  (spike-times element :spike-threshold spike-threshold :supra-threshold-duration-min supra-threshold-duration-min
 				       :model-type model-type
-				       :data-list voltages 
+				       :data-list voltages
 				       :time-base time-base))))
     (find-maxs voltages spike-times time-base :before/after :subsequent)))
 
@@ -300,11 +300,11 @@ Remaining arguments are as for the function SPIKE-TIMES. Returns as values two l
 				   plot-d2v-dt2 (plot-d2v-dt20-title "Threshold 2nd Derivative Output")
 				   plot-thresholds (plot-thresholds-title "Threshold Output")
 				   (x-label "ms") (y-label "mV"))
-  "Find spike thresholds associated with ELEMENT. 
+  "Find spike thresholds associated with ELEMENT.
 Spike thresholds are defined as the time of the maximum second derivative [greater than MINIMUM-MAX-D2VDT2, default 1.0e3 mV/ms2] preceding each entry of reference times
 from an explicit list of SPIKE-TIMES, if supplied, otherwise as detected by the function SPIKE-TIMES applied to ELEMENT. Returns as values a list of the threshold
 voltages and a list of times for the thresholds. When PLOT-THRESHOLDS is T, then the data is plotted with markers at the calculated thresholds. PLOT-D2V-DT2 enables the
-plotting of the second derivative of the data. Remaining arguments are as for the function SPIKE-TIMES." 
+plotting of the second derivative of the data. Remaining arguments are as for the function SPIKE-TIMES."
   (declare (ignore sub-threshold-time))
   (let* ((minimum-d2vdt2 (s-flt minimum-d2vdt2))
 	 (voltages (or data-list (element-data element 'voltage model-type)))
@@ -384,7 +384,7 @@ Spikes from SPIKE-TIMES or detected from the voltage of the soma or segment asso
 as used by the SPIKE-TIMES function."
   (declare (ignore sub-threshold-time))
   (let ((spike-times (or SPIKE-TIMES
-			 (spike-times element :model-type model-type :data-list data-list :time-base time-base :spike-threshold spike-threshold 
+			 (spike-times element :model-type model-type :data-list data-list :time-base time-base :spike-threshold spike-threshold
 				      :supra-threshold-duration-min supra-threshold-duration-min))))
     (* 1000 (/ (loop for spike-time in spike-times when (< start-time spike-time end-time) sum 1)
 	       (- end-time start-time)))))
@@ -404,7 +404,7 @@ as used by the SPIKE-TIMES function."
 Analysis based on time base of step DT, if supplied, otherwise from times in TIME-LIST. The maximum [respectively minimum], according to MAXP, of WHAT [:SLOPE,
 :1ST-DERIVATIVE (same as :SLOPE), :2ND-DERIVATIVE, :VALUE \(default\)], within a time window between MIN-TIME and MAX-TIME [same units as DT or
 TIME-LIST]. The default value of MAX-TIME is the last time given in the TIME-LIST. Returns as values the extreme value and the time for which that
-value was detected. If no extreme was detected, then returns as values NIL and MIN-TIME." 
+value was detected. If no extreme was detected, then returns as values NIL and MIN-TIME."
   (declare (optimize (safety 1) (speed 3) (space 1)))
   (let ((min-time (s-flt min-time)) (max-time (s-flt max-time))
 	extreme (extreme-time 0.0) (time-n-1 0.0) (time-n-2 0.0) (data-n-1 0.0) (data-n-2 0.0)
@@ -458,19 +458,19 @@ Amplitude units appropriate for the type of data in DATA-LIST, if supplied, othe
   (data-amplitude (or data-list (if dt (element-data-dted element dt data-type model-type time-list) (element-data element data-type)))
 		  :MIN-TIME (s-flt MIN-TIME) :MAX-TIME (s-flt MAX-TIME) :dt dt :time-list time-list
 		  :negative-p negative-p :base-level base-level))
-  
+
 (defun data-amplitude (data-list &key dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (CAR (LAST TIME-LIST))) negative-p base-level)
   "Amplitude of DATA-LIST.
 The reference level is given by BASE-LEVEL [assumed to be in the units corresponding to that of the data] if supplied, otherwise the reference is taken
 as the minimum \(respectively maximum\) when NEGATIVE-P is NIL, \(respectively T\). The measured event amplitude is either the maximum or minimum value
-thereafter, depending on NEGATIVE-P." 
+thereafter, depending on NEGATIVE-P."
   (let ((base-level
 	 (or base-level (apply (if negative-p 'data-max 'data-min) (list :data-list data-list :MIN-TIME MIN-TIME :MAX-TIME MAX-TIME :dt dt :time-list time-list))))
 	(extreme
 	 (apply (if negative-p 'data-min 'data-max) (list :data-list data-list :MIN-TIME MIN-TIME :MAX-TIME MAX-TIME :dt dt :time-list time-list))))
     (abs (- extreme base-level))))
 
-(defun element-10-90-rise-time (element &key data-type dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (CAR (LAST TIME-LIST))) 
+(defun element-10-90-rise-time (element &key data-type dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (CAR (LAST TIME-LIST)))
 				data-list model-type negative-p base-level)
   "Returns the time in milliseconds for the 10% to 90% rise time applied to DATA-LIST, if supplied, otherwise to the data of DATA-TYPE of
 ELEMENT. Remaining arguments are as for ELEMENT-AMPLITUDE and ELEMENT-EXTREME."
@@ -487,7 +487,7 @@ ELEMENT. Remaining arguments are as for ELEMENT-AMPLITUDE and ELEMENT-EXTREME."
 	 (90%amp (+ base-level (* (if negative-p -1 1) 0.9 amp)))
 	 10%time)
     (loop for data in data-list
-	  for time in time-list 
+	  for time in time-list
 	  when (and (<= min-time time max-time)
 		    (not 10%time) (if negative-p (< data 10%amp) (> data 10%amp)))
 	  do (setq 10%time time)
@@ -512,14 +512,14 @@ ELEMENT. Remaining arguments are as for ELEMENT-AMPLITUDE and ELEMENT-EXTREME."
 	 10%time)
 
     (loop for data in data-list
-	  for time in time-list 
+	  for time in time-list
 	  when (and (<= min-time time max-time)
 		    (not 10%time) (if negative-p (< data 10%amp) (> data 10%amp)))
 	  do (setq 10%time time)
 	  when (and (<= min-time time max-time) (if negative-p (< data 90%amp) (> data 90%amp)))
 	  do (return (unless (= 0 (- time 10%time))
 		       (/ (* 0.8 amp) (- time 10%time)))))))
-	 
+
 (defun element-max-slope (element &key data-type model-type dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (CAR (LAST TIME-LIST))) data-list)
   "Returns the maximum slope in units/ms and the time for the max as values, applied to the DATA-LIST, if supplied, otherwise to the data of DATA-TYPE of
 ELEMENT. Remaining arguments are as for ELEMENT-EXTREME."
@@ -527,7 +527,7 @@ ELEMENT. Remaining arguments are as for ELEMENT-EXTREME."
    element :data-type data-type :model-type model-type :min-time min-time :max-time max-time :data-list data-list :dt dt :maxp t :what :slope :time-list time-list))
 
 (defun data-max-slope (&key  dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (CAR (LAST TIME-LIST))) data-list)
-  "Same as ELEMENT-MAX-SLOPE, except that DATA-LIST must be supplied." 
+  "Same as ELEMENT-MAX-SLOPE, except that DATA-LIST must be supplied."
   (data-extreme data-list :min-time min-time :max-time max-time :dt dt :maxp t :what :slope :time-list time-list))
 
 (defun element-min-slope (element &key data-type model-type dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (CAR (LAST TIME-LIST))) data-list)
@@ -537,7 +537,7 @@ ELEMENT. Remaining arguments are as for ELEMENT-EXTREME."
 		   :data-list data-list :dt dt :maxp nil :what :slope :time-list time-list))
 
 (defun data-min-slope (&key dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (CAR (LAST TIME-LIST))) data-list)
-  "Same as ELEMENT-MIN-SLOPE, except that DATA-LIST must be supplied." 
+  "Same as ELEMENT-MIN-SLOPE, except that DATA-LIST must be supplied."
   (data-extreme data-list :min-time min-time :max-time max-time :dt dt :maxp nil :what :slope :time-list time-list))
 
 (defun element-max (element &key data-type model-type dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (car (last time-list))) data-list)
@@ -547,7 +547,7 @@ arguments are as for ELEMENT-EXTREME."
 		   :data-list data-list :dt dt :maxp t :what :value :time-list time-list))
 
 (defun data-max (&key  dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (CAR (LAST TIME-LIST))) data-list)
-  "Same as ELEMENT-MAX, except that DATA-LIST must be supplied." 
+  "Same as ELEMENT-MAX, except that DATA-LIST must be supplied."
   (data-extreme data-list :min-time min-time :max-time max-time :dt dt :maxp t :what :value :time-list time-list))
 
 (defun element-min (element &key data-type model-type dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (CAR (LAST TIME-LIST))) data-list)
@@ -557,7 +557,7 @@ MODEL-TYPE. Remaining arguments are as for ELEMENT-EXTREME."
 		   :data-list data-list :dt dt :maxp nil :what :value :time-list time-list))
 
 (defun data-min (&key dt (time-list (current-sim-plot-time-list)) (MIN-TIME 0.0) (MAX-TIME (CAR (LAST TIME-LIST))) data-list)
-  "Same as ELEMENT-MIN, except that DATA-LIST must be supplied." 
+  "Same as ELEMENT-MIN, except that DATA-LIST must be supplied."
   (data-extreme data-list :min-time min-time :max-time max-time :dt dt :maxp nil :what :value :time-list time-list))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -588,7 +588,7 @@ single element or a list of elements."
 		    (/ mean-xs integral) ; mean
 		    integral		; integral
 		    )))))
-	  
+
 (defun gaussian-wave (x-sequence mean variance) (loop for x in x-sequence collect (gaussian x mean variance)))
 
 (defun normalize-wave-area (wave integral)
@@ -639,7 +639,7 @@ the maximum"
 	  when (and (not maximum) (>= time max-reference-time))	; Rh(0)
 	  do (setq maximum y)		; (format t "max ~A time ~A~%" y time)
 	  finally (return (/ integral maximum)))))
-	  
+
 (defun cross-correlation (waves &key wave2s labels return-result (normalize t) plot-result title x-label y-label (print-std-dev t) plot-gaussian-fit (delta-t 1.0) (dc-bias 0.0))
   (declare (optimize (safety 1) (speed 3) (space 1)))
   (let ((delta-t (s-flt delta-t)))
@@ -675,7 +675,7 @@ the maximum"
 					;(* delta-t (+ wave-length reverse-wave-length))
 					;(* delta-t (- reverse-wave-length))
 					;delta-t)
-				
+
 				(loop for x single-float from (* delta-t (- reverse-wave-length)) to (* delta-t wave-length) by delta-t collect x))))
 		 (result (loop for shift fixnum from (- reverse-wave-length) to wave-length collect
 			       (let ((left-wave (if (< shift 0) reverse-wave wave))
@@ -718,7 +718,7 @@ the maximum"
 			       collect (format nil "~A CC" orig-label) into new-labels
 			       when (and (> variance 0) plot-gaussian-fit)
 			       collect (gaussian-wave (nth 1 normal-results-x-seq-mean-var-half-width-auto-corr-duration) mean variance)
-			       into out and 
+			       into out and
 			       collect (nth 1 normal-results-x-seq-mean-var-half-width-auto-corr-duration) into x-sequences
 			       and collect (format nil "~A Gaussian" orig-label) into new-labels
 			       when print-std-dev
@@ -729,7 +729,7 @@ the maximum"
 				 (when print-std-dev (add-comment plot-win (concatenate-string-list std-dev-strings :lf-count 1))))))
 		       (return (values normal-results-x-seq-mean-var-half-width-auto-corr-durations)))))
 	    (when return-result (return return-value))))))
-  
+
 (defun integrate-wave (wave &optional (delta-t 1.0) (x-0 0.0))
   "Given the sequence WAVE, assumed to be spaced evenly by DELTA-T with respect to the independent variable, returns a list which is the
 cumulative integral of WAVE, with the initial conditions given by the optional argument X-0."
@@ -796,7 +796,7 @@ processed wave."
 	(when within-pos-event (format t "time:~A Within pos event...~%" time)))
       (push (cond ((and			; (not within-pos-event)
 		    (member time start-mins))
-		   (setq within-neg-event t) 
+		   (setq within-neg-event t)
 		   (if within-pos-event hold-value (setq hold-value this-x)))
 		  ((and			; (not within-neg-event)
 		    (member time start-maxs))
@@ -835,7 +835,7 @@ processed wave."
 	  else when (and in-spike (> value hold-value)) collect hold-value into out
 	  else do (setq in-spike nil) and collect value into out
 	  finally (return out))))
-		 
+
 (defun find-zero-crossings (wave &optional (delta-t 1.0) (min-difference-from-0 0.0))
   "For data in the sequence WAVE, with time step DELTA-T, return a list of the zero-crossing times. True zero crossings are detected when they are framed by
 alternating polarity amplitudes of at least MIN-DIFFERENCE-FROM-0 [default 0.0]."
@@ -861,7 +861,7 @@ alternating polarity amplitudes of at least MIN-DIFFERENCE-FROM-0 [default 0.0].
 	    (when (> (abs this-x) min-difference-from-0)
 	      (setq previous-ampltiude-above-minimum-p t)))))
     (reverse output)))
-	
+
 ;; ************* ************* ************* *************
 ;;
 ;;    2D Array Related Functions
@@ -948,7 +948,7 @@ otherwise, returns volume of array."
 		     (aref waveform integer-time)
 		     (+ (aref waveform integer-time) (* fractional-time (aref delta-waveform integer-time))))))
     (if (and rectify (< raw-value 0)) 0.0 raw-value)))
-				
+
 (proclaim '(inline double-interpolated-array-value-with-delta-array))
 (defun double-interpolated-array-value-with-delta-array (waveform delta-waveform integer-time fractional-time &optional rectify)
   (declare (optimize (safety 1) (speed 3) (space 1))
@@ -960,7 +960,7 @@ otherwise, returns volume of array."
 		     (+ (aref waveform integer-time)
 			(* fractional-time (aref delta-waveform integer-time))))))
     (if (and rectify (< raw-value 0)) 0.0d0 raw-value)))
-				
+
 (defun interpolated-value (value1 value2 fractional-time &optional rectify)
   (declare (optimize (safety 1) (speed 3) (space 1))
 	   (single-float fractional-time value1 value2))
@@ -980,7 +980,7 @@ otherwise, returns volume of array."
   (let ((raw-value (typecase index
 		     (fixnum (aref (the vec-flt array) index))
 		     (float (multiple-value-bind (integer-part fractional-part)
-				(kernel::sf-sb32-truncate (the sf index))
+				(truncate (the sf index))
 			      ;; (truncate (the sf index))
 			      (interpolated-array-value (the vec-flt array) integer-part fractional-part)))
 		     (t 0.0))))
@@ -997,7 +997,7 @@ otherwise, returns volume of array."
 	   (fixnum integer-time slice-index waveform-length)
 	   (single-float fractional-time))
   (let* ((1+integer-time (1+ integer-time))
-	 (raw-value 
+	 (raw-value
 	  (if (or fractional-time=0-OR-do-not-interpolate (>= 1+integer-time waveform-length))
 	    (aref waveform-array slice-index integer-time)
 	    (+ (aref waveform-array slice-index integer-time)
@@ -1076,11 +1076,11 @@ original WAVEFORM."
 		       (find 'start parsed-args :key 'car)))
 					; 0.0
 	     ))))
-  
+
 (defun waveform-menu (&optional funspec comment (use-menus t))
   (let* ((*automatic-run* (or *automatic-run* (not use-menus)))
 	 (function-name (if (consp funspec) (car funspec) funspec))
-	 new-function-name 
+	 new-function-name
 	 (dummy1 (when funspec (read-from-string (format nil ":~A" (if (consp funspec) (car funspec) funspec)))))
 	 (basics `(:exponential :double-exponential :impulse :alpha :double-alpha :sinewave))
 	 (candidates (if funspec (delete-duplicates (cons dummy1 basics)) basics)))
@@ -1106,7 +1106,7 @@ original WAVEFORM."
 					; that given by this slope.
 		 (end-window-duration 0.0)
 		 end-window-sigma
-		 (amplitude 1.0) 
+		 (amplitude 1.0)
 		 (baseline 0.0) (offset 0.0)
 		 (return-wave t)
 		 plot-wave (plot-title "Zap Wave"))
@@ -1173,7 +1173,7 @@ after START-TIME [default 0] according to SLOPE."
   (s-flt-array
    (loop for voltage from vmin to vmax by vres
 	 collecting (/ 1.0 (+ 1.0 (exp-w-limits (max -50.0 (min 50.0 (* -1 slope (- voltage v-half))))))))))
-				 
+
 (defun impulse-array (&optional (amplitude 1.0) (duration 1) (delay 0) (step 1.0))
   (let* ((length (round (/ duration step)))
 	 (array (make-array length :element-type 'single-float))
@@ -1202,7 +1202,7 @@ PULSE-DURATION, then 0.0 for the rest of the list."
 
 (defun exponential-array-unit-area (&optional (tau 1.0) (step 1.0) length)
   "Returns an array filled with a decaying exponential, whose amplitude is adjusted so that its area is 1.0 and with time base increment given by STEP
- [default 1.0]. The length of array is given by LENGTH, if given, otherwise when the amplitude is less than 
+ [default 1.0]. The length of array is given by LENGTH, if given, otherwise when the amplitude is less than
 *WAVE-CUTOFF* times the AMPLITUDE."
   (let* ((original-exponential (exponential-array tau step length))
 	 (area (* 1			; step
@@ -1231,7 +1231,7 @@ AMPLITUDE. Values before the START [default 0.0] of waveform are given by OFFSET
 		      (round length))))
     (declare (single-float value threshold))
     (without-floating-underflow-traps
-     (s-flt-array 
+     (s-flt-array
       (loop for time single-float from 0.0 by step
 	    for count fixnum from 1
 	    do (setq value (if (< time start) 0.0 (exp-w-limits (* -1.0 (/ (- time start) tau)))))
@@ -1283,7 +1283,7 @@ otherwise when the larger of the two exponential terms is less than *WAVE-CUTOFF
 
 (defun double-exponential-array (&optional (tau-rise 1.0) (tau-fall 1.0) &key (amplitude 1.0) normalize (step 1.0) (length 0) (offset 0.0) (start 0.0))
   (double-exponential tau-rise tau-fall :amplitude amplitude :normalize normalize :step step :length length :offset offset :start start))
-	 
+
 (defun alpha-integral (tau time-exponent)
   (* (factorial (round time-exponent))
      (expt tau (1+ time-exponent))))
@@ -1327,13 +1327,13 @@ met."
 			       0.0
 			       (* amplitude (the sf (alpha-function-float tau (- time delay) adjustment-numeric-value TIME-EXPONENT)))))
 	   into values
-	   when (if (and duration (> duration 0)) 
+	   when (if (and duration (> duration 0))
 		  (>= time duration)
 		  (and (> (- time delay) tau) (< (abs (- (the sf (car (last values))) offset)) minimum)))
 	   do (return (s-flt-array values))))))
 
 (defun alpha-list (&optional (tau 1.0) &key (adjustment :NORMALIZE) (step 1.0) (duration 0) (offset 0.0) (amplitude 1.0) (delay 0.0))
-  "As in ALPHA-ARRAY, but returns a list." 
+  "As in ALPHA-ARRAY, but returns a list."
   (array-to-list (alpha-array tau :adjustment adjustment :step step :duration duration :offset offset :delay delay :amplitude amplitude)))
 
 (defun alpha-impulse (tau tau-power)
@@ -1419,17 +1419,17 @@ length. The value of OFFSET [default 0.0] is added to the final waveform. Functi
   (list-to-array
    (loop for i from 0 to (1- length) collect
 	 (let ((e1 (exp-w-limits (- 0.0 (/ i tau1))))
-	       (e2 (exp-w-limits (- 0.0 (/ i tau2)))))	      
+	       (e2 (exp-w-limits (- 0.0 (/ i tau2)))))
 	   (/ (+ (* i (+ e1 e2)) (/ (* -2 tau1 tau2 (- e1 e2)) (- tau1 tau2)))
 	      (* (- tau1 tau2) (- tau1 tau2)))))))
 
 
 (defun DISTORTED-EXPONENTIAL (length tau1 tau2)
-  ;; Convolution of a normalized alpha function with time constant TAU1 and a normalized exponential distribution with time constant TAU2. 
+  ;; Convolution of a normalized alpha function with time constant TAU1 and a normalized exponential distribution with time constant TAU2.
   (list-to-array
    (loop for i from 0 to (1- length) collect
 	 (let ((e1 (exp-w-limits (- 0.0 (/ i tau1))))
-	       (e2 (exp-w-limits (- 0.0 (/ i tau2)))))	      
+	       (e2 (exp-w-limits (- 0.0 (/ i tau2)))))
 	   (/ (- (/ (* tau1 tau2 (- e2 e1)) (- tau2 tau1)) (* i e1)) (* tau1 (- tau2 tau1)))))))
 
 
@@ -1464,5 +1464,3 @@ length. The value of OFFSET [default 0.0] is added to the final waveform. Functi
 (defun trans-sus-array (&optional length tau tau-power)
   (declare (ignore length tau tau-power))
   (list-to-array '(1.25 0.0 -0.5 -0.3 -0.2)))
-
-

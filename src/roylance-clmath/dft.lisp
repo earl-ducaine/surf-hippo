@@ -8,7 +8,7 @@
 ;;;  that this notice is not removed.
 
 ;;; Reference
-;;;   Alan Oppenheim and Ronald Schafer, 
+;;;   Alan Oppenheim and Ronald Schafer,
 ;;;     Digital Signal Processing
 ;;;     Prentice Hall, 1975
 
@@ -17,7 +17,7 @@
 ;;;   use complex arithmetic
 ;;;   sign error fixed:  W = e^{- 2 pi / N}
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
 (export '(dft-array dft-float
 		    dft-init
@@ -26,8 +26,6 @@
 		    dft-reverse-array
 		    dft-610
 		    dft-618))
-
-(provide "DFT")
 
 ;;; Transform conventions
 
@@ -151,7 +149,7 @@
 	 (x0     0.0) (x1     0.0))
 	((> i ln))
       (declare (fixnum i butter-dis separation repetition)
-	       (float w-real w-imag x0 x1)) 
+	       (float w-real w-imag x0 x1))
       (do ((k 0 (+ k repetition))		; each W factor
 	   (l 0 (1+ l)))
 	  ((>= k n-over-2))
@@ -172,7 +170,7 @@
 	  (setq x1 (aref x-imag (+ j butter-dis)))
 	  (setf (aref x-imag (+ j          0)) (+ x0 x1))
 	  (setf (aref x-imag (+ j butter-dis)) (- x0 x1))
-	  
+
 	  ;; multiply x[j+butter-dis] by W
 	  (setq x0 (aref x-real (+ j butter-dis)))
 	  (setq x1 (aref x-imag (+ j butter-dis)))
@@ -201,10 +199,7 @@
 		 (mask2 #2r0011001100110011)
 		 (mask4 #2r0000111100001111)
 		 (mask8 #2r0000000011111111))
-	     (declare (type (unsigned-byte 16) r mask1 mask2 mask4 mask8)
-		      (ftype (function ((unsigned-byte 16) (unsigned-byte 16))
-				       (unsigned-byte 16))
-			     logior logand ash))
+	     (declare (type (unsigned-byte 16) r mask1 mask2 mask4 mask8))
 
 	     (setq r (logior (logand (ash r -1) mask1) (ash (logand r mask1)  1)))
 	     (setq r (logior (logand (ash r -2) mask2) (ash (logand r mask2)  2)))
@@ -328,7 +323,7 @@
 	 (1d-real (make-array          size  :element-type 'single-float :initial-element 0.0))
 	 (1d-imag (make-array          size  :element-type 'single-float :initial-element 0.0)))
     (setf (aref 2d-real 0 0) 1.0)
-    (time 
+    (time
       (dft-2d-sub-for 2d-real 2d-imag 1d-real 1d-imag precomp))
     (values 2d-real 2d-imag)))
 
@@ -395,7 +390,7 @@
     (dotimes (i (the fixnum (ash 1 dft-log-size)))
       (setf (aref x-real i) 1.0)
       (setf (aref x-imag i) 0.0))
-      
+
     (setq time0 (get-internal-run-time))
     (dft-reverse-array x-real dft-tables)
     (setq time1 (get-internal-run-time))

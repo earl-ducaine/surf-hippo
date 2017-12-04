@@ -9,37 +9,39 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
 
 ;;; SYS Source file: element-functions-1.lisp
 
-(in-package "SURF-HIPPO")
+(in-package :surf-hippo)
 
-;; ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
-;;
-;; Various element functions, taking an optional ELEMENT arg as a single ELT or a list of ELTs. If omitted, a menu will be generated to select instances of
-;; the elements. Each atom of the argument can be a string, a symbol that is the name of an element, or a symbol for the general type of element
-;; (e.g. 'channel or 'channel-type). In the latter case the function operates on all loaded elements which are of the general type. 
-;;
-;; ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+
+;; Various element functions, taking an optional ELEMENT arg as a
+;; single ELT or a list of ELTs. If omitted, a menu will be generated
+;; to select instances of the elements. Each atom of the argument can
+;; be a string, a symbol that is the name of an element, or a symbol
+;; for the general type of element (e.g. 'channel or
+;; 'channel-type). In the latter case the function operates on all
+;; loaded elements which are of the general type.
+
 
 (defun structure-type-slot-p (model-name slot-sym)
   (let ((accessor-function (read-from-string (format nil "~A-~A" model-name slot-sym))))
     (setfable-p accessor-function)))
-  
+
 (defun element-slot-p (element slot-sym) (structure-type-slot-p (type-of (element element)) slot-sym))
 
 (defun cell-element-elements (element &optional (types :all))
@@ -153,19 +155,19 @@ the segment or soma attached to the proximal node of this segment will also be r
   (typecase element
     ((or soma segment) element)
     (t (let ((element (element element model-type fast)))
-	 (or (element-slot element :cell-element)
-	     (typecase element
-	       (node (loop for elt in (node-elements element)
-			when (typecase elt
-			       (segment (eq element (segment-node-2 elt)))
-			       (soma  (eq element (soma-node elt))))
-			do (return elt)))
-	       (cell (cell-elements element))
-	       (segment element)
-	       (soma element)
-	       ;; (pump (element-cell-element (pump-conc-int element nil t)))
-	       (particle (when (particle-channel element) (channel-cell-element (particle-channel element))))
-	       (conc-particle (when (conc-particle-channel element) (channel-cell-element (conc-particle-channel element))))))))))
+	 (unless (element-slot element :cell-element)
+	   (typecase element
+	     (node (loop for elt in (node-elements element)
+		      when (typecase elt
+			     (segment (eq element (segment-node-2 elt)))
+			     (soma  (eq element (soma-node elt))))
+		      do (return elt)))
+	     (cell (cell-elements element))
+	     (segment element)
+	     (soma element)
+	     ;; (pump (element-cell-element (pump-conc-int element nil t)))
+	     (particle (when (particle-channel element) (channel-cell-element (particle-channel element))))
+	     (conc-particle (when (conc-particle-channel element) (channel-cell-element (conc-particle-channel element))))))))))
 
 
 ;; *********** *********** *********** ***********
@@ -181,7 +183,7 @@ the segment or soma attached to the proximal node of this segment will also be r
 	  (cond
 	    ((macro-function function-sym) (eval (macroexpand (if arg-supplied-p (list function-sym element arg) (list function-sym element)))))
 	    ((fboundp function-sym) (if arg-supplied-p (funcall function-sym element arg) (funcall function-sym element)))))))
-				  
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun pre-synaptic-element (element)
@@ -225,7 +227,7 @@ the segment or soma attached to the proximal node of this segment will also be r
 (defun model-elements-need-reordering-p (model)
   (declare (optimize (safety 1) (speed 3) (space 1)))
   (and (fboundp (read-from-string (format nil "~A-first-element" (model-name model))))
-       (or 
+       (or
 	(loop for parent-type being the hash-value of (get-model-hash-table model)
 	      thereis (element-parameter parent-type :reorder-elements))
 	(/= (loop for parent-type being the hash-value of (get-model-hash-table model)
@@ -263,7 +265,7 @@ the moment). See also *ENABLE-REORDER-ELEMENTS*."
 	  when (model-elements-need-reordering-p model)
 	  do (loop for element-parent-type being the hash-value of (get-model-hash-table model)
 		   do (reorder-elements-of-type element-parent-type)))))
-		 
+
 ;; (defvar *DEBUG-REORDER-ELEMENTS-OF-TYPE* nil)
 
 (defun all-elements () (flatten-no-nils-list (loop for model in (models) collect (hash-table-list (model-HASH-TABLE model)))))
@@ -346,7 +348,7 @@ TYPE-DEF forms as well. For synapse types, the SYNAPSE-CONTROL argument can be :
     (when (eq model-type 'segment) (setq things (delete-if 'electrode-structure-p things)))
     (when cell (setq things (loop for thing in things when (eq (element-cell thing) cell) collect thing)))
     things))
-  
+
 (defun list-of-all-things-in-circuit (model-type &optional cell)
   (loop for thing in (list-of-all-things model-type cell) when (element-in-circuit thing) collect thing))
 
@@ -506,7 +508,7 @@ otherwise all elements are returned."
 #|
 child model name (e.g. 'CHANNEL) -> all channels
 channel instance or name ->
-parent model type instance or name (e.g. *channel-type*) -> all child instances of the parent type instance (e.g. (channel-type-channels *channel-type*)) 
+parent model type instance or name (e.g. *channel-type*) -> all child instances of the parent type instance (e.g. (channel-type-channels *channel-type*))
 parent model name (e.g. 'CHANNEL-TYPE) -> all parent type instances (e.g. (channel-types))
 |#
 
@@ -560,8 +562,8 @@ parent model name (e.g. 'CHANNEL-TYPE) -> all parent type instances (e.g. (chann
 	when (stringp pointer) collect (read-from-string pointer) into out
 	when (symbolp pointer) collect (format nil "~A" pointer) into out
 	finally (return (element (atomize-list out) model-type fast))))
-  
-(defun element-which-is-cell-element (element model-type) 
+
+(defun element-which-is-cell-element (element model-type)
   (case model-type
     ((segment soma cell) (element element model-type))
     (t (or (element element 'segment)
@@ -576,7 +578,7 @@ parent model name (e.g. 'CHANNEL-TYPE) -> all parent type instances (e.g. (chann
       (do ((i 1 (the fn (+ 1 i))))
 	  ((not (CELL-HASH-TABLE (format nil "~a-~D" name i)))
 	   (if (or automatic-name-fixing
-		   (go-ahead-menu 
+		   (go-ahead-menu
 		    (format nil "Cell ~a already defined - ~%use ~a for name of new cell instead  ~%(otherwise cancel)." name (format nil "~a-~D" name i))
 		    "Verify Replacement Cell Name"
 		    t))
@@ -595,7 +597,7 @@ parent model name (e.g. 'CHANNEL-TYPE) -> all parent type instances (e.g. (chann
 	(do ((i 1 (the fn (+ 1 i))))
 	    ((not (gethash (format nil "~a-~D" name i) hash-table))
 	     (if (or automatic-name-fixing
-		     (go-ahead-menu 
+		     (go-ahead-menu
 		      (format nil "~a ~a already defined - ~%use ~a for name of new ~a instead  ~%(otherwise cancel)."
 			      model-type name (format nil "~a-~D" name i) model-type)
 		      (format nil "Verify Replacement ~A Name" model-type)
@@ -633,10 +635,10 @@ during the current invocation of CREATE-ELEMENT. For example:
 
        * (create-element 'NA-HH)
        <Channel Type NA-HH>
-                                   
+
        * (create-element 'NA-HH *soma*)
        <Channel Hippo-soma-NA-HH: type NA-HH>
-                                              
+
        * (create-element 'NA-HH *soma* 'DR-HH)
        (<Channel Hippo-soma-NA-HH: type NA-HH>
         <Channel Hippo-soma-DR-HH: type DR-HH>)
@@ -645,7 +647,7 @@ If the keyword :NO-DUPLICATES is included in the arguments, then no duplicate el
 same cell element\) will be created. Otherwise duplicates may be generated with or without use interaction depending on the values
 of *USE-SIMPLE-NAMES*, *ALLOW-DUPLICATE-ELEMENTS* and *PROMPT-FOR-ALTERNATE-ELEMENT-NAMES*. The arguments 'SEGMENT, 'SOMA and
 'CELL-ELEMENT will reference all the segments, somas, and both segments and somas of the circuit, respectively. See also
-the global variable *ENABLE-REORDER-ELEMENTS*." 
+the global variable *ENABLE-REORDER-ELEMENTS*."
   (let* ((ARGS (flatten-no-nils-list thing others))
 	 (new-things nil)
 	 (*allow-duplicate-elements* (and (not (member :no-duplicates ARGS)) (not (member :no-dups ARGS)))) ; :NO-DUPS for backward compatibility
@@ -696,7 +698,7 @@ element, nor a cell element!" element-type))))))
   (RANDOM-NTH (segments element)))
 
 (defun object-type-symbol-p (thing) (model-name-p thing))
-  
+
 (defun element-cell-type (element &optional model-type)
   (let ((cell (element-cell element model-type)))
     (when cell (cell-type (if (consp cell) (car cell) cell)))))
@@ -715,13 +717,13 @@ element, nor a cell element!" element-type))))))
 	       when (and (segment-p elt) (or (not exclude-self)
 					     (not (eq cell-element elt))))
 	       collect elt))))
-			      
+
 (defun particle-type-channel-type (element)
   (let ((prt (element element `particle)))
     (if prt
       (channel-type (particle-channel prt))
       (let ((prt-type (element-type element)))
-	(when (particle-type-p prt-type) 
+	(when (particle-type-p prt-type)
 	  (loop for channel-type in (channel-types)
 		when (member prt-type (channel-type-particle-types-and-powers channel-type) :key 'car)
 		do (return channel-type)))))))
@@ -810,7 +812,7 @@ value in nF."
   (s-flt (node-voltage-n+1 (element-physical-node element))))
 
 (defun element-dvdt (element)
-  "Either NODE-DVDT-N or GET-NODE-DVDT \(V_n+1 - V_n / delta-t[n]\). Value in mV/ms." 
+  "Either NODE-DVDT-N or GET-NODE-DVDT \(V_n+1 - V_n / delta-t[n]\). Value in mV/ms."
   (let ((node (element-physical-node element)))
     (element-dvdt-fast node)))
 
@@ -819,7 +821,7 @@ value in nF."
 		 (not (THING-IN-ARRAY-P node *NODE-W/ELEMENTS-ARRAY*)))
 	     (get-node-dvdt node)
 	     (node-dvdt-n node))))
-    
+
 (defun element-capacitance-current (element)
   "Return the membrane capacitance current in nA for the node associated with ELEMENT."
   (let* ((element (element-cell-element element))
@@ -849,7 +851,7 @@ value in nF."
 (defun segment-leak-current (seg)
   (let ((seg (element seg 'segment)))
     (when seg (segment-leak-current-fast seg))))
-	  
+
 (defun segment-leak-current-fast (seg)
   (* (- (node-voltage-n+1 (segment-node-2 seg)) (cell-type-v-leak-dendrite (cell-type (segment-cell seg)))) ; mV
      (segment-g-leak seg))		; uS
@@ -894,7 +896,7 @@ value in nF."
 (defun length-element-parameters (element keys &optional params) (or (loop for key in keys sum (or (length-element-parameter element key params) 0)) 0))
 (defun length-element-parameter (element key &optional params) (length-element-param-acons element key params))
 
-(defun length-element-param-acons (element key &optional params) 
+(defun length-element-param-acons (element key &optional params)
   (let* ((params (or params (element-parameters element)))
 	 (assoc-result (assoc key params)))
     (when assoc-result
@@ -940,7 +942,7 @@ the parameter to be fully processed."
   (if value
     ;; Set ELEMENT-PARAMETER
     (let* ((assoc-result (assoc key params)))
-      (if assoc-result 
+      (if assoc-result
 	(rplacd assoc-result value)
 	(let ((new-params (acons key value params)))
 	  (element-slot element :parameters new-params)))
@@ -1005,9 +1007,11 @@ the parameter to be fully processed."
       (NODE nil)
       (extracellular-electrode nil))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun find-element-array (elt key dims &optional (type 'double-float) from-particle-type always-set-new)
+(defun find-element-array
+    (elt
+     key
+     dims
+     &optional (type 'double-float) from-particle-type always-set-new)
   (or (and (not always-set-new)
 	   (if from-particle-type
 	     (get-a-value key (particle-type-parameters elt))
@@ -1015,24 +1019,40 @@ the parameter to be fully processed."
       (element-parameter elt key (make-array (coerce-to-list dims) :element-type type))))
 
 (defun element-sourcefile-string (element &optional (stream t))
-  (when (element-parameter element 'source-file) (format stream "Source file: ~A" (element-parameter element 'source-file))))
+  (when (element-parameter element 'source-file)
+    (format stream
+	    "Source file: ~A"
+	    (element-parameter element 'source-file))))
 
 (defun update-type-from-definition (element)
-  "Updates the ELEMENT type from the most recently loaded library definition. Note that change in an ELEMENT type does not
-necessarily propagate to elements of that type."
-  (let* ((type (element-type element))
-	 (type-model (element-model type))
-	 (create-routine (model-create-routine type-model)))
-    ;; The following types have create routines with args (type-symbol &optional actual-type-symbol update-parameters):
-    ;; 
-    ;; AXON-TYPE SYNAPSE-TYPE CHANNEL-TYPE PARTICLE-TYPE CONC-PARTICLE-TYPE BUFFER-TYPE PUMP-TYPE CONC-INT-TYPE CELL-TYPE
-    ;;
-    ;; Here, we make sure that these args exist in the model CREATE-ROUTINE.
-    (when (search "&optional actual-type-symbol update-parameters" (lisp::%function-arglist (extract-function create-routine)))
-      (funcall create-routine type nil t))))
+  "Updates the ELEMENT type from the most recently loaded library
+   definition. Note that change in an ELEMENT type does not
+   necessarily propagate to elements of that type."
+  (error "This function is not implemented.~%"))
+
+;; lisp::%function-arglist only supported in old CMUCL
+;;
+;; (defun update-type-from-definition (element)
+;;   "Updates the ELEMENT type from the most recently loaded library
+;;    definition. Note that change in an ELEMENT type does not
+;;    necessarily propagate to elements of that type."
+;;   (let* ((type (element-type element))
+;; 	 (type-model (element-model type))
+;; 	 (create-routine (model-create-routine type-model)))
+;;     ;; The following types have create routines with args (type-symbol
+;;     ;; &optional actual-type-symbol update-parameters):
+;;     ;;
+;;     ;; AXON-TYPE SYNAPSE-TYPE CHANNEL-TYPE PARTICLE-TYPE
+;;     ;; CONC-PARTICLE-TYPE BUFFER-TYPE PUMP-TYPE CONC-INT-TYPE
+;;     ;; CELL-TYPE
+;;     ;;
+;;     ;; Here, we make sure that these args exist in the model CREATE-ROUTINE.
+;;     (when (search "&optional actual-type-symbol update-parameters"
+;; 		  (lisp::%function-arglist (extract-function create-routine)))
+;;       (funcall create-routine type nil t))))
 
 #|
-;; This must be loaded after the revamp functions have been loaded. 
+;; This must be loaded after the revamp functions have been loaded.
 (defun revamp-type-parameters ()
 ;;  "Go through all the current instances of element types with REVAMP functions, updating them according to the appropriate type
 ;; parameter library list. Note that this will not remove any properties which are excluded from the current library definitions."
@@ -1049,12 +1069,12 @@ necessarily propagate to elements of that type."
 ;;; Gbar Pbar functions
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-      
+
 (defun independent-element-gbars-p (type)
   (typecase type
     (synapse-type (and (synapses-of-type type) (loop for elt in (synapses-of-type type) never (synapse-inherit-parameters-from-type elt))))
     (channel-type (and (channels-of-type type) (loop for elt in (channels-of-type type) never (channel-inherit-parameters-from-type elt))))))
-    
+
 (defun list-total-gbars (&optional type)
   (loop for type in (coerce-to-list (or type (channel-types)))
 	collect (list (element-name type) (loop for elt in (elements-of-type type) sum (element-gbar elt)))))
@@ -1079,7 +1099,7 @@ from absolute gbars or permeabilities to densities, where REFERENCE-AREA is in u
 
 (defun set-element-absolute-iv-reference (element iv-reference)
   "Set the gbar or permeability for the synapse or channel ELEMENT to an absolute value IV-REFERENCE (uS or cm3/s). To get the
-current value, use ELEMENT-GBAR." 
+current value, use ELEMENT-GBAR."
   (set-element-iv-reference element iv-reference))
 
 (defun set-element-absolute-iv-relation-ref (element iv-reference) (set-element-absolute-iv-reference element iv-reference))
@@ -1130,7 +1150,7 @@ current value, use ELEMENT-GBAR."
 (defun element-iv-reference (element)
   (let ((elt (element element)))
     (if (inherit-parameters-from-type elt nil t)
-      (membrane-element-type-iv-reference (element-iv-parameters elt nil t)) 
+      (membrane-element-type-iv-reference (element-iv-parameters elt nil t))
       (membrane-element-iv-reference elt))))
 
 (defun channel-iv-reference (element) (element-iv-reference element))
@@ -1193,7 +1213,7 @@ current value, use ELEMENT-GBAR."
 	       (case iv-source
 		 (:DENSITY (format nil "density reference ~,2e pS/um^2)" (s-flt (element-iv-density elt))))
 		 (:ABSOLUTE (format nil "absolute reference)"))))))))
-	    
+
 (defun membrane-element-iv-reference (element &optional fast)
   ;; Returns a double float.
   (let ((element (element element nil fast)))
@@ -1487,9 +1507,9 @@ current value, use ELEMENT-GBAR."
       (setq *node-w/elements-array*
 	    (list-to-array
 	     (delete-duplicates
-	      (flatten-no-nils-list 
+	      (flatten-no-nils-list
 	       (when (or all-driven-elements vsource-driven-elements)
-		 (loop for elt in 
+		 (loop for elt in
 		       (loop for src in (vsources)
 			     collect (typecase (vsource-cell-element src)
 				       (segment (list (proximal-cell-element src) (distal-segments src)))
@@ -1534,7 +1554,7 @@ current value, use ELEMENT-GBAR."
 	  (channel (SET-channel-PARAMETERS element))
 	  (synapse (SET-synapse-pARAMETERS element))
 	  (conc-int (set-conc-integrator-parameters nil element))))
-  nil) 
+  nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1646,11 +1666,11 @@ part of the same cell as TARGET."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Erase element 
+;;; Erase element
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun transfer-node-elements (from-node to-node)	
+(defun transfer-node-elements (from-node to-node)
   (let ((from-element (node-cell-element from-node))
 	(to-element (node-cell-element to-node)))
     (loop for element in (node-elements from-node) do
@@ -1694,13 +1714,13 @@ part of the same cell as TARGET."
   nil)
 
 ;;; REMOVE-MODEL-INSTANCE and REMOVE-MODEL-HASH-ELT Run both functions when a circuit object TARGET is to be removed. These do not remove the object from
-;;; the hash table for the object type. 
+;;; the hash table for the object type.
 
 (defun remove-model-instance (target)
-  ;;  
+  ;;
   ;;  (loop for mod being the hash-value of *model-hash-table*
-  ;;        when 
-  ;;        (loop for inst in (model-instances mod) 
+  ;;        when
+  ;;        (loop for inst in (model-instances mod)
   ;;              when (eq target inst) do (return (setf (model-instances mod) (delete inst (model-instances mod)))))
   ;;        do (return t))
   )
@@ -1757,7 +1777,7 @@ part of the same cell as TARGET."
 
 (defun update-top-pointer (element)
   ;; If the appropriate top-pointer-symbol (e.g. *channel* or *soma* or *segment*) is set to the ELEMENT, then update the value of
-  ;; the top-pointer-symbol to the last entry of the appropriate hash table that is not equal to ELEMENT. 
+  ;; the top-pointer-symbol to the last entry of the appropriate hash table that is not equal to ELEMENT.
   (let ((element-top-pointer-symbol (model-top-pointer-symbol (element-model element))))
     (when (eq element (symbol-value element-top-pointer-symbol))
       (setf (symbol-value element-top-pointer-symbol)
@@ -1777,7 +1797,7 @@ part of the same cell as TARGET."
     (isource (isources))
     (vsource (vsources))
     (t (element symbol model-type))))
-  
+
 ;; Cell-types, Particle and Conc-particle types are only erased if there are no instances of them
 (defun erase-element-core (elements &optional model-type (remove-segment-from-cell t) just-erase-top-element
 			   ;; (clear-working-arrays-and-lengths)	; Drastic, but safe
@@ -1801,7 +1821,7 @@ part of the same cell as TARGET."
 		     (erase-elements (channels-of-type element) (channel-type-particle-types element) (channel-type-conc-particle-types element))
 		     (when look-at-cints (loop for cint in (conc-ints) unless (conc-int-pores cint) do (erase-element cint))))))
 		(synapse-type
-		 (unless just-erase-top-element 
+		 (unless just-erase-top-element
 		   (let ((look-at-cints (element-has-conc-ints element)))
 		     (erase-elements (synapses-of-type element))
 		     (when look-at-cints (loop for cint in (conc-ints) unless (conc-int-pores cint) do (erase-element cint)))))
@@ -1873,7 +1893,7 @@ part of the same cell as TARGET."
   (loop for type in (coerce-to-list type) do
 	(let* ((type (element-type type))
 	       (active-symbol (typecase type
-				(pump-type 'active-pumps) 
+				(pump-type 'active-pumps)
 				(buffer-type 'active-buffers)
 				(conc-int-type 'active-conc-ints))))
 	  (element-parameter type active-symbol nil))))
@@ -1896,7 +1916,7 @@ part of the same cell as TARGET."
   (loop for prt in (particles)
 	when (eq node (particle-vnode-point prt))
 	do (setf (particle-vnode-point prt) nil)
-	(format t "Setting Particle ~A Vnode pointer to NIL (was pointing to ~A).~%" (particle-name prt) (node-name node))) 
+	(format t "Setting Particle ~A Vnode pointer to NIL (was pointing to ~A).~%" (particle-name prt) (node-name node)))
   (loop for elt in (node-elements node)	do (erase-element elt nil remove-segment-from-cell)))
 
 (defun no-input-p () (not (or (isources) (vsources) (synapses))))
@@ -1962,7 +1982,7 @@ of MODEL-TYPE."
 
 (defun erase-element (element &optional model-type (remove-segment-from-cell t) just-erase-top-element)
   "Erase ELEMENT, if it is singular, or the members of ELEMENT, if it is a list.
-Erased elements are restricted to  MODEL-TYPE, if specified [default NIL]. If erasing a segment, 
+Erased elements are restricted to  MODEL-TYPE, if specified [default NIL]. If erasing a segment,
 be sure to remove it from its cell when REMOVE-SEGMENT-FROM-CELL is non-nil [default T]. For erasing all segments
 of a cell, it is more efficient to remove the segments from the cell's :SEGMENTS slot separately.
 
@@ -1996,7 +2016,7 @@ If element is a cell, then all elements of that cell are erased"
 
 (defun disable-element (element &optional model-type)
 ;;  "Generic disable (blocking) for elements associated with ELEMENT."
-  (element-wrapper 
+  (element-wrapper
    (element model-type)
    (when (element-slot-p elt :blocked) (element-slot elt :blocked t))))
 
@@ -2006,7 +2026,7 @@ If element is a cell, then all elements of that cell are erased"
 
 (defun enable-element (element &optional model-type)
 ;;  "Generic enable (unblocking) for elements associated with ELEMENT."
-  (element-wrapper 
+  (element-wrapper
    (element model-type)
    (when (element-slot-p elt :blocked) (element-slot elt :blocked nil))))
 
@@ -2050,7 +2070,7 @@ If element is a cell, then all elements of that cell are erased"
 	  (when (and (plot-menu-class-enable elt internal-type)
 		     (go-ahead-menu (format nil "Edit Plot for ~A ~A" (type-of (element elt internal-type)) (element-name elt internal-type)) "Authorization" nil))
 	    (plot-element-menu elt internal-type)))))
-|# 
+|#
 
 (defun edit-element (element &optional model-type)
   "Edit menu for properties of ELEMENT."
@@ -2065,7 +2085,7 @@ If element is a cell, then all elements of that cell are erased"
   (or (eq name1 name2)
       (and (stringp name1) (stringp name2) (string= name1 name2))
       (and (numberp name1) (numberp name2) (= name1 name2))))
-      
+
 (defun element-name (element &optional model-type)
   "The printed name for ELEMENT."
   (element-wrapper (element model-type) (element-slot elt :name)))

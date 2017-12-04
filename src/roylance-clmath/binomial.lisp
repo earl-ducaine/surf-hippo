@@ -34,9 +34,7 @@
   (user:module-require "COMBINATORICS")		; choose
   (user:module-require "BETA-FUNCTION"))
 |#
-(provide "STATISTICS-BINOMIAL")
 
-
 ;;;; Binomial Distribution (discrete)
 
 ;;; Probability that there are k heads out of n trials

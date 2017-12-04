@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -48,7 +48,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     (setf *last-sim-reverse-time-list* (delete-duplicates *sim-reverse-time-list*))
     (setf *last-sim-reverse-time-step-list* *sim-reverse-time-step-list*)
     (setq *auto-refresh-last-sim-reverse-time-list* nil))
-  
+
   (setf
    *MAX-DV-DIFF-NODES* nil
    *SAVE-DATA-CALLED-P* nil
@@ -68,7 +68,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
    *synapse-evaluation-times* nil
    *first-time-step* t
    *last-sparse-data-time* nil
-   
+
    *reverse-sparse-data-times* nil  *sim-reverse-time-list* '()  *sim-reverse-time-step-list* '()  *sim-reverse-plot-time-list* '()  *FIXED-TIME-STEPS* '()
 
    *simulation-initialized* nil
@@ -82,7 +82,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
    *particle-error-max-time-step* 0)
 
   ;; Breakpoint variables
-  
+
     (setf *breakpoint-list* (when *enable-user-breakpoint-list* *user-breakpoint-list* nil))
     (setf *dynamic-breakpoint-generation* (and *enable-dynamic-breakpoint-generation* (eq *INTEGRATION-TIME-REFERENCE* :variable) ; (not (or *use-time-list* *use-fixed-step*))
 						))
@@ -92,7 +92,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (setq *absolute-voltage-error-internal*  (s-flt *absolute-voltage-error*)
 	*absolute-particle-error-internal*  (s-flt *absolute-particle-error*)
 	*absolute-conc-int-error-internal*  (s-flt *absolute-conc-int-error*))
-  
+
   (set-stepping-constants)		; Set constants that control time stepping.
 
   (initialize-time-step)
@@ -104,7 +104,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	*real-time* 0.0
 	*integer-time* 0
 	(*fractional-time*) 0.0)
-  
+
   (setq *simulation-actual-time* (get-universal-time))
   (setq *last-show-time-remaining-time* *simulation-actual-time*)
 
@@ -114,7 +114,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   ;; Called by INITIALIZE-SIMULATION-VARS.
   (when *use-fixed-step*
     (format t "*USE-FIXED-STEP* is deprecated - instead specify integration time reference by the variable *INTEGRATION-TIME-REFERENCE*")
-    (setq *integration-time-reference* :fixed)) 
+    (setq *integration-time-reference* :fixed))
   (cond
     ((eq *INTEGRATION-TIME-REFERENCE* :fixed) ; *use-fixed-step*
      (setq *time-step* (round (/ *user-step* *mrt*))
@@ -150,19 +150,18 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (setf *USER-MIN-STEP-DOUBLE* (d-flt *USER-MIN-STEP*))
   ;; This ensures that SAVE-DATA will save the data the first time it is called.
   (setq *save-data-step-count* (1- *save-data-step*))
-  (setq *sim-time-n+1* *start-time*			
+  (setq *sim-time-n+1* *start-time*
 	*sim-time-n* *start-time*
 	*sim-time-n-1* *start-time*
 	*sim-time-n-2* *start-time*))
- 
+
 (defun scrub-and-gc (&key verbose (full t) (gen 0) show-dynamic-space)
-  "This function will clean up dead pointers more thouroughly than the basic garbage collection. Explicit calls during large
-simulations (temporally or spatially) may avoid excessive disk thrashing or memory faults. ** NOT VERIFIED **
-"
-  (let ((*GC-ANNOUNCE-text* verbose))
-    (system::scrub-control-stack)
-    (ext::gc :verbose verbose :full full :gen gen)
-    (when show-dynamic-space (vm::instance-usage :dynamic))))
+  "This function will clean up dead pointers more thouroughly than the
+   basic garbage collection. Explicit calls during large
+   simulations (temporally or spatially) may avoid excessive disk
+   thrashing or memory faults. ** NOT VERIFIED **"
+  ;; for now noop, non-portable
+  )
 
 (defun initialize-model-top-pointer-symbols ()
   (loop for model in (models) do (setf (symbol-value (model-top-pointer-symbol model)) nil))
@@ -181,7 +180,7 @@ simulations (temporally or spatially) may avoid excessive disk thrashing or memo
   (setq *LAST-SIMULATION-TEMPERATURE* *TEMPERATURE*
 	*LAST-SIMULATION-TEMP-celcius* *TEMP-celcius*)
   nil)
-	
+
 (defun initialize-globals-for-circuit ()
 ;;  "Initialize simulator to accept a new circuit definition."
   (when *scrub-and-gc-on-global-initialization* (scrub-and-gc))
@@ -191,7 +190,7 @@ simulations (temporally or spatially) may avoid excessive disk thrashing or memo
   (when *always-clear-types*
     (clear-model-instances)
     (make-new-circuit-element-type-model-hash-tables)) ; If we keep the element type hash tables intact between circuits, then circuits can
-					; directly share the current edition of a type. 
+					; directly share the current edition of a type.
   (make-new-circuit-element-model-hash-tables)
   (global-initialize-time-variables)
   (initialize-plotting-variables)
@@ -204,7 +203,7 @@ simulations (temporally or spatially) may avoid excessive disk thrashing or memo
   (clear-node-and-matrix-arrays)
   (clear-working-arrays-and-lengths)
   (declare-ground "Ground")
-  
+
   (setq *need-to-reorder-matrix* nil
 	*MAX-DV-DIFF-NODES* nil
 	*simulation-started* nil *simulation-finished* nil *simulation-in-progress* nil
@@ -215,14 +214,14 @@ simulations (temporally or spatially) may avoid excessive disk thrashing or memo
 	*node-voltage-initializations* '() *conc-int-initializations* '() *buffer-initializations* '() *pump-initializations* '()
 	*use-node-voltage-initializations* nil
 	*find-steady-state* nil
-	
+
 	*include-simulation-annotation* nil *simulation-annotation* ""
-	
+
 	*enable-channels* t *enable-synapses* t *ARE-THERE-SYNAPSES* nil *eval-all-synapses-every-step* nil
 	*setup-voltage-synapses* t *setup-light-synapses* t *setup-event-synapses* t *enable-light* nil *LIGHT-INPUT-WAVEFORM* nil
-  
-	
-	
+
+
+
 	*recheck-circuit-elements-parameters* t	*LOADED-CIRCUIT-PARTS* nil *multiple-source-circuit* nil
 
 	*use-simple-names* nil
@@ -234,7 +233,7 @@ simulations (temporally or spatially) may avoid excessive disk thrashing or memo
 	*circuit* "" *simulation-name* "" *circuit-filename* "" *circuit-file* "" *circuit-file-type* nil *input-is-function* nil *circuit-parts* nil
 	*circuit-loaded* nil *circuit-processed* nil
 
-	*CALCULATE-ABSOLUTE-LOCATIONS* t 
+	*CALCULATE-ABSOLUTE-LOCATIONS* t
 	*neuron-tree-consolidated* nil
 
 	*make-node-w/elements-array* t *make-needed-v-particle-arrays* nil *make-needed-v-pump-arrays* nil *make-needed-v-buffer-arrays* nil
@@ -366,13 +365,13 @@ simulations (temporally or spatially) may avoid excessive disk thrashing or memo
   (setq *soma-array* nil
 
 	*segment-guts-list* nil
-	*segment-node-2-floats-list*  nil    
-	
+	*segment-node-2-floats-list*  nil
+
 	*channel-type-list* nil
 	*synapse-type-list* nil
 	*isource-type-list* nil
 	*vsource-type-list* nil
-	
+
 	;; 	*USE-PARTICLE-ARRAY* t
 
 	*particle-type-list* nil
@@ -409,7 +408,3 @@ simulations (temporally or spatially) may avoid excessive disk thrashing or memo
     (get-original-surf-variable-symbols)
     (setq *plot-membrane-voltage-p* t)
     nil))
-
-
-
-	    

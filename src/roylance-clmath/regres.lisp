@@ -44,9 +44,7 @@
   (user:module-require "MATRIX"))
 
 |#
-(provide "OPTIMIZE-REGRESSION")
 
-
 ;;;; Multiple Linear Regression
 
 ;;; Make a multiple linear regression fit to data with a specified
@@ -87,11 +85,11 @@
 
 (defun regression-yfit (fctn a yfit x npts nterms)
   (declare (type (array float (*)) a yfit))
-  
+
   (do ((i 0 (1+ i)))
       ((>= i npts))
     (declare (fixnum i))
-    
+
     (do ((j 1 (1+ j))				; jimmied so fctn(x i 0) never called
 	 (z (aref a 0)))			; jimmied
 	((> j nterms)
@@ -99,7 +97,7 @@
 	 NIL)
       (declare (fixnum j)
 	       (float z))
-      
+
       (setq z (+ z
 		 (* (aref a j)
 		    (funcall fctn x i j))))
@@ -142,7 +140,7 @@
 	     (float sum det wmean ymean sigma chisq varnce
 		    a0 sigma0 rmul chisqr ftest
 		    fnpts free1 freej freen))
-    
+
     ;; initialize sums and arrays
     (do ((j 0 (1+ j)))
 	((> j nterms))
@@ -155,7 +153,7 @@
 	  ((> k nterms))
 	(declare (fixnum k))
 	(setf (aref array j k) 0.0)))
-    
+
     ;; accumulate weighted sums
     (do ((i 0 (1+ i)))
 	((>= i npts))
@@ -187,7 +185,7 @@
       (declare (fixnum i))
       (setf (aref weight i)
 	    (/ (aref weight i) wmean)))
-    
+
     ;; accumulate matrices r and array
     (do ((i 0 (1+ i)))
 	((>= i npts))
@@ -239,11 +237,11 @@
 		 (aref sigmax k)))
 	(setf (aref array k j)
 	      (aref array j k))))
-    
+
     ;; invert symmetric matrix
     (setf (aref array 0 0) 1.0)
     (setq det (matrix-inverse array))
-    
+
     (cond ((= det 0.0)
 	   (setq a0     0.0)
 	   (setq sigma0 0.0)
@@ -270,7 +268,7 @@
 	     (setf (aref a j)
 		   (* (aref a j)
 		      (/ sigma (aref sigmax j)))))
-	   
+
 	   (setq a0 ymean)
 	   (do ((j 1 (1+ j)))
 	       ((> j nterms))
@@ -278,10 +276,10 @@
 	     (setq a0 (- a0 (* (aref     a j)
 			       (aref xmean j)))))
 	   (setf (aref a 0) a0)			; make a(0) meaningful
-	   
+
 	   ;; calculate the fitted y values
 	   (regression-yfit fctn a yfit x npts nterms)
-	   
+
 	   (do ((i 0 (1+ i)))
 	       ((>= i npts))
 	     (declare (fixnum i))
@@ -291,7 +289,7 @@
 					(aref yfit i))
 				     2)))))
 	   (setq chisqr (* chisq (/ wmean freen)))
-	   
+
 	   ;; calculate uncertainties
 	   (setq varnce (if (= mode 0) chisqr (/ wmean)))
 	   (do ((j 1 (1+ j)))
@@ -330,10 +328,10 @@
 			   (aref sigmax k))))
 	       ))
 	   (setq sigma0 (sqrt sigma0))
-	   
+
 	   (setf (aref sigmaa 0) sigma0)
 	   (setf (aref      r 0)   rmul)
-	   
+
 	   (LIST 'REGRES
 		 'DETERMINANT DET
 		 'CHISQ       CHISQ
@@ -379,7 +377,7 @@
 		    rmul chisqr ftest))
   (let ((result
 	  (regres 'fctn x y sigmay npts nterms mode yfit a sigmaa r)))
-    
+
     (format t "~%")
     (format t "~% DETERMINANT = ~F" (getf (cdr result) 'determinant))
     (format t "~% CHISQ         ~F" (getf (cdr result) 'chisq))

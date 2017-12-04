@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -53,7 +53,7 @@ it is loaded first (even if there is already a loaded circuit). See also GOFERIT
      (unless load-only
        (let ((quit-lisp
 	      ;; The main SURF-HIPPO GUI loop.
-	      (loop when (main-menu) ; Menus, load &initialize circuit. Return NIL if quitting. This function is run even when menus are disabled (i.e. automatic runs).  
+	      (loop when (main-menu) ; Menus, load &initialize circuit. Return NIL if quitting. This function is run even when menus are disabled (i.e. automatic runs).
 		    do (simulation watch-time)
 		    else do (return (YES-OR-NO-P-DEFAULT-NO "Do you want to quit LISP? (RETURN for NO, yes/YES for YES): "))
 		    when automatic do (return nil))) ; So an automatic run will only run through this loop once.
@@ -65,7 +65,7 @@ it is loaded first (even if there is already a loaded circuit). See also GOFERIT
 (defun sh-cleanup ()
   (write-system-variables-file)
   )
-  
+
 (defun quit-sh () (when t ; (YES-OR-NO-P-DEFAULT-NO "Do you want to quit LISP? (RETURN for NO, yes/YES for YES): ")
 		    (sh-cleanup)
 		    (system::quit t)))
@@ -76,10 +76,10 @@ it is loaded first (even if there is already a loaded circuit). See also GOFERIT
 (defun goferit (&optional (stop-time *USER-STOP-TIME*))
   "Simulate the loaded circuit for STOP-TIME [default *USER-STOP-TIME*] milliseconds."
   (let ((*user-stop-time* stop-time)) (surf nil t)))
-       
+
 (defun gotimed (&optional (stop-time *USER-STOP-TIME*))
   "As GOFERIT, but keeps track of the simulation run time."
-  (let ((*user-stop-time* stop-time)) (surf nil t nil t)))	
+  (let ((*user-stop-time* stop-time)) (surf nil t nil t)))
 
 (defun goquiet (&optional (stop-time *USER-STOP-TIME*))
   "As GOFERIT, but suppressing text output to Lisp window."
@@ -152,7 +152,7 @@ elements in the circuit. Returns the new value of *TEMP-CELCIUS* as a single-flo
   ;; setup voltage array indexes for the appropriate nodes.  Calls (init-all-nodes) to Clear tri-diag matrix, and initialize all
   ;; the accumulator fields, including (node-jacobian nd), (node-alpha-charge nd) and (node-current nd).
   (init-node-voltages-slots-and-matrix)
-  (init-node-elements)			
+  (init-node-elements)
   (fix-up-off-diags)
   (fix-breakpoint-list)	; Breakpoints include breakpoints of sources (pulses) and start times for event synapses.
   ;; One step vclamp initialization.
@@ -171,7 +171,7 @@ elements in the circuit. Returns the new value of *TEMP-CELCIUS* as a single-flo
 (defun setup-node-elements ()
   (when *setup-elements*
     (cond-every
-     (*setup-channels* (setup-channels)) ; Must go before setup-particles  and setup-conc-particles 
+     (*setup-channels* (setup-channels)) ; Must go before setup-particles  and setup-conc-particles
      (*setup-synapses* (setup-synapses))
      (*setup-isources* (setup-isources))
      (*setup-conc-ints* (setup-conc-ints)) ; Must go after channel and synapse setup
@@ -221,7 +221,7 @@ elements in the circuit. Returns the new value of *TEMP-CELCIUS* as a single-flo
 		     *recheck-circuit-elements-parameters*))
 	(cond-every
 	 (*enable-segment-membrane-parameter-update* (set-segments-membrane-parameters t))
-	 (*enable-soma-membrane-parameter-update* (set-somas-membrane-parameters t))		
+	 (*enable-soma-membrane-parameter-update* (set-somas-membrane-parameters t))
 	 (*enable-conc-integrator-membrane-parameter-update* (set-conc-integrators-parameters))
 	 ((and (not update-temperature-dependent-parameters) *enable-axon-membrane-parameter-update*) (set-axons-parameters))
 	 ((and (not update-temperature-dependent-parameters) *enable-synapse-membrane-parameter-update*) (set-synapse-types-parameters)
@@ -253,10 +253,10 @@ there, given *ENABLE-USER-BREAKPOINT-LIST* is T."
 (defun convert-time-to-mrt-units (time)
   (declare ; (optimize (safety 0) (speed 3) (space 1))
 	   (single-float time))
-  (kernel::sf-sb32-truncate (the sf (/ time *mrt*))))
+  (truncate (the sf (/ time *mrt*))))
 
 (defun fix-breakpoint-list ()
-  ;; Clean up values in *BREAK-POINT-LIST* and convert them for *MRT-BREAK-POINT-LIST*. 
+  ;; Clean up values in *BREAK-POINT-LIST* and convert them for *MRT-BREAK-POINT-LIST*.
 ;  (declare (optimize (safety 0) (speed 3) (space 0) (compilation-speed 0)))
   (setq *user-stop-time* (float *user-stop-time*))
   (when (eq *INTEGRATION-TIME-REFERENCE* :VARIABLE) ; (unless (or *use-time-list* *use-fixed-step*)
@@ -277,8 +277,3 @@ there, given *ENABLE-USER-BREAKPOINT-LIST* is T."
 		  do (format t "VAL ~A, convert.. ~A~%" val (convert-time-to-mrt-units val))
 		  collect (convert-time-to-mrt-units val))))
     nil))
-
-
-
-
-

@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -27,7 +27,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 ;; GARNET-FIXES Source file: make-ps-file-hack.lisp
 
-;;; LBG 6/10/94 Edited Make-PS-File to always include the PostScript definitions for *LINE-FN*, *TEXT-FN*, *POLYLINE-FN*. 
+;;; LBG 6/10/94 Edited Make-PS-File to always include the PostScript definitions for *LINE-FN*, *TEXT-FN*, *POLYLINE-FN*.
 
 (in-package "OPAL")
 
@@ -67,15 +67,15 @@ Requires a Garnet WINDOW (or list of windows), and a PostScript
 output FILE-NAME.  Optional arguments that affect the position
 and appearance of the picture are:
 
-POSITION-X - :LEFT, :CENTER, or :RIGHT. Default :CENTER.  
+POSITION-X - :LEFT, :CENTER, or :RIGHT. Default :CENTER.
 
-POSITION-Y - :TOP, :CENTER, or :BOTTOM.  Default :CENTER. 
+POSITION-Y - :TOP, :CENTER, or :BOTTOM.  Default :CENTER.
 
 LEFT-MARGIN, RIGHT-MARGIN, TOP-MARGIN, BOTTOM-MARGIN - Distance in
 points, default 72.
 
 LEFT, TOP - Distance in points, or default NIL to use POSITION-X
-and POSITION-Y. 
+and POSITION-Y.
 
 SCALE-X, SCALE-Y - Scale factor for image.  Default is NIL, which means
 the image will be automatically scaled to fit on the page.
@@ -98,7 +98,7 @@ COLOR-P - T or NIL controls use of color.  Default T.
 
 BACKGROUND-COLOR - Opal color, background fill.  Default is opal:white.
 
-TITLE, CREATOR, FOR, COMMENT - Strings for header comments. 
+TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
 "
   (let (region-left region-right region-top region-bottom
 	region-width region-height)
@@ -341,9 +341,9 @@ TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
 					      include-filename-and-date
 					      page-comment)
   (when (or include-filename-and-date (> (length page-comment) 0))
-	    
+
     (let ((file-date-string (convert-parentheses (format nil "~A   ~A" file-name (date-string)))))
-							 
+
       (terpri)
       (format t "/Times-Roman findfont~%")
 					; 6 is for font size in dots.
@@ -353,7 +353,7 @@ TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
 	(format t "35 0 moveto~%")	; Left hand side.
 	(format t "(~A)" page-comment)
 	(format t " show~%"))
-	
+
       (when include-filename-and-date
 	(format t "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%~%")
 	(format t "%% Start of lower right corner filename and data....~%")
@@ -368,7 +368,7 @@ TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
 	))))
 
 
-      
+
 
 
 (defun Write-PS-To-File (win file-name
@@ -394,7 +394,7 @@ TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
     (write-ps-include-extra-info
      file-name landscape-p include-filename-and-date page-comment)
     (trailer-comments debug)))
-		  
+
 
 
 ;; LBG Modified 2/18/97 to handle individual window border specifications.
@@ -428,15 +428,15 @@ Requires a Garnet WINDOW (or list of windows), and a PostScript
 output FILE-NAME.  Optional arguments that affect the position
 and appearance of the picture are:
 
-POSITION-X - :LEFT, :CENTER, or :RIGHT. Default :CENTER.  
+POSITION-X - :LEFT, :CENTER, or :RIGHT. Default :CENTER.
 
-POSITION-Y - :TOP, :CENTER, or :BOTTOM.  Default :CENTER. 
+POSITION-Y - :TOP, :CENTER, or :BOTTOM.  Default :CENTER.
 
 LEFT-MARGIN, RIGHT-MARGIN, TOP-MARGIN, BOTTOM-MARGIN - Distance in
 points, default 72.
 
 LEFT, TOP - Distance in points, or default NIL to use POSITION-X
-and POSITION-Y. 
+and POSITION-Y.
 
 SCALE-X, SCALE-Y - Scale factor for image.  Default is NIL, which means
 the image will be automatically scaled to fit on the page.
@@ -464,7 +464,7 @@ COLOR-P - T or NIL controls use of color.  Default T.
 
 BACKGROUND-COLOR - Opal color, background fill.  Default is opal:white.
 
-TITLE, CREATOR, FOR, COMMENT - Strings for header comments. 
+TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
 "
   ;; 2/18/97 LBG *temp-win* with multiple children has individual border info in :BORDERS-P slot.
 
@@ -477,7 +477,7 @@ TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
 	 region-left region-right region-top region-bottom
 	 region-width region-height)
     ;;    (format t "borders-p = ~A, borders-p-for-windows = ~A~%" borders-p borders-p-for-windows)
-	   
+
 
     ;; We call *temp-win* a "window", but it is really just a KR object
     ;; that has the same slots as a window.
@@ -497,9 +497,9 @@ TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
        (setf clip-p T))			; Since the temp window has the same dimensions
 					; as the clip region, just clip to the window
       (t
-       (setf region-left opal:*screen-width*)
+       (setf region-left gem:*screen-width*)
        (setf region-right 0)
-       (setf region-top opal:*screen-height*)
+       (setf region-top gem:*screen-height*)
        (setf region-bottom 0)
        ;; Figure maximum window size.
        ;; 2/18/97 LBG *temp-win* with multiple children has individual border info in :BORDERS-P slot.
@@ -681,7 +681,7 @@ TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
 
 
 
-     
+
 (defvar *PRINT-NON-VISIBLE-WINDOWS* t "When T PS-WINDOW ignores the :visible slot of a window when printing.")
 
 ;; LBG Modified 2/18/97 to handle individual window border specifications.
@@ -769,7 +769,7 @@ TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
 	  (if (not clip-p)
 	      (translate (- (g-value top-agg :left))
 			 (g-value top-agg :top)))
-	  ;; maybe pass the window background color to the frame proc 
+	  ;; maybe pass the window background color to the frame proc
 	  (print-window-background win)
 	  (when top-agg
 	    (kr-send top-agg :ps-object top-agg))
@@ -791,5 +791,3 @@ TITLE, CREATOR, FOR, COMMENT - Strings for header comments.
 	(setf *clip-right* old-clip-right)
 
 	(grestore)))))
-
-

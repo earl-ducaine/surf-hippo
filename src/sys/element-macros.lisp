@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -51,36 +51,57 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 
 (defmacro element-slot-core (element slot-sym &optional (value nil value-supplied-p) update)
-  ;; Note that the only way we are able to do this is because the structure types stored in *MODEL-NAMES* are known at compile time.
+  ;; Note that the only way we are able to do this is because the
+  ;; structure types stored in *MODEL-NAMES* are known at compile
+  ;; time.
   (let* ((elt (gensym))
 	 (enable-set-value (gensym))
 	 (new-value (gensym))
 	 (returned-value (gensym))
 	 (typecase-clauses
-	  (no-nils (append (mapcar #'(lambda (object-type-symbol)
-				       (let* ((accessor-function-string (format nil "~A-~A" object-type-symbol slot-sym))
-					      (accessor-function (read-from-string accessor-function-string))
-					      (full-slot-accesssor `(,accessor-function ,elt)))
-					 ;; (print 'hello ) (print accessor-function-string) (print 'goodby)
-					 (when (setfable-p accessor-function)
-					   `(,object-type-symbol (if ,enable-set-value (setf ,full-slot-accesssor ,new-value) ,full-slot-accesssor)))))
-				   *model-names*)
-			   `((t
-			      (when (and *element-slot-t-typecase-error-p* ,elt)
-				  (sim-error (format nil "ELEMENT-SLOT-CORE macro error: ~A ~A does not have a ~s structure slot"
-						     (type-of ,elt) ,elt ,slot-sym)))))))))
+	  (no-nils
+	   (append
+	    (mapcar
+	     #'(lambda (object-type-symbol)
+		 (let* ((accessor-function-string
+			 (format nil "~A-~A" object-type-symbol slot-sym))
+			(accessor-function
+			 (read-from-string accessor-function-string))
+			(full-slot-accesssor `(,accessor-function ,elt)))
+		   ;; (print 'hello ) (print accessor-function-string)
+		   ;; (print 'goodby)
+		   (when (setfable-p accessor-function)
+		     `(,object-type-symbol
+		       (if ,enable-set-value
+			   (setf ,full-slot-accesssor ,new-value)
+			   ,full-slot-accesssor)))))
+	     *model-names*)
+	    `((t
+	       (when (and *element-slot-t-typecase-error-p* ,elt)
+		 (sim-error
+		  (format
+		   nil
+		   (str "ELEMENT-SLOT-CORE macro error: ~A ~A "
+			"does not have a ~s structure slot")
+		   (type-of ,elt) ,elt ,slot-sym)))))))))
     (when typecase-clauses
       `(let* ,(no-nils (list `(,elt ,element)
 			     `(,enable-set-value ,value-supplied-p)
 			     `(,new-value ,value)
-			     `(,returned-value (typecase ,elt ,@typecase-clauses))))
-	 (null ,new-value) (null ,enable-set-value) ; To avoid "Note: Variable NEW-VALUE defined but never used." etc when there are
-					; no non-T typecase-clauses.
+			     `(,returned-value (typecase
+						   ,elt
+						 ,@typecase-clauses))))
+	 ; To avoid "Note: Variable NEW-VALUE defined but never used."
+	 ; etc when there are
+	 (null ,new-value) (null ,enable-set-value)
+	 ;; no non-T typecase-clauses.
 	 (when ,update (update-element ,elt))
 	 ,returned-value))))
 
 (defmacro element-slot (element slot-sym &optional (value nil value-supplied-p) update)
-  ;; Note that the only way we are able to do this is because the structure types stored in *MODEL-NAMES* are known at compile time.
+  ;; Note that the only way we are able to do this is because the
+  ;; structure types stored in *MODEL-NAMES* are known at compile
+  ;; time.
   (if value-supplied-p
     `(element-slot-core (element-core ,element) ,slot-sym ,value ,update)
     `(element-slot-core (element-core ,element) ,slot-sym)))
@@ -138,8 +159,8 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		   ,(macroexpand `(element-slot ,elt :next-element))))
 	    ((null ,elt))
 	  ,@body))))
-|#	   
-	   
+|#
+
 (defmacro element-TYPE-DO ((elt elt-type) &rest body)
   `(dolist (type (coerce-to-list (element-type ,elt-type)))
     (if (element-slot-p type :first-element)
@@ -147,5 +168,3 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		   ,(macroexpand `(element-slot ,elt :next-element))))
 	    ((null ,elt))
 	  ,@body))))
-	   
-

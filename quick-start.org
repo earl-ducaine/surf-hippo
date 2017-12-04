@@ -3,125 +3,126 @@
 * surf-hippo quick start
 
 ** Prerequisites
-   This document assumes that the reader has a basic familiarity with
-   Linux and (perhaps) Emacs, and that the Linux shell is bash.
-
-
+   - Basic familiarity with Linux 
+   - Emacs installed Emacs, not required by handy for Lisp interaction.
+   - git installed
+   - wget installed
+   - unzip installed
 					    
 ** Installation
 
-   1. Download the tarball (surf-hippo.VERSION.PLATFORM.zip) from the
-      Surf-Hippo site Download Directory
+   1. Get latestest sources and pre-built artifacts
 
-      git clone https://github.com/earl-ducaine/cl-garnet.git ~/
-      (http://surf-hippo.neurophysics.eu/download/) to the /usr/local
-      directory and unzip:
-
-    unix-prompt> cd /usr/local
-    unix-prompt> unzip surf-hippo.VERSION.PLATFORM.zip
-
- This will create the /usr/local/surf-hippo directory, and install the system subdirectories and
- files. Delete the original zip file, and make sure that you have the proper permissions:
-
-     unix-prompt> rm surf-hippo.VERSION.PLATFORM.zip
-     unix-prompt> chmod -R 777 surf-hippo
-
- The Surf-Hippo User Manual is now at /usr/local/surf-hippo/doc/user-manual.pdf, and full installation
- documentation at /usr/local/surf-hippo/doc/installation/installation.doc.txt. 
+      git clone https://github.com/earl-ducaine/surf-hippo.git .
+      wget http://surf-hippo.neurophysics.eu/download/surf-hippo.4.0_alpha.linux.04.04.2017.zip
+      mkdir surf-hippo-v40
+      unzip surf-hippo.4.0_alpha.linux.04.04.2017.zip -d surf-hippo-v40
+      cp -r surf-hippo-v40/bin/* surf-hippo/bin/
+      cp -r surf-hippo-v40/cmucl-20d/* surf-hippo/cmucl-20d/
+      cd surf-hippo
 
 
- 2. Create (or edit) the .emacs and .bashrc files in your home directory, using the Surf-Hippo examples:
-
-    unix-prompt> cd /usr/local/surf-hippo
-    unix-prompt> cp doc/installation/.emacs ~/.emacs
-    unix-prompt> cp doc/installation/.bashrc ~/.bashrc
+      The Surf-Hippo User Manual can be found at doc/user-manual.pdf
+      and full installation documentation at
+      doc/installation/installation.doc.txt
 
 
+   2. Create (or edit) the .emacs and .bashrc files in your home directory, using the Surf-Hippo examples:
 
-			   UP AND RUNNING - Under Emacs or from a terminal
+      # Note this appends the contents surf-hippo's .emacs file to
+      # your own.  Often times you will want do this by hand to ensure
+      # the contents are compatible with your own configuration.
+      cat doc/installation/.emacs >> ~/.emacs
 
-* Running Surf-Hippo under Emacs (SLIME) *
+      # Likewise for the .bashrc.  Not especially that some commands
+      # must be the last command in the ~/.bashrc file.  So ensure
+      # surf-hippo commands apear before those.
+      cat doc/installation/.bashrc ~/.bashrc
 
-1. After installing the .emacs file as described above, start Emacs:
+** Running Surf-Hippo under Emacs (SLIME) *
 
-    unix-prompt> emacs
+   1. After installing the .emacs configuration as described above, start Emacs:
 
-2. From Emacs, SLIME can be installed via
+      emacs
 
-   M-x package-install RET slime RET
+   2. From Emacs, SLIME can be installed via
 
-(type the ESC key, then type "x", then type "package-install" followed by the Return or Enter key,
-then type "slime" followed by the Return or Enter key).
+      M-x package-install <return> slime <return>
 
+      M-x (press <alt> key and the x key in sequence, holding down the
+      <alt> while the x is still depressed.
 
-3. Start SLIME (and Surf-Hippo) from Emacs, via
+   3. Start SLIME (and Surf-Hippo) from Emacs, via
 
-   M-x slime RET
+      M-x slime <return>
 
-(type the ESC key, then type "x", then type "slime" followed by the Return or Enter key).
+      Likewise for running the slime environment.
 
-This will start the Lisp system, where the main interaction is via the *slime-repl surf-hippo*
-Emacs buffer, which shows the prompt "SH>".
+     *** following has yet to be determined *** 
 
-4. To start the main menu, type in the top level Surf-Hippo function "(surf)" and hit Return (or Enter):
+   4 This will start the Lisp system, where the main interaction is
+     via the *slime-repl surf-hippo* Emacs buffer, which shows the prompt
+     "SH>".
 
-     SH> (surf)
+   5. To start the main menu, type in the top level Surf-Hippo function "(surf)" and hit Return (or Enter):
 
-OR
+      SH> (surf)
 
-Run a demo simulation immediately:
+      or
 
-    SH> (topload "circuits/demos/colorized-n120.lisp")
-    SH> (run)
+      Run a demo simulation immediately:
 
+     (topload "circuits/demos/colorized-n120.lisp")
+     (run)
    
-In normal use you can ignore the *inferior-lisp* buffer created by SLIME.
+     In normal use you can ignore the *inferior-lisp* buffer created
+     by SLIME.
 
 
 
-* Running Surf-Hippo from a terminal window (Linux shell) *
+** Running Surf-Hippo from a terminal window (Linux shell) *
 
-1. Open a terminal window after installing the .bashrc file as described above, and enter the
-command "surf-hippo". This will start the Lisp system, printing a message followed by the Lisp
-prompt (here, the Lisp prompt is "*"):
+   1. Open a terminal window after installing the .bashrc file as
+      described above, and enter the command "surf-hippo". This will
+      start the Lisp system, printing a message followed by the Lisp
+      prompt (here, the Lisp prompt is "*"):
 
-   unix-prompt> surf-hippo
-   CMU Common Lisp 20d (20D Unicode), running on lyle-Precision-M4700
-   With core: /usr/local/surf-hippo/lib/images/cmucl-20d-image
-   Dumped on: Thu, 2017-03-16 11:10:04+01:00 on lyle-Precision-M4700
-   Send questions and bug reports to your local CMUCL maintainer, 
-   or see <http://www.cmucl.org/support.html>.
-   Loaded subsystems:
-       Unicode 1.28 with Unicode version 6.1.0
-       Python 1.1, target Intel x86/x87
-       CLOS based on Gerd's PCL 2010/03/19 15:19:03
-       CLX X Library Telent CLX 0.7.3 + CMUCL mods, based on MIT R5.02
-       Garnet Version 3.0
-       Surf-Hippo Version 4.0, 2/27/17 11:11 am [-1]
-       Surf-Hippo Home: surf-hipppo.neurophysics.eu
+      surf-hippo
 
-       To start the Surf-Hippo menus enter (SURF) at the Lisp prompt.
-       To start the Surf-Hippo demo circuit menu enter (DEMO) at the Lisp prompt.
-       For help, read the User Manual in the surf-hippo/doc directory.
-       To quit Lisp, enter (QUIT) at the Lisp prompt.
-
-  *
-
-
-2. To start the main menu, type in the top level Surf-Hippo function "(surf)" and hit Return (or
-Enter): 
-
-  * (surf)
-
-OR
-
-Run a demo simulation immediately:
-
-  * (topload "circuits/demos/colorized-n120.lisp")
-  * (run)
-
-..................................
+      CMU Common Lisp 20d (20D Unicode), running on lyle-Precision-M4700
+      With core: /usr/local/surf-hippo/lib/images/cmucl-20d-image
+      Dumped on: Thu, 2017-03-16 11:10:04+01:00 on lyle-Precision-M4700
+      Send questions and bug reports to your local CMUCL maintainer, 
+      or see <http://www.cmucl.org/support.html>.
+      Loaded subsystems:
+      Unicode 1.28 with Unicode version 6.1.0
+      Python 1.1, target Intel x86/x87
+      CLOS based on Gerd's PCL 2010/03/19 15:19:03
+      CLX X Library Telent CLX 0.7.3 + CMUCL mods, based on MIT R5.02
+      Garnet Version 3.0
+      Surf-Hippo Version 4.0, 2/27/17 11:11 am [-1]
+      Surf-Hippo Home: surf-hipppo.neurophysics.eu
+      
+      To start the Surf-Hippo menus enter (SURF) at the Lisp prompt.
+      To start the Surf-Hippo demo circuit menu enter (DEMO) at the Lisp prompt.
+      For help, read the User Manual in the surf-hippo/doc directory.
+      To quit Lisp, enter (QUIT) at the Lisp prompt.
 
 
-A good next step is to read the SH_tutorial.pdf in the /usr/local/surf-hippo/doc directory.
-Next, start with the "Running Surf-Hippo" chapter in the User Manual and go from there....
+   1. To start the main menu, type in the top level Surf-Hippo function
+      "(surf)" and hit Return (or Enter):
+
+      (surf)
+
+      or
+
+      Run a demo simulation immediately:
+
+      (topload "circuits/demos/colorized-n120.lisp")
+      (run)
+
+** Next Steps
+
+   A good next step is to read the SH_tutorial.pdf in the doc
+   directory.  Next, start with the "Running Surf-Hippo" chapter in
+   the User Manual and go from there....

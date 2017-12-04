@@ -9,21 +9,21 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
-(in-package "COMMON-LISP-USER")
+(in-package :garnet-user)
 
 
 ;; LBG 8/17/99
@@ -49,9 +49,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 
 ; If DIR doesn't exist, default to *SURF-HOME*. This way we can mirror GARNET files that are loaded
-; unexpectedly on systems without Garnet. 
+; unexpectedly on systems without Garnet.
 
-(defun Garnet-Pathnames (subdir dir)
+(defun garnet-pathnames (subdir dir)
   (merge-pathnames
    subdir
    (if (probe-file dir)
@@ -68,12 +68,12 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ; Garnet is built.
 
 (defun opal::Get-Garnet-Bitmap (bitmapname)
-  (opal:read-image (user::garnet-pathnames
+  (opal:read-image (garnet-pathnames
 		    (concatenate 'string "lib/bitmaps/" bitmapname)
-		    user::Your-Garnet-Pathname)))
-		    
+		    (asdf:system-source-directory :org.xoanonos.gui.garnet))))
 
-	       
+
+
 
 ; Another way is to recreate the offending schema, without the o-formulae.
 ; These come from src/opal/create-instances2.lisp
@@ -99,7 +99,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ; Another way is to reset the the offending slots, without the o-formulae. But we need
 ; KR::WITH-CONSTANTS-DISABLED since :image is declared :constant.
 
-; If we don't KR:DESTROY-SLOT first, then you get - 
+; If we don't KR:DESTROY-SLOT first, then you get -
 ;
 ; *** Warning: you are setting the value of slot :IMAGE of
 ;  object #k<OPAL:HOURGLASS-CURSOR-MASK>.  This slot contains a formula which was never evaluated.
@@ -110,20 +110,19 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;  re-install the formula using s-value.
 
 (kr::with-constants-disabled
-    
-  (kr::destroy-slot opal::ARROW-CURSOR :image) 
-  (s-value opal::ARROW-CURSOR 
+
+  (kr::destroy-slot opal::ARROW-CURSOR :image)
+  (s-value opal::ARROW-CURSOR
 	   :image (opal::Get-Garnet-Bitmap "garnet.cursor"))
 
-  (kr::destroy-slot opal::ARROW-CURSOR-MASK :image) 
+  (kr::destroy-slot opal::ARROW-CURSOR-MASK :image)
   (s-value opal::ARROW-CURSOR-MASK
 	   :image (opal::Get-Garnet-Bitmap "garnet.mask"))
 
-  (kr::destroy-slot opal::HOURGLASS-CURSOR :image) 
-  (s-value opal::HOURGLASS-CURSOR 
+  (kr::destroy-slot opal::HOURGLASS-CURSOR :image)
+  (s-value opal::HOURGLASS-CURSOR
 	   :image (opal::Get-Garnet-Bitmap "hourglass.cursor"))
 
-  (kr::destroy-slot opal::HOURGLASS-CURSOR-MASK :image) 
-  (s-value opal::HOURGLASS-CURSOR-MASK 
+  (kr::destroy-slot opal::HOURGLASS-CURSOR-MASK :image)
+  (s-value opal::HOURGLASS-CURSOR-MASK
 	   :image (opal::Get-Garnet-Bitmap "hourglass.mask")))
-

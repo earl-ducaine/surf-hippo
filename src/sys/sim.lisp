@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -28,7 +28,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 ;;; Main routines, mostly.
 
-(in-package "SURF-HIPPO")
+(in-package :surf-hippo)
 
 (defun demo ()
   "Gives a menu of Surf-Hippo demos."
@@ -56,7 +56,7 @@ If there is an optional CIRCUIT, then it is loaded first (even if there is alrea
      (unless load-only
        (let ((quit-lisp
 	      ;; The main SURF-HIPPO GUI loop.
-	      (loop when (main-menu) ; Menus, load &initialize circuit. Return NIL if quitting. This function is run even when menus are disabled (i.e. automatic runs).  
+	      (loop when (main-menu) ; Menus, load &initialize circuit. Return NIL if quitting. This function is run even when menus are disabled (i.e. automatic runs).
 		    do (simulation watch-time)
 		    else do (return (YES-OR-NO-P-DEFAULT-NO "Do you want to quit LISP? (Hit RETURN/ENTER for NO, type yes/YES for YES): "))
 		    when automatic do (return nil))) ; So an automatic run will only run through this loop once.
@@ -66,10 +66,11 @@ If there is an optional CIRCUIT, then it is loaded first (even if there is alrea
 (defun sh-cleanup ()
   (write-system-variables-file)
   )
-  
-(defun quit-sh () (when t ; (YES-OR-NO-P-DEFAULT-NO "Do you want to quit LISP? (RETURN/ENTER for NO, yes/YES for YES): ")
+
+;;; (YES-OR-NO-P-DEFAULT-NO "Do you want to quit LISP? (RETURN/ENTER for NO, yes/YES for YES): ")
+(defun quit-sh () (when t
 		    (sh-cleanup)
-		    (system::quit t)))
+		    (quit t)))
 
 ;; May 22 2002. Under RedHat 7.3 seem to need the RECKLESSLY-P flag - otherwise get
 ;;    Error in function UNIX::SIGSEGV-HANDLER:  Segmentation Violation at #x4000BB04.
@@ -80,7 +81,7 @@ If there is an optional CIRCUIT, then it is loaded first (even if there is alrea
 
 (setf (symbol-function 'goferit) #'run) ; backward compatibility
 (setf (documentation 'goferit 'function) "See RUN.")
-       
+
 (defun runtimed (&optional (stop-time *USER-STOP-TIME*))
   "As RUN, but keeps track of the simulation run time."
   (let ((*user-stop-time* stop-time)) (surf nil t nil t)))
@@ -110,7 +111,7 @@ If there is an optional CIRCUIT, then it is loaded first (even if there is alrea
   (when *circuit-loaded*
     (when *WRITE-LOG-FILE* (update-surf-log-file 'print-circuit))
     ;; SIMULATE!
-    (if watch-time (time (do-time-control)) (do-time-control)) 
+    (if watch-time (time (do-time-control)) (do-time-control))
     (unless *KILL-ALL-OUTPUT* (sim-output))
     (when *WRITE-LOG-FILE* (update-surf-log-file 'analysis-output))
     (when *beep-after-surf* (inter:beep) (inter:beep))))
@@ -149,8 +150,9 @@ elements in the circuit. Returns the new value of *TEMP-CELCIUS* as a single-flo
 
 (defun initialize-simulation ()
   ;; Called at the beginning of every simulation. Initialize circuit at the beginning of every simulation.
-  (sys::set-floating-point-modes :traps '(:OVERFLOW :INVALID :DIVIDE-BY-ZERO)) ; For insurance!
-  (CHECK-FIXED-VOLTAGE-NODES)	  ; and reprocess circuit if necessary
+  ;; For insurance!
+  ;; and reprocess circuit if necessary
+  (CHECK-FIXED-VOLTAGE-NODES)
   (set-circuit-elements-parameters t)
   (choose-plot-data)
   (update-temperature)
@@ -166,7 +168,7 @@ elements in the circuit. Returns the new value of *TEMP-CELCIUS* as a single-flo
   ;; including (node-jacobian nd), (node-alpha-charge nd) and
   ;; (node-current nd).
   (init-node-voltages-slots-and-matrix)
-  (init-node-elements)			
+  (init-node-elements)
   (fix-up-off-diags)
   (fix-breakpoint-list)	; Breakpoints include breakpoints of sources (pulses) and start times for event synapses.
   ;; One step vclamp initialization.
@@ -185,7 +187,7 @@ elements in the circuit. Returns the new value of *TEMP-CELCIUS* as a single-flo
 (defun setup-node-elements ()
   (when *setup-elements*
     (cond-every
-     (*setup-channels* (setup-channels)) ; Must go before setup-particles  and setup-conc-particles 
+     (*setup-channels* (setup-channels)) ; Must go before setup-particles  and setup-conc-particles
      (*setup-synapses* (setup-synapses))
      (*setup-isources* (setup-isources))
      (*setup-conc-ints* (setup-conc-ints)) ; Must go after channel and synapse setup
@@ -208,7 +210,9 @@ elements in the circuit. Returns the new value of *TEMP-CELCIUS* as a single-flo
   (init-somas))
 
 (defun introduce ()
-  (unless *automatic-run* (format t "~%~% ** The Surf-Hippo Neuron Simulation System, Version ~A **~%~%" user::Surf-Hippo-Version-Number)))
+  (unless *automatic-run*
+    (format t "~%~% ** The Surf-Hippo Neuron Simulation System, Version ~A **~%~%"
+	    surf-hippo-version-number)))
 
 (defun set-circuit-element-parameters (element)
   (let ((element (element element)))
@@ -235,7 +239,7 @@ elements in the circuit. Returns the new value of *TEMP-CELCIUS* as a single-flo
 		     *recheck-circuit-elements-parameters*))
 	(cond-every
 	 (*enable-segment-membrane-parameter-update* (set-segments-membrane-parameters t))
-	 (*enable-soma-membrane-parameter-update* (set-somas-membrane-parameters t))		
+	 (*enable-soma-membrane-parameter-update* (set-somas-membrane-parameters t))
 	 (*enable-conc-integrator-membrane-parameter-update* (set-conc-integrators-parameters))
 	 ((and (not update-temperature-dependent-parameters) *enable-axon-membrane-parameter-update*) (set-axons-parameters))
 	 ((and (not update-temperature-dependent-parameters) *enable-synapse-membrane-parameter-update*) (set-synapse-types-parameters)
@@ -287,11 +291,11 @@ there, given *ENABLE-USER-BREAKPOINT-LIST* is T."
 			     ;; (printvars dv2dt2 time)
 			     (setq over-threshold-p t))
 		     (setq over-threshold-p nil)))
-		 
+
 	    when (= (+ 2 index) (1- (length array))) do (return out)))))
 
 (defun fix-breakpoint-list ()
-  ;; Clean up values in *BREAK-POINT-LIST* and convert them for *MRT-BREAK-POINT-LIST*. 
+  ;; Clean up values in *BREAK-POINT-LIST* and convert them for *MRT-BREAK-POINT-LIST*.
   (setq *user-stop-time* (s-flt *user-stop-time*)) ; Do this somewhere else?
   (when (eq *INTEGRATION-TIME-REFERENCE* :VARIABLE)
     (let ((padded-stop-time (+ *extra-time-after-stop-time* *user-stop-time*)))
@@ -340,4 +344,3 @@ there, given *ENABLE-USER-BREAKPOINT-LIST* is T."
     (let ((event-mrt (the fn (truncate (/ event *mrt*)))))
       (insert-event-mrt-breakpoint event-mrt)))
   nil)
-

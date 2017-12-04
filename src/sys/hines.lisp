@@ -55,7 +55,7 @@
 
 (defun build-branch-list (seg)
  ;; This is called from LOCATE-CELL-NODES, where cell nodes are located seqentially from the soma outward, and from GET-AND-LOCATE-DISTAL-SEGMENTS, which
-  ;; is called recursively from LOCATE-CELL-NODES (for each branch originating at the soma). 
+  ;; is called recursively from LOCATE-CELL-NODES (for each branch originating at the soma).
   (unless (node-has-ideal-voltage-source (segment-node-2 seg))
     (let ((last-seg (caar *branch-list*)) ; Get the last segment added to the *branch-list*
 	  (last-seg-d-node-segs 0)	; Last seg's prox node segs (which includes last seg).
@@ -69,21 +69,21 @@
 	;; See if current segment is distal to last segment.
 	(dolist (elt (node-elements (segment-node-2 last-seg)))
 	  (when (and (eq (named-structure-symbol elt) 'segment) (eq elt seg))
-	    (setq last-seg-d-to-seg t))))    
+	    (setq last-seg-d-to-seg t))))
       ;; Now update *branch-list*.
       (setq *branch-list*
 	    (if (or (not last-seg-d-to-seg) ;If this seg not connected to last seg,
 		    (> last-seg-d-node-segs 2) ;or the last seg was node of the latest branch,
 		    (not last-seg))	;or we are at the beginning of *branch-list*,
 		(cons (list seg) *branch-list*) ;then START a new branch with the new seg.
-	      
-		;; Else ADD seg to latest branch.    
-		(cons (cons seg (car *branch-list*)) (cdr *branch-list*)))) 
-					
+
+		;; Else ADD seg to latest branch.
+		(cons (cons seg (car *branch-list*)) (cdr *branch-list*))))
+
       (when *debug-hines*
 	(format t "BBL: seg ~a; last-seg ~a - last-seg-dis-segs ~a add-branch-now ~a ~%"
-		(segment-name seg) 
-		(if last-seg (segment-name last-seg))  last-seg-d-node-segs 
+		(segment-name seg)
+		(if last-seg (segment-name last-seg))  last-seg-d-node-segs
 		(or (> last-seg-d-node-segs 2) ;If the *last* seg was node of the latest branch,
 		    (not last-seg-d-to-seg) (not last-seg)))))))
 
@@ -127,7 +127,7 @@
 		    (aref *RHS-DOUBLE* node-index)
 		    (- (aref *RHS-DOUBLE* node-index) (* (aref *RHS-DOUBLE* node-index-1) coefficent)))))
 	  (when (and (segment-branch-node-index segment)
-		     (eq segment last-seg))		     
+		     (eq segment last-seg))
 	    (let ((coefficent (the df (/ (- (segment-g-axial segment)) (aref *diag-double* node-index)))))
 	      (setf (aref *diag-double* (segment-branch-node-index segment))
 		    (- (aref *diag-double* (segment-branch-node-index segment))
@@ -141,7 +141,7 @@
   ;; NG, j'ai rajoute l'option de compilation-speed a 0, 31/10/97
   ;; ca fait gagner 10%.
   (declare (optimize (safety 0) (speed 3) (space 1) (debug 0) (compilation-speed 0))
-	   (cons branch) 
+	   (cons branch)
 	   (type (simple-array double-float) *diag-double* *lower-diag-double* *upper-diag-double* *rhs-double*))
   ;; 'branch' is a list of segments in the branch, in order of their node indexes. Note that for the soma branch,
   ;; the soma will be skipped. We want to go from second segment of branch to last segment. If branch has only one
@@ -157,25 +157,25 @@
 	       (node-index-1 (- node-index 1)))
 	  (declare (fixnum node-index node-index-1))
 	  (when branch-length>1
-	    (let ((coefficient (ext:truly-the df (/ (aref *lower-diag-double* node-index)
+	    (let ((coefficient (the df (/ (aref *lower-diag-double* node-index)
 						    (aref *diag-double* node-index-1)))))
 	      (declare (double-float coefficient))
 	      (setf (aref *diag-double* node-index)
-		    (ext:truly-the df (- (aref *diag-double* node-index)
-					 (ext:truly-the df (* (aref *upper-diag-double* node-index-1) coefficient))))
+		    (the df (- (aref *diag-double* node-index)
+					 (the df (* (aref *upper-diag-double* node-index-1) coefficient))))
 		    (aref *RHS-DOUBLE* node-index)
-		    (ext:truly-the df (- (aref *RHS-DOUBLE* node-index)
-					 (ext:truly-the df (* (aref *RHS-DOUBLE* node-index-1) coefficient)))))))
+		    (the df (- (aref *RHS-DOUBLE* node-index)
+					 (the df (* (aref *RHS-DOUBLE* node-index-1) coefficient)))))))
 	  (when (and (segment-branch-node-index segment)
-		     (eq segment last-seg))		     
+		     (eq segment last-seg))
 	    (let ((coefficient (the df (/ (- (segment-g-axial segment)) (aref *diag-double* node-index)))))
 	      (declare (double-float coefficient))
 	      (setf (aref *diag-double* (segment-branch-node-index segment))
-		    (ext:truly-the df (- (aref *diag-double* (segment-branch-node-index segment))
-					 (ext:truly-the df (* (- (segment-g-axial segment)) coefficient))))
+		    (the df (- (aref *diag-double* (segment-branch-node-index segment))
+					 (the df (* (- (segment-g-axial segment)) coefficient))))
 		    (aref *RHS-DOUBLE* (segment-branch-node-index segment))
-		    (ext:truly-the df (- (aref *RHS-DOUBLE* (segment-branch-node-index segment))
-					 (ext:truly-the df (* (aref *RHS-DOUBLE* node-index) coefficient))))))))))))
+		    (the df (- (aref *RHS-DOUBLE* (segment-branch-node-index segment))
+					 (the df (* (aref *RHS-DOUBLE* node-index) coefficient))))))))))))
 
 
 ;;; Now back-substitute the upper-triangular matrix.
@@ -221,17 +221,17 @@
 	(declare (fixnum node-index))
 	;; que du numerique a partir d'ici.
 	(setf (aref *v-at-half-step-double* node-index)
-	      (ext:truly-the
+	      (the
 	       df
 	       (/ (- (aref *RHS-DOUBLE* node-index)
-		     (ext:truly-the
+		     (the
 		      df
 		      (if first-time
 			  (if (segment-branch-node-index segment)
 			      (* (aref *v-at-half-step-double* (segment-branch-node-index segment))
 				 (- (segment-g-axial segment)))
 			      0.0d0)
-			  (* (aref *v-at-half-step-double* (ext:truly-the fn (+ node-index 1)))
+			  (* (aref *v-at-half-step-double* (the fn (+ node-index 1)))
 			     (aref *upper-diag-double* node-index)))))
 		  (aref *diag-double* node-index))))))))
 
@@ -266,21 +266,21 @@
   	   (type (simple-array double-float) *diag-double* *rhs-double* *v-at-half-step-double*)
 	   (type (simple-array cons) *branch-array* *reverse-branch-array*)
 	   (type (simple-array segment) *last-seg-branch-array*))
-  (do ((i 0 (ext:truly-the fn (1+ (ext:truly-the fn i)))))
-      ((> (ext:truly-the fn i) (ext:truly-the fn *branch-array-limit*)))
+  (do ((i 0 (the fn (1+ (the fn i)))))
+      ((> (the fn i) (the fn *branch-array-limit*)))
     (declare (fixnum i))
     (TRIANG (aref *branch-array* i) (aref *last-seg-branch-array* i)))
   ;; Before back-substitution of the branches, take care of soma nodes first.
-  (do ((i 0 (ext:truly-the fn (1+ (ext:truly-the fn i)))))
-      ((= (ext:truly-the fn i) (ext:truly-the fn *soma-array-length*)))
+  (do ((i 0 (the fn (1+ (the fn i)))))
+      ((= (the fn i) (the fn *soma-array-length*)))
     (declare (fixnum i))
     (let ((soma-index (node-index (soma-node (aref (the (simple-array soma) *soma-array*) i)))))
       (declare (fixnum soma-index))
       (setf (aref *v-at-half-step-double* soma-index)
-	    (ext:truly-the df (/ (aref *RHS-DOUBLE* soma-index)
+	    (the df (/ (aref *RHS-DOUBLE* soma-index)
 				 (aref *diag-double* soma-index))))))
-  (do ((i (the fn *branch-array-limit*) (ext:truly-the fn (1- (ext:truly-the fn i)))))
-      ((< (ext:truly-the fn i) 0))
+  (do ((i (the fn *branch-array-limit*) (the fn (1- (the fn i)))))
+      ((< (the fn i) 0))
     (declare (fixnum i))
     (BKSUB (aref *reverse-branch-array* i))))
 
@@ -305,7 +305,7 @@
 (defun order-cell-nodes-from-hines-branch-list (cell)
   (declare (optimize (safety 0) (speed 3) (space 0))
 	   (fixnum *num-unknowns*))
-  (loop for branch in *branch-list* 
+  (loop for branch in *branch-list*
 	when (eq (segment-cell (car branch)) cell)
 	do (loop for segment in branch do
 		 (let ((nd (segment-node-2 segment)))

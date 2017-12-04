@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -35,7 +35,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 
 ;; Only light-dependent, event, or voltage-controlled synapses get evaluated here. Channel driven/dependent synapses do not
-;; have a syn. The activity of these synapses are evaluated by their associated channels. 
+;; have a syn. The activity of these synapses are evaluated by their associated channels.
 
 ;; This is used by all the eval synapse routines.
 (defmacro finish-syn-eval (syn iv-relation-coeff static-v-dependence conductance-function e-rev-update-enable)
@@ -65,7 +65,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	   (deccumulate-setf (node-aref-current node-double-floats) (* conductance (synapse-e-rev ,syn)))
 	   (accumulate-setf (node-aref-jacobian node-double-floats) conductance)))
        (unless (= conductance (synapse-conductance ,syn)) (setf (synapse-conductance ,syn) conductance)))))
-				    
+
 ;; This returns a single float. LBG 7/6/99 Original modified from NG code.
 
 ;; This macro is evaluated within a loop in EVAL-EVENT-SYNAPSE over the entries in XFRMD-EVENTS, and returns the appropriate value
@@ -80,16 +80,16 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 ;; of the synapse type conductance wave. Note that EVENT-TIMEs in this form are in units of the waveform interval. For
 ;; 1st-order-Depressing synapses, each entry in XFRMD-EVENTS is a list of the form (EVENT-TIME WEIGHT).
 
-(defmacro EVENT-SYNAPSE-ACCUMULATER (syn wave delta-wave 
+(defmacro EVENT-SYNAPSE-ACCUMULATER (syn wave delta-wave
 				     wave-input-time-int wave-input-time-fract ; Wave input time integer and fractional parts
 				     last-valid-wave-input-time-int ; Last valid wave input time integer part
 				     max-wave-index transformed-events rectify-conductance)
   `(let* ((event-time/weight (car ,transformed-events)) ; The next event in the queue.
 	  (event-time (the fn (if (consp event-time/weight) (car event-time/weight) event-time/weight))))
     (declare (type (or fixnum cons) event-time/weight) (fixnum event-time))
-    
+
     (if (> event-time ,wave-input-time-int)
-	
+
 	;; Time hasn't reached the next event yet. Null the local TRANSFORMED-EVENTS to exit loop, returning 0.0.
 	(progn (setq ,transformed-events nil) 0.0)
 
@@ -99,14 +99,14 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 	(if (and (numberp ,last-valid-wave-input-time-int)
 		 (>= (the fn (- (the fn ,last-valid-wave-input-time-int) event-time)) ,max-wave-index))
-						       
+
 	    ;; If last valid integration step index overreaches wave, then we are permanently through with this event, and we
 	    ;; throw it out and return a value of 0.0.
-	    
+
 	    (progn (setf (synapse-transformed-events ,syn) (cdr ,transformed-events)) 0.0)
 
 	    ;; Further process wave. Calculate the wave index DELAYED-EFFECTIVE-TIME-INT, appropriate for the current time step.
-	    
+
 	    (let ((delayed-effective-time-int (- ,wave-input-time-int event-time))) ; Starts at 0
 	      (declare (fixnum delayed-effective-time-int))
 	      (if (>= delayed-effective-time-int ,max-wave-index)
@@ -131,9 +131,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   `(let* ((event-time/weight (car ,transformed-events)) ; The next event in the queue.
 	  (event-time (the fn (if (consp event-time/weight) (car event-time/weight) event-time/weight))))
      (declare (type (or fixnum cons) event-time/weight) (fixnum event-time))
-    
+
      (if (> event-time ,wave-input-time-int)
-	
+
        ;; Time hasn't reached the next event yet. Null the local TRANSFORMED-EVENTS to exit loop, returning 0.0.
        (progn (setq ,transformed-events nil) 0.0)
 
@@ -156,9 +156,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
       (do ((transformed-events (synapse-transformed-events syn) (cdr transformed-events)))
 	  ((null transformed-events)
 	   (finish-syn-eval syn iv-relation-coeff static-v-dependence conductance-function e-rev-update-enable))
-	(declare (type (or cons null) transformed-events))  
+	(declare (type (or cons null) transformed-events))
 	(incf iv-relation-coeff (the sf (EVENT-SYNAPSE-ACCUMULATER
-					 syn wave delta-wave 
+					 syn wave delta-wave
 					 wave-input-time-int wave-input-time-fract last-valid-wave-input-time-int
 					 max-wave-index transformed-events rectify-conductance)))))
     NIL))
@@ -174,9 +174,9 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     (do ((transformed-events (synapse-transformed-events syn) (cdr transformed-events)))
 	((null transformed-events)
 	 (finish-syn-eval-w-decay-factor syn iv-relation-coeff static-v-dependence conductance-function e-rev-update-enable decay-factor))
-      (declare (type (or cons null) transformed-events))  
+      (declare (type (or cons null) transformed-events))
       (incf iv-relation-coeff (the sf (EVENT-SYNAPSE-ACCUMULATER-w-decay-factor syn wave-input-time-int transformed-events rectify-conductance)))))
-    
+
   NIL)
 
 (proclaim '(inline add-event-to-syn-transformed-events))
@@ -193,7 +193,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
       (rplacd (last (synapse-transformed-events syn)) listified-delayed-transformed-event-time)
       (setf (synapse-transformed-events syn) listified-delayed-transformed-event-time)))
   (when event-breakpoints-mrt
-    (let ((delay-mrt (kernel::sf-sb32-truncate (/ (synapse-delay syn) *mrt*))))
+    (let ((delay-mrt (truncate (/ (synapse-delay syn) *mrt*))))
       (loop for event-breakpoint-mrt in event-breakpoints-mrt do
 	    (insert-event-mrt-breakpoint (+ delay-mrt (the fn event-breakpoint-mrt)))))))
 
@@ -214,7 +214,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
       ;; Still sub-threshold or in refractory period so update :SUB-THRESHOLD-TIME.
       (setf (synapse-sub-threshold-time syn) t[n])
-	
+
       ;; Fire event if above threshold and if either SYNAPSE-TYPE-SUPRA-THRESHOLD-DURATION-MIN is ignored
       ;; (= 0), or if the current period above threshold is is greater than this time.
       (when (and (not below-threshold-p)
@@ -249,13 +249,13 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 								 (*fractional-time*) fractional-time=0-OR-do-not-interpolate)))))
     (declare (single-float iv-relation-coeff))
     (finish-syn-eval syn iv-relation-coeff static-v-dependence conductance-function e-rev-update-enable))
-     
+
   nil)
 
 (proclaim '(inline eval-tonic-synapse))
 (defun eval-tonic-synapse (syn static-v-dependence conductance-function e-rev-update-enable)
   (declare (optimize (safety 0) (speed 3) (space 0) (debug 0))
-	   (type boolean e-rev-update-enable))		     
+	   (type boolean e-rev-update-enable))
   (finish-syn-eval syn 1.0 static-v-dependence conductance-function e-rev-update-enable)
   nil)
 
@@ -346,7 +346,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	 (e-rev-update-enable (first-iteration&var-e-rev-p first-iteration type))
 	 (last-valid-wave-input-time-int (get-a-value 'last-valid-wave-input-time-integer-part params)))
     (let* ((wave-input-time (* (synapse-type-waveform-time-interval-inverse type) (the sf (or time (*input-time*)))))
-	   (wave-input-time-int (ext:truly-the fn (kernel:%unary-truncate wave-input-time)))
+	   (wave-input-time-int (the fn (truncate wave-input-time)))
 	   (wave-input-time-fract (- wave-input-time wave-input-time-int)))
       (declare (fixnum max-wave-index wave-input-time-int) (single-float wave-input-time-fract wave-input-time))
       (let ((*ADVANCE-EVENT-ELEMENTS* (or *ADVANCE-EVENT-ELEMENTS* *first-time-step*)))
@@ -356,7 +356,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	   (if decay-factor
 	     (EVAL-EVENT-SYNAPSE-w-decay-factor syn static-v-dependence conductance-function
 						e-rev-update-enable wave-input-time-int decay-factor rectify-conductance)
-	     (EVAL-EVENT-SYNAPSE syn static-v-dependence conductance-function e-rev-update-enable wave delta-wave max-wave-index 
+	     (EVAL-EVENT-SYNAPSE syn static-v-dependence conductance-function e-rev-update-enable wave delta-wave max-wave-index
 				 wave-input-time-int wave-input-time-fract last-valid-wave-input-time-int rectify-conductance))))
 	(set-synapse-type-parameter-slot-fast type 'last-wave-input-time-integer-part wave-input-time-int params))
       nil)))
@@ -378,14 +378,14 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 	 ;; future use?
 	 ;; (evaluation-method-parameters (get-a-value 'evaluation-method-parameters params))
-	 
+
 	 ;; New stuff from NG code
 	 ;; For *OPTIMIZE-EXPO-CONDUCTANCE-WAVEFORMS*
 	 (decay-factor (when *OPTIMIZE-EXPO-CONDUCTANCE-WAVEFORMS* (get-a-value 'CONDUCTANCE-DECAY-FACTOR params)))
 					; (type-generators (get-a-value 'GENERATORS params))
 	 )
     (let* ((wave-input-time (* (synapse-type-waveform-time-interval-inverse type) (the sf (or time (*input-time*)))))
-	   (wave-input-time-int (ext:truly-the fn (kernel:%unary-truncate wave-input-time)))
+	   (wave-input-time-int (the fn (truncate wave-input-time)))
 	   (wave-input-time-fract (- wave-input-time wave-input-time-int)))
       (declare (fixnum max-wave-index wave-input-time-int) (single-float wave-input-time-fract wave-input-time))
       (let ((*ADVANCE-EVENT-ELEMENTS* (or *ADVANCE-EVENT-ELEMENTS* *FIRST-TIME-STEP*)))
@@ -419,4 +419,3 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	       (when (and last-wave-int last-valid-int ; Make sure these numbers exist.
 			  (> (the fn last-wave-int) (the fn last-valid-int))) ; Is this check necessary??
 		 (set-element-parameter-fast type 'last-valid-wave-input-time-integer-part last-wave-int params))))))))
-

@@ -46,9 +46,6 @@
 	   matrix-solve-LUP-double
 	  matrix-solve-double-optimized))
 
-(provide "MATRIX")
-
-
 ;;;; Type Definitions
 
 ;;; There is an age old efficiency issue:  generic arrays versus
@@ -178,7 +175,7 @@
 
     (if (null to)
 	(setq to (make-matrix-double n n)))
-    (locally 
+    (locally
       (declare (type (matrix-array-double (* *)) to))
       (dotimes (i n)
 	(setf (aref to   i i) (aref from i i))))
@@ -292,7 +289,7 @@
     (if (null c)
 	(setq c (make-matrix n m)))
 
-    (locally 
+    (locally
       (declare (type (matrix-array-double (* *)) C))
       (unless (and (= n (array-dimension b 0))
 		   (= m (array-dimension b 1))
@@ -321,7 +318,7 @@
     (if (null c)
 	(setq c (make-matrix-double n m)))
 
-    (locally 
+    (locally
       (declare (type (matrix-array-double (* *)) C))
 
       (unless (and (= n (array-dimension b 0))
@@ -352,7 +349,7 @@
 	(m (array-dimension c 0))		; rows of C
 	(n (array-dimension c 1)))		; cols of C
     (declare (fixnum l m n))
-    
+
     (if (null a)
 	(setq a (make-matrix-double l n)))
 
@@ -360,7 +357,7 @@
 		 (= n (array-dimension a 1))
 		 (= m (array-dimension b 1)))
 	(error "Matrix-Multiply-Mat-Mat-double: given bad dimensions"))
-    
+
     (dotimes (i l)
       (dotimes (j n)
 
@@ -379,7 +376,7 @@
 ;;;; Multiply ROW x MAT and MAT x COL
 
 ;;; ROW * MAT
-;;; 
+;;;
 (defun matrix-multiply-row-mat-double (b c &optional a)
   (declare (type          (matrix-array-double   (*))  B)
 	   (type          (matrix-array-double (* *))  C)
@@ -405,7 +402,7 @@
 	  (dotimes (j m)
 	    (setq sum (+ sum (* (aref b j)
 				(aref c j i)))))
-      
+
 	  (setf (aref a i) sum))))
 
     a))
@@ -437,7 +434,7 @@
 	  (dotimes (j m)
 	    (setq sum (+ sum (* (aref b i j)
 				(aref c j)))))
-	
+
 	  (setf (aref a i) sum))))
 
     a))
@@ -487,7 +484,7 @@
 
 	(t
 	 (error "Matrix-Multiply-Num-Mat-double:  not given vector or matrix"))))
-  
+
 
 ;;;; Matrix Multiply
 
@@ -602,12 +599,12 @@
 
     (dotimes (i n)			; do for each row
       (declare (fixnum i))
-      
+
       (if (not MD-unity)		; main diagonal not unity?
 	  (setf (aref b i)		; solution for xi
 		(/ (aref b i)
 		   (aref A i i))))
-      
+
       (do ((j (1+ i) (1+ j)))		; do for all the x[i] we know
 	  ((>= j n))
 	(declare (fixnum j))
@@ -627,12 +624,12 @@
 
     (dotimes (i n)			; do for each row
       (declare (fixnum i))
-      
+
       (if (not MD-unity)		; main diagonal not unity?
 	  (setf (aref b i)		; solution for xi
 		(/ (aref b i)
 		   (aref A i i))))
-      
+
       (do ((j (1+ i) (1+ j)))		; do for all the x[i] we know
 	  ((>= j n))
 	(declare (fixnum j))
@@ -651,12 +648,12 @@
 
   (dotimes (i n)			; do for each row
     (declare (fixnum i))
-      
+
     (if (not MD-unity)			; main diagonal not unity?
 	(setf (aref b i)		; solution for xi
 	      (/ (aref b i)
 		 (aref A i i))))
-      
+
     (do ((j (1+ i) (1+ j)))		; do for all the x[i] we know
 	((>= j n))
       (declare (fixnum j))
@@ -704,12 +701,12 @@
     (do ((i (1- n) (1- i)))		; do for each row
 	((< i 0))
       (declare (fixnum i))
-      
+
       (if (not MD-unity)		; main diagonal not unity?
 	  (setf (aref b i)		; solution for xi
 		(/ (aref b i)
 		   (aref A i i))))
-      
+
       (do ((j (1- i) (1- j)))		; do for all the x[i] we know
 	  ((< j 0))
 	(declare (fixnum j))
@@ -730,12 +727,12 @@
     (do ((i (1- n) (1- i)))		; do for each row
 	((< i 0))
       (declare (fixnum i))
-      
+
       (if (not MD-unity)		; main diagonal not unity?
 	  (setf (aref b i)		; solution for xi
 		(/ (aref b i)
 		   (aref A i i))))
-      
+
       (do ((j (1- i) (1- j)))		; do for all the x[i] we know
 	  ((< j 0))
 	(declare (fixnum j))
@@ -755,12 +752,12 @@
   (do ((i (1- n) (1- i)))		; do for each row
       ((< i 0))
     (declare (fixnum i))
-      
+
     (if (not MD-unity)			; main diagonal not unity?
 	(setf (aref b i)		; solution for xi
 	      (/ (aref b i)
 		 (aref A i i))))
-      
+
     (do ((j (1- i) (1- j)))		; do for all the x[i] we know
 	((< j 0))
       (declare (fixnum j))
@@ -769,8 +766,8 @@
 	       (* (aref A j i)
 		  (aref b i))))))
   nil)
-  
-    
+
+
 
 #+ignore
 (defun matrix-solve-upper-test-double (n)
@@ -786,7 +783,7 @@
     (matrix-solve-triangle-upper-double U x)
     (matrix-print-double x)
     (matrix-print-double (matrix-multiply-double U x))))
-  
+
 
 ;;;; Matrix Inversion
 
@@ -846,7 +843,7 @@
 
 ;;; throw in permutation:
 
-;;;  Mn ... M3 M2 M1 A P1 P2 P3 ... Pn = Mn ... M3 M2 M1 A P1 P2 P3 ... Pn 
+;;;  Mn ... M3 M2 M1 A P1 P2 P3 ... Pn = Mn ... M3 M2 M1 A P1 P2 P3 ... Pn
 
 ;;; where the Pi swap columns
 ;;;   L and M are as before but U includes the Pi
@@ -874,14 +871,14 @@
 	   (type (simple-array fixnum   (*)) P))
   (let* ((n  (array-dimension A 0)))
     (declare (fixnum n))
-    
+
     (dotimes (i n)				; initial permutation
       (setf (aref P i) i))
 
     (do ((i 0 (1+ i)))
 	((>= i n))
       (declare (fixnum i))
-      
+
       ;; partial pivot -- swap columns!
       (let ((maxv (abs (aref A i i)))
 	    (maxk i))
@@ -900,19 +897,19 @@
 	  (matrix-swap-cols-double A n i maxk)))
 
       ;; "compute" Mi in our heads -- it's the identity plus the (-$ mki) terms
-      
+
       ;; now set A to Mi * A
       ;;   because Mi is an identity in the upper left and lower right
       ;;   do for each row beyond i
       ;;     do for every element
-      
+
       (do ((k   (1+ i) (1+ k))			; Mi is the identity for first i rows
 	   (mki 0.0d0))
 	  ((>= k n))
 	(declare (fixnum k) (type matrix-element-type-double mki))
 	(setq mki (/ (aref A k i)
 		     (aref A i i)))
-	
+
 	(do ((j  i (1+ j)))			; calculate all the columns
 	    ((>= j n))
 	  (declare (fixnum j))
@@ -920,7 +917,7 @@
 		(+ (aref A k j)			; main diagonal of Mi has a 1
 		   (* (- mki)			; col i has only other nonzero element
 		      (aref A i j)))))
-	
+
 	(setf (aref L  k i) mki )		; clever L calculation -- see Luenberger
 						; SETF after DO so L can be eq A
 	))
@@ -932,14 +929,14 @@
 	   (type (simple-array fixnum   (*)) P))
   (let* ((n  (array-dimension A 0)))
     (declare (fixnum n))
-    
+
     (dotimes (i n)			; initial permutation
       (setf (aref P i) i))
 
     (do ((i 0 (1+ i)))
 	((>= i n))
       (declare (fixnum i))
-      
+
       ;; partial pivot -- swap columns!
       (let ((maxv (abs (aref A i i)))
 	    (maxk i))
@@ -959,19 +956,19 @@
 	  (matrix-swap-cols-double A n i maxk)))
 
       ;; "compute" Mi in our heads -- it's the identity plus the (-$ mki) terms
-      
+
       ;; now set A to Mi * A
       ;;   because Mi is an identity in the upper left and lower right
       ;;   do for each row beyond i
       ;;     do for every element
-      
+
       (do ((k   (1+ i) (1+ k))		; Mi is the identity for first i rows
 	   (mki 0.0d0))
 	  ((>= k n))
 	(declare (fixnum k) (type matrix-element-type-double mki))
 	(setq mki (/ (aref A k i)
 		     (aref A i i)))
-	
+
 	(do ((j  i (1+ j)))		; calculate all the columns
 	    ((>= j n))
 	  (declare (fixnum j))
@@ -979,7 +976,7 @@
 		(+ (aref A k j)		; main diagonal of Mi has a 1
 		   (* (- mki)		; col i has only other nonzero element
 		      (aref A i j)))))
-	
+
 	(setf (aref L  k i) mki )	; clever L calculation -- see Luenberger
 					; SETF after DO so L can be eq A
 	))
@@ -996,7 +993,7 @@
   (do ((i 0 (1+ i)))
       ((>= i n))
     (declare (fixnum i))
-      
+
     ;; partial pivot -- swap columns!
     (let ((maxv (abs (aref A i i)))
 	  (maxk i))
@@ -1009,7 +1006,7 @@
 	(declare (fixnum k))
 	(let ((abs-val (abs (aref A i k))))
 ; 	  (format t "  A[~A,~A] = ~A~%" i k abs-val)
-		    
+
 	  (when (> abs-val maxv)
 	    (setq maxv abs-val
 		  maxk k))))
@@ -1020,19 +1017,19 @@
 	(matrix-swap-cols-double A n i maxk)))
 
     ;; "compute" Mi in our heads -- it's the identity plus the (-$ mki) terms
-      
+
     ;; now set A to Mi * A
     ;;   because Mi is an identity in the upper left and lower right
     ;;   do for each row beyond i
     ;;     do for every element
-      
+
     (do ((k   (1+ i) (1+ k))		; Mi is the identity for first i rows
 	 (mki 0.0d0))
 	((>= k n))
       (declare (fixnum k) (type matrix-element-type-double mki))
       (setq mki (/ (aref A k i)
 		   (aref A i i)))
-	
+
       (do ((j  i (1+ j)))		; calculate all the columns
 	  ((>= j n))
 	(declare (fixnum j))
@@ -1040,7 +1037,7 @@
 	      (+ (aref A k j)		; main diagonal of Mi has a 1
 		 (* (- mki)		; col i has only other nonzero element
 		    (aref A i j)))))
-	
+
       (setf (aref L  k i) mki )		; clever L calculation -- see Luenberger
 					; SETF after DO so L can be eq A
       ))
@@ -1083,7 +1080,7 @@
 ;;; Solve the system Ax=b
 ;;; Factor A into LUP
 ;;;   then LUPx=b which can be associated as L(U(Px))=b
-;;;     solve Ly=b 
+;;;     solve Ly=b
 ;;;     solve Uz=y
 ;;;     solve Px=z
 
@@ -1196,13 +1193,13 @@
   (declare (type (matrix-array-double  (* *)) A)
 	   (type fixnum n k)
 	   (type matrix-element-type-double pivot))
-  
+
   (dotimes (i n)				; divide column by minus pivot
     (declare (fixnum i))
     (setf (aref a k i)
 	  (/ (aref a k i) (- pivot))))
   (setf (aref a k k) pivot)			; got smashed (don't need this statement)
-  
+
   (dotimes (i n)				; reduce matrix
     (declare (fixnum i))
     (if (not (= i k))
@@ -1214,15 +1211,15 @@
 	      (setf (aref a j i)
 		    (+ (* temp (aref a j k))
 		       (aref a j i)))))))
-  
+
   (dotimes (j n)				; divide row by pivot
     (declare (fixnum j))
     (setf (aref a j k)
 	  (/ (aref a j k) pivot)))
-  
+
   ;; replace pivot by reciprocal
   (setf (aref a k k) (/ 1.0d0 pivot))
-  
+
   nil)
 
 
@@ -1258,7 +1255,7 @@
 	     (j k)				;   in lower right corner
 	     (max (abs (aref matrix i j))))
 	(declare (fixnum i j) (type matrix-element-type-double max))
-	
+
 	(do ((i0 k (1+ i0)))			; find the max
 	    ((>= i0 n))
 	  (declare (fixnum i0))
@@ -1267,7 +1264,7 @@
 	    (declare (fixnum j0))
 	    (if (> (abs (aref matrix i0 j0)) max)
 		(setq i i0 j j0 max (abs (aref matrix i0 j0))))))
-	
+
 	(let ((pivot (aref matrix i j))
 	      (d     0.0d0))
 	  (declare (type matrix-element-type-double pivot d))
@@ -1276,14 +1273,14 @@
 	      (progn
 		(matrix-swap-rows-double matrix n i k)	; put pivot in right place
 		(matrix-swap-cols-double matrix n j k)	; matrix = C A R
-		
+
 		(matrix-process-double matrix n k pivot)	; invert(C A R)
 		;; determinant is the recursive product of pivots
 		(setq d (* pivot (matrix-subr-double matrix n (1+ k))))
-		
+
 		(matrix-swap-rows-double matrix n j k)	; undo permutation
 		(matrix-swap-cols-double matrix n i k)	; matrix = R (CAR)**-1 C
-		
+
 		d))
 	  ))))
 
@@ -1318,7 +1315,7 @@
   (do ((i 0 (1+ i)))
       ((>= i n))
     (declare (fixnum i))
-      
+
     ;; partial pivot -- swap columns!
     (let ((maxv (abs (aref A i i)))
 	  (maxk i))
@@ -1339,19 +1336,19 @@
 	(matrix-swap-cols-double A n i maxk)))
 
     ;; "compute" Mi in our heads -- it's the identity plus the (-$ mki) terms
-      
+
     ;; now set A to Mi * A
     ;;   because Mi is an identity in the upper left and lower right
     ;;   do for each row beyond i
     ;;     do for every element
-      
+
     (do ((k (1+ i) (1+ k))		; Mi is the identity for first i rows
 	 (mki 0.0d0))
 	((>= k n))
       (declare (fixnum k) (type matrix-element-type-double mki))
       (setq mki (/ (aref A k i)
 		   (aref A i i)))
-	
+
       (do ((j  i (1+ j)))		; calculate all the columns
 	  ((>= j n))
 	(declare (fixnum j))
@@ -1359,7 +1356,7 @@
 	      (+ (aref A k j)		; main diagonal of Mi has a 1
 		 (* (- mki)		; col i has only other nonzero element
 		    (aref A i j)))))
-	
+
       (setf (aref L  k i) mki )		; clever L calculation -- see Luenberger
 					; SETF after DO so L can be eq A
       ))
@@ -1390,12 +1387,12 @@
 
   (dotimes (i n)			; do for each row
     (declare (fixnum i))
-      
+
     (unless MD-unity			; main diagonal not unity?
 	(setf (aref b i)		; solution for xi
 	      (/ (aref b i)
 		 (aref A i i))))
-      
+
     (do ((j (1+ i) (1+ j)))		; do for all the x[i] we know
 	((>= j n))
       (declare (fixnum j))
@@ -1421,7 +1418,7 @@
 	(setf (aref b i)		; solution for xi
 	      (/ (aref b i)
 		 (aref A i i))))
-      
+
     (do ((j (1- i) (1- j)))		; do for all the x[i] we know
 	((< j 0))
       (declare (fixnum j))

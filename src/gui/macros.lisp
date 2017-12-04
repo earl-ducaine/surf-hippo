@@ -1,35 +1,31 @@
 ;;; -*- Mode: LISP; Syntax: Common-Lisp; Package: WINDOWS-HACK; Base: 10 -*-
 
-#|
+;; The Surf-Hippo Neuron Simulator System
+;;
+;; This code was written as part of the Surf-Hippo Project, originally
+;; at the Center for Biological Information Processing, Department of
+;; Brain and Cognitive Sciences, Massachusetts Institute of
+;; Technology, and currently at the Neurophysiology of Visual
+;; Computation Laboratory, CNRS.
+;;
+;; Permission to use, copy, modify, and distribute this software and
+;; its documentation for any purpose and without fee is hereby
+;; granted, provided that this software is cited in derived published
+;; work, and the copyright notice appears in all copies and in
+;; supporting documentation. The Surf-Hippo Project makes no
+;; representations about the suitability of this software for any
+;; purpose. It is provided "as is" without express or implied
+;; warranty.
+;;
+;; If you are using this code or any part of Surf-Hippo, please
+;; contact surf-hippo@ai.mit.edu to be put on the mailing list.
+;;
+;; Copyright (c) 1989 - 2003, Lyle J. Graham
 
-====================================================================================================
-			       The Surf-Hippo Neuron Simulator System
-====================================================================================================
+(in-package :windows-hack)
 
-This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
-Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
-Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
-Permission to use, copy, modify, and distribute this software and its documentation for any purpose
-and without fee is hereby granted, provided that this software is cited in derived published work,
-and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
-Project makes no representations about the suitability of this software for any purpose. It is
-provided "as is" without express or implied warranty.
-                                                                                 
-If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
-on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
-
-|#
-
-;; GUI Source file: macros.lisp
-
-
-(IN-PACKAGE "WINDOWS-HACK")
-
-;;; Contains various macros and utilities that are required by the MENU-HACK and PLOT-HACK systems.
-
+;; Contains various macros and utilities that are required by the
+;; MENU-HACK and PLOT-HACK systems.
 
 (defmacro type-of-seq (sequence)
   `(typecase ,sequence
@@ -51,17 +47,19 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	 when value collect value))
 
 (defmacro string-case (keyform &body cases)
-;; STRING-CASE Keyform {({(Key*) | Key} Form*)}*
-;; Evaluates the Forms in the first clause with a Key STRING= to the value of
-;; Keyform.  If a singleton key is T then the clause is a default clause.
-  (COMMON-LISP::CASE-BODY 'case keyform cases t 'string= nil nil))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; STRING-CASE Keyform {({(Key*) | Key} Form*)}* Evaluates the Forms
+  ;; in the first clause with a Key STRING= to the value of Keyform.
+  ;; If a singleton key is T then the clause is a default clause.
+  (case-body 'case keyform cases t 'string= nil nil))
 
 (defmacro generic-numeric-coerce (num-or-num-seq result-type result-numeric-type)
-  ;; If NUM-OR-NUM-SEQ is a number, coerce to RESULT-NUMERIC-TYPE, or if a numeric sequence, returns a sequence of RESULT-NUMERIC-TYPE. If NUM-OR-NUM-SEQ
-  ;; is a sequence, the returned sequence is of the same sequence type (list or array), unless RESULT-TYPE is specified explicitly as 'CONS, 'LIST, 'ARRAY
-  ;; or 'SIMPLE-ARRAY. If RESULT-TYPE is 'NUMBER, then NUM-OR-NUM-SEQ must be a number.
+  ;; If NUM-OR-NUM-SEQ is a number, coerce to RESULT-NUMERIC-TYPE, or
+  ;; if a numeric sequence, returns a sequence of
+  ;; RESULT-NUMERIC-TYPE. If NUM-OR-NUM-SEQ is a sequence, the
+  ;; returned sequence is of the same sequence type (list or array),
+  ;; unless RESULT-TYPE is specified explicitly as 'CONS, 'LIST,
+  ;; 'ARRAY or 'SIMPLE-ARRAY. If RESULT-TYPE is 'NUMBER, then
+  ;; NUM-OR-NUM-SEQ must be a number.
   (if (equal result-type (quote 'NUMBER)) ; This seems stupid. why does this need to be double quoted?
       (if (equal result-numeric-type (quote 'FIXnum))
 	  `(round ,num-or-num-seq)
@@ -71,7 +69,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	      (internal-result-type ,result-type)
 	      (internal-result-numeric-type ,result-numeric-type)
 	      (result-type-arrayp (or (member internal-result-type '(ARRAY SIMPLE-ARRAY SIMPLE-VECTOR)) ; RESULT-TYPE specifies array
-				      (and (not internal-result-type) (arrayp internal-num-or-num-seq)))) ; NIL RESULT-TYPE and input is array 
+				      (and (not internal-result-type) (arrayp internal-num-or-num-seq)))) ; NIL RESULT-TYPE and input is array
 	      (num-or-num-seq-type-ok-arrayp (and result-type-arrayp ; We can use the input array for the output.
 						  (arrayp internal-num-or-num-seq)
 						  (member internal-result-numeric-type num-or-num-seq-type-spec)))
@@ -97,7 +95,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 			    do (internal-coercion val index) finally (return (typecase out-sequence (cons (reverse out-sequence)) (t out-sequence)))))
 		(array (loop for val across internal-num-or-num-seq for index fixnum from 0
 			     do (internal-coercion val index) finally (return (typecase out-sequence (cons (reverse out-sequence)) (t out-sequence)))))))))))
-	   
+
 (defmacro d-flt-gen (arg &optional result-type) `(generic-numeric-coerce ,arg ,result-type 'double-float))
 (defmacro d-flt (arg) "Coerce number ARG to a double-float." `(d-flt-gen ,arg 'number))
 (defmacro d-flt-num (arg) `(d-flt-gen ,arg 'number))
@@ -124,7 +122,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defmacro defvars (&rest vals)
   ;; VALS may consist of atoms denoting unbound global variables and lists whose CAR is the variable symbol and whose CADR is the
-  ;; assigned value as set by DEFVAR. 
+  ;; assigned value as set by DEFVAR.
   `(progn
      ,@(loop for elt in vals
 	     collect (if (consp elt)
@@ -133,7 +131,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defmacro defvars-w-list (vals-list)
   ;; VALS may consist of atoms denoting unbound global variables and lists whose CAR is the variable symbol and whose CADR is the
-  ;; assigned value as set by DEFVAR. 
+  ;; assigned value as set by DEFVAR.
   `(progn
      ,@(loop for elt in `,vals-list
 	  collect (if (consp elt)
@@ -252,7 +250,7 @@ Example: (pprint (macroexpand-1 '(Time-Form (Foo 1 2 3) 10)))
   (FORMAT T "~%Time to do ~S is ~0,5F sec." '(FOO 1 2 3)
           (FLOAT
            (/ (- STOP START) (* 10 INTERNAL-TIME-UNITS-PER-SECOND))))
-  VALUE) 
+  VALUE)
 
 Note that if you really care, you could subtract off the time of one
 call to get-internal-run-time. But since this only happens once, not
@@ -269,7 +267,7 @@ for each N, I usually ignore it.
 	  d-flt-gen d-flt d-flt-num d-flt-list d-flt-array
 	  s-flt-gen s-flt s-flt-num s-flt-list s-flt-array
 	  fix-gen fix fix-num fix-list fix-array
-	  defvars defvars-w-value make-var 
+	  defvars defvars-w-value make-var
 	  *break-on-printvars* printvars
 	  cond-every
 	  Time-Form

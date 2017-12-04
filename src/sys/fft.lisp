@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -47,15 +47,17 @@ user::dft-reverse
 (defvar *dft-tables* (make-hash-table :test #'equal))
 (defun load-*dft-tables* ()
   (loop for log-size from 1 to 20
-	do (setf (gethash log-size *dft-tables*) (dft-init log-size))))
+     do (setf (gethash log-size *dft-tables*)
+	      (roylance-clmath::dft-init log-size))))
 (load-*dft-tables*)
 
 (defun get-dft-tables (dft-input-sequence-or-length)
   (let* ((wave-length (if (numberp dft-input-sequence-or-length) dft-input-sequence-or-length (length dft-input-sequence-or-length)))
 	 (log-size  (ceiling (log wave-length 2))))
-    (or (and *ENABLE-DFT-TABLES-HASH-TABLE* (gethash log-size *dft-tables*)) (dft-init log-size))))
+    (or (and *ENABLE-DFT-TABLES-HASH-TABLE* (gethash log-size *dft-tables*))
+	(roylance-clmath::dft-init log-size))))
 
-;; Pads WAVE with PAD until its length reaches 2^N, where N is an integer. 
+;; Pads WAVE with PAD until its length reaches 2^N, where N is an integer.
 (defun dft-wave (wave &key (pad 0.0))
   (let* ((wave (sequence-to-list wave))
 	 (log-size (ceiling (log (length wave) 2)))
@@ -66,7 +68,7 @@ user::dft-reverse
 	 (x-imag   (make-array n :element-type 'dft-float)))
     (declare (fixnum log-size n)
 	     (type (dft-array (*)) x-real x-imag))
-    (loop for i from 0 
+    (loop for i from 0
 	  for val in wave do
 	  (setf (aref x-real i) val)
 	  (setf (aref x-imag i) 0.0))
@@ -82,7 +84,7 @@ user::dft-reverse
     (plot-timed-data x-mag nil nil :title "Frequency Mag" :y-min 0.0)
     (plot-timed-data x-imag nil nil :title "Frequency Imag")
     (dft-reverse x-real x-imag tables)))
-		    
+
 
 
 #|
@@ -126,7 +128,7 @@ user::dft-reverse
 		      :delta-t delta-t
 		      :remove-dc t
 		      :plot-input-wave t)))
-  
+
 
 |#
 
@@ -141,7 +143,7 @@ sequence to fit a 2^N array that may be DFTed. A list of strings in LABELS is us
 traces. Note that if a time sequence must be resampled then the effective delta-t will be smaller
 than the given DELTA-T. Also, this resampling is done by simple linear interpolation between known
 points, and thus may introduce spurious high frequencies into the spectrum. Maximum length of a time
-sequence in INPUT-WAVE is 2^16. 
+sequence in INPUT-WAVE is 2^16.
 
 Given a INPUT-WAVE input, if RETURN-WAVES is T [default NIL] then returns as values lists for the input and outputs in the form:
 
@@ -212,7 +214,7 @@ The LOG-PLOT-MAG and LOG-PLOT-FREQ arguments control plotting of the magnitude a
 				   (setq last-real real last-imag imag)
 				   and collect phase))))
 	  (when normalize-mag (setq true-mag (normalize-sequence true-mag)))
-    
+
 	  (let* ((max-freq (min (or max-freq (* freq-step (/ (length true-mag) 2))) true-max-freq))
 		 (plot-max-freq (if log-plot-freq (log max-freq 10) max-freq))
 		 (plot-min-freq (if log-plot-freq (log freq-step 10) 0.0))
@@ -240,7 +242,7 @@ The LOG-PLOT-MAG and LOG-PLOT-FREQ arguments control plotting of the magnitude a
 			       :x-origin plot-min-freq :x-min plot-min-freq :x-log log-plot-freq :x-label-h-position :right
 			       :x-are-fns (not log-plot-freq) :x-label txfmed-x-label :x-inc plot-freq-inc :x-max plot-max-freq))
 	     (plot-phase
-	      (plot-timed-data true-phase label freq-step :title (concatenate 'string fixed-title-prefix "Phase") :delta-t-start delta-freq-start :log-base 10 
+	      (plot-timed-data true-phase label freq-step :title (concatenate 'string fixed-title-prefix "Phase") :delta-t-start delta-freq-start :log-base 10
 			       :y-min (unless unfold-phase (- (/ pi-single 2))) :y-max (unless unfold-phase (/ pi-single 2))
 			       :y-inc (/ pi-single 4) :y-label "Radians"
 			       :x-origin plot-min-freq :x-min plot-min-freq :x-log log-plot-freq :x-label-h-position :right
@@ -316,7 +318,7 @@ The LOG-PLOT-MAG and LOG-PLOT-FREQ arguments control plotting of the magnitude a
 				   (setq last-real real last-imag imag)
 				   and collect phase))))
 	  (when normalize-mag (setq true-mag (normalize-sequence true-mag)))
-    
+
 	  (let* ((max-freq (min (or max-freq (* freq-step (/ (length true-mag) 2))) true-max-freq))
 		 (plot-max-freq (if log-plot-freq (log max-freq 10) max-freq))
 		 (plot-min-freq (if log-plot-freq (log freq-step 10) 0.0))
@@ -344,7 +346,7 @@ The LOG-PLOT-MAG and LOG-PLOT-FREQ arguments control plotting of the magnitude a
 			       :x-origin plot-min-freq :x-min plot-min-freq :x-log log-plot-freq :x-label-h-position :right
 			       :x-are-fns (not log-plot-freq) :x-label txfmed-x-label :x-inc plot-freq-inc :x-max plot-max-freq))
 	     (plot-phase
-	      (plot-timed-data true-phase label freq-step :title (concatenate 'string fixed-title-prefix "Phase") :delta-t-start delta-freq-start :log-base 10 
+	      (plot-timed-data true-phase label freq-step :title (concatenate 'string fixed-title-prefix "Phase") :delta-t-start delta-freq-start :log-base 10
 			       :y-min (unless unfold-phase (- (/ pi-single 2))) :y-max (unless unfold-phase (/ pi-single 2))
 			       :y-inc (/ pi-single 4) :y-label "Radians"
 			       :x-origin plot-min-freq :x-min plot-min-freq :x-log log-plot-freq :x-label-h-position :right
@@ -409,8 +411,8 @@ is T [default NIL], then the following are returned as values:
 		and collect (- output-phase-value input-phase-value) into transfer-phase
 		and collect frequency into transfer-frequencies
 		else do (setq frequencies nil)
-		finally 
-		
+		finally
+
 		(plot-timed-data transfer-mag nil transfer-frequencies :title "Transfer Function Magnitude"
 				 :x-log log-plot-freq :y-log log-plot-mag :log-base 10
 				 :y-min (unless log-plot-mag 0.0)
@@ -648,7 +650,7 @@ is T [default NIL], then the following are returned as values:
 	when (>= freq 0) collect (if (= freq 0) (* 0.1 delta-f) freq) into out-frequencies
 	collect mag into out-magnitudes
 	finally	(plot-timed-data out-magnitudes nil out-frequencies :y-log t :log-base 10 :x-log t :title (format nil "Bode Plot: ~A" title))))
-		    
+
 #|
 (defun deconvolve (data-x data-y delta-t &key cutoff-freq return-values plot-x plot-y plot-h)
   (let* ((title-prefix (if cutoff-freq (format nil "DATA-H (Cutoff ~AHz)" cutoff-freq) 'data-h))
@@ -754,4 +756,3 @@ is T [default NIL], then the following are returned as values:
 	       (setf (aref output-array i) right-element
 		     (aref output-array (+ lhl i)) left-element)))
     (if wave-is-arrayp output-array (sequence-to-list output-array))))
-

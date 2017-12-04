@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -29,7 +29,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (IN-PACKAGE "WINDOWS-HACK")
 
 
-(defvar *delete-delay-after-print* 2 "Delay erasing PS files after printing, in seconds. Needs to be empirically determined.") 
+(defvar *delete-delay-after-print* 2 "Delay erasing PS files after printing, in seconds. Needs to be empirically determined.")
 (defvar *gc-every-print* nil)
 (defvar *enable-printing* t)
 
@@ -38,10 +38,10 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defvar *shell-lpr-command* (cond ((find :solaris *features*) "lp")
 				  ((find :sunos *features*) "lpr")
 				  (t "lpr")))
-				  
+
 (defvar *shell-lpr-printer-flag* (cond ((find :solaris *features*) "-d")
 				       ((find :sunos *features*) "-P")
-				       (t "-P"))) 
+				       (t "-P")))
 
 (defvar *PS-FILENAME-SUFFIX* "" "Added to .ps filenames")
 (defvar *maximum-ps-filename-length* nil "When NIL, no limit. Some problems with VMS server based printers.suggest setting this to 32.")
@@ -78,7 +78,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defvar *lpr-paper-height* 842)		; for a4, letter is 792
 (defvar *ps-position-x* :center ":LEFT, :CENTER, or :RIGHT.")
 (defvar *ps-position-y* :center ":TOP, :CENTER, or :BOTTOM.")
-(defvar *ps-scale-x* nil "X scale factor for image for making PS files. Default is NIL, which means the image will be automatically scaled to fit on the page.") 
+(defvar *ps-scale-x* nil "X scale factor for image for making PS files. Default is NIL, which means the image will be automatically scaled to fit on the page.")
 (defvar *ps-scale-y* nil "Y scale factor for image for making PS files. Default is NIL, which means the image will be automatically scaled to fit on the page.")
 (defvar *ps-file-page-comment* "" "A string added to the lower left corner of all PS files.")
 (defvar *kill-ps-margins* nil "When T minimize all margins for PS files.")
@@ -91,10 +91,10 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defvar *kill-multiple-window-printing* nil) ; In some setups printing more than one window at a time may crash the system.
 (defvar *flag-windows-for-borders* nil)
 
-;; List of strings for which the titles of windows passed to PRINT-WINDOWS are checked - if a title contains one of the strings, then that window is not printed. 
+;; List of strings for which the titles of windows passed to PRINT-WINDOWS are checked - if a title contains one of the strings, then that window is not printed.
 (defvar *print-windows-exclusion-list* nil)
 
-;; List of strings for which the titles of windows passed to PRINT-WINDOWS are checked - if a title contains one of the strings, then that window is printed. 
+;; List of strings for which the titles of windows passed to PRINT-WINDOWS are checked - if a title contains one of the strings, then that window is printed.
 (defvar *print-windows-inclusion-list* nil)
 (defvar *print-windows-include-title* nil)
 
@@ -155,7 +155,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
        (*ps-file-page-comment* "Comment to add to lower left hand corner of ps files" :string)
        (dummy5 "Paper size:" :choose (:letter :a4 :arbitrary) :label-left)
        (*lpr-paper-width* "Paper width in points (when Size = Arbitrary)" :integer)
-       (*lpr-paper-height* "Paper height in points (when Size = Arbitrary)" :integer))		      
+       (*lpr-paper-height* "Paper height in points (when Size = Arbitrary)" :integer))
      :label "Postscript File Options")
     (setq *ps-landscape-p* (eq dummy6 :landscape))
     (setq *lpr-paper-size*
@@ -168,15 +168,15 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 (defun select-and-filter-printed-windows (windows-to-print exclusion-list inclusion-list)
   (cond-every (exclusion-list
-	       (setq windows-to-print 
+	       (setq windows-to-print
 		     (loop for win in windows-to-print collect
-			   (loop for exclude-title-fragment in exclusion-list 
+			   (loop for exclude-title-fragment in exclusion-list
 				 when (search exclude-title-fragment (gv win :title)) do (return nil)
 				 finally (return win)))))
 	      (inclusion-list
-	       (setq windows-to-print 
+	       (setq windows-to-print
 		     (loop for win in windows-to-print collect
-			   (loop for include-title-fragment in inclusion-list 
+			   (loop for include-title-fragment in inclusion-list
 				 when (search include-title-fragment (gv win :title)) do (return win)
 				 finally (return nil))))))
   (clean-up-list windows-to-print))
@@ -209,7 +209,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (when windows-to-print
     (let* ((windows-to-print (coerce-to-list windows-to-print))
 	   (top-window (car windows-to-print))
-	   (candidate (concatenate 'string  
+	   (candidate (concatenate 'string
 				  (if (and (> (length windows-to-print) 1)
 					   (> (length (gv top-window :session-name)) 1))
 				      (gv top-window :session-name)
@@ -237,8 +237,8 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 				    :label "Postscript Filename")
 	    (unless dummy2
 	      (when (write-file-overwrite-authorization dummy1)
-		(unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-		(when (ext:unix-namestring pathname-directory nil)
+		(uiop:run-program  "mkdir" pathname-directory)
+		(when  pathname-directory
 		  (make-ps-file windows-to-print dummy1 borders-p-for-windows)
 		  (format t ";; File ~a written~%" dummy1)
 		  (list dummy1)))))
@@ -248,8 +248,8 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		 collecting
 		 (let ((filename (get-candidate-ps-windows-filename pathname-directory window-to-print filename-extra)))
 		   (when (write-file-overwrite-authorization filename)
-		     (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-		     (when (ext:unix-namestring pathname-directory nil)
+		     (uiop:run-program "mkdir" pathname-directory)
+		     (when pathname-directory
 		       (make-ps-file window-to-print filename)
 		       (format t ";; File ~a written~%" filename)
 		       filename)))))))))
@@ -336,10 +336,10 @@ options. Additional options include:
 	 dummy7 dummy8 (dummy10 filename-suffix) dummy11 dummy12
 	 (dummy13 (true-p print-together))
 	 (dummy14 arrange)
-	 (dummy15 (if *print-windows-use-automatic-plot-directory* "Use automatic plot directory" "Use *PLOT-DIRECTORY*")) 
+	 (dummy15 (if *print-windows-use-automatic-plot-directory* "Use automatic plot directory" "Use *PLOT-DIRECTORY*"))
 	 dummy16)
     (setq *printer* printer
-	  *kill-ps-margins* kill-ps-margins 
+	  *kill-ps-margins* kill-ps-margins
 	  *ps-landscape-p* landscape)
     (unless *plot-directory* (setq *plot-directory* *Surf-user-home*))
     (when (opal:directory-p DIRECTORY) (setq *plot-directory* DIRECTORY))
@@ -407,7 +407,6 @@ options. Additional options include:
   nil)
 
 (defun print-ps-file (filename &optional lpr-flags-string)
-  (when *gc-every-print* (ext:gc))
   (when *enable-printing*
     (let ((*announce-shell-exec* t))
       (shell-exec (concatenate `string
@@ -425,7 +424,7 @@ options. Additional options include:
 					      (window-tile-x-gap *window-tile-x-gap*) (window-tile-y-gap *window-tile-y-gap*)
 					      (start-x *window-tile-start-x*) (start-y *window-tile-start-y*)
 					      break-after-plot)
-  (let* ((*print-together* print-together) 
+  (let* ((*print-together* print-together)
 	 (*ps-borders-p* borders-p)
 	 (*ps-landscape-p* landscape-p)
 	 (wins (reverse (windows-of-mode :standard-plot))) ; Put first win first.
@@ -444,7 +443,7 @@ options. Additional options include:
 	  *DELETE-DELAY-AFTER-PRINT*
 	  *include-filename-and-date-in-ps-files*
 	  *PS-FILE-PAGE-COMMENT*
-			  
+
 	  *ps-landscape-p* *ps-borders-p* *ps-color-p* *ps-left-margin* *ps-right-margin*
 	  *ps-top-margin* *ps-bottom-margin* *ps-header-print-p* *lpr-paper-size*
 
@@ -453,7 +452,7 @@ options. Additional options include:
 	  *lpr-paper-width* *lpr-paper-height*
 
 	  *print-now* *PRINT-WINDOWS-WHAT-TO-DO*
-	  *gc-every-print* *enable-printing* 
+	  *gc-every-print* *enable-printing*
 	  *print-together* *print-windows-inclusion-list* *print-windows-exclusion-list*
 	  *print-windows-include-title*
 	  *MAXIMUM-PS-FILENAME-LENGTH*
@@ -461,15 +460,13 @@ options. Additional options include:
 	  *shell-lpr-command*
 	  *shell-lpr-printer-flag*
 	  *include-printer-flags*
-	  *flag-windows-for-borders*  
+	  *flag-windows-for-borders*
 	  *kill-ps-margins*
 	  *kill-multiple-window-printing*
-	  
+
 	  print-windows make-ps-file
 	  HARD-COPY-SCREEN
 	  PRINT-WINDOW-MENU
 	  PS-FILE-OPTIONS-MENU
 
 	  arrange-plot-and-clear-standard-plots))
-
-

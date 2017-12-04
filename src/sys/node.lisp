@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -111,7 +111,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	(format t "Node ~A: cell ~a~%" name cell-name)
 	(format t "   Relative/absolute position = ~d/~d ~%" rel-loc ab-loc)
 	(format t "   Its elements are: ~A ~%" (node-elements nd))))))
-    
+
 (defstruct core-off-diag
   (point-diag nil)
   (lower nil))
@@ -164,11 +164,11 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 (defun reorder-circuit ()
   "Collects nodes to be evaluated in to *CORE-NODE-ARRAY*, ordered by the segment *BRANCH-LIST* according to the Hines
 ordering. Contructs the 3 (tridiagonal) matrix arrays (upper, lower, diagonal) and the right hand side and output array."
-  (loop for node being the hash-value of (NODE-HASH-TABLE) 
+  (loop for node being the hash-value of (NODE-HASH-TABLE)
 	unless (eq *ground-node* node) collect node into all-nodes
 	unless (or (eq *ground-node* node)
 		   (not (node-is-physical-cell-node node))
-		   (node-has-ideal-voltage-source node))		   
+		   (node-has-ideal-voltage-source node))
 	collect node into core-nodes
 	finally (setq *all-node-array* (list-to-array all-nodes)
 		      *ALL-NODE-ARRAY-LENGTH-1* (1- (length all-nodes))
@@ -189,7 +189,7 @@ ordering. Contructs the 3 (tridiagonal) matrix arrays (upper, lower, diagonal) a
 	    *upper-diag-double* (make-array array-param :element-type 'double-float)
 	    *v-at-half-step-double* (make-array array-param :element-type 'double-float)
 	    *rhs-double* (make-array array-param :element-type 'double-float)))))
-  
+
 (defun make-branch-arrays ()
   (setf *branch-array* (make-array (list (length *branch-list*)))
 	*last-seg-branch-array* (make-array (list (length *branch-list*)))
@@ -208,7 +208,7 @@ ordering. Contructs the 3 (tridiagonal) matrix arrays (upper, lower, diagonal) a
   (do ((index 0 (+ 1 (the fn index))))
       ((= index (the fn *CORE-NODE-ARRAY-LENGTH*)))
     (let ((nd (aref (the (vector node) *core-node-array*) index)))
-;;      (format t "index ~A~%" index) 
+;;      (format t "index ~A~%" index)
       (unless (or (eq nd *ground-node*) (<= *CORE-NODE-ARRAY-LENGTH* 1))
 	(let ((index (node-index nd)))
 	  (declare (fixnum index))
@@ -279,11 +279,11 @@ ordering. Contructs the 3 (tridiagonal) matrix arrays (upper, lower, diagonal) a
 				   (the df (/ (the df (- voltage *particle-look-up-table-min-voltage-double*))
 					      (the sf *particle-look-up-table-voltage-range*))))))
 	 (fixed-v (if *interpolate-particle-arrays*
-		      (kernel:%unary-truncate index-voltage)
-		      (kernel:%unary-round index-voltage)))
+		      (truncate index-voltage)
+		      (round index-voltage)))
 	 (p-max (the fn (1- *particle-look-up-table-length*))))
     (declare (fixnum fixed-v))
-    (the (signed-byte 32) 
+    (the (signed-byte 32)
       (if (> 0 fixed-v)			; FIXED-V index must be greater than or equal to 0.
 	  0
 	  (if (< fixed-v p-max) fixed-v p-max) ; Limit FIXED-V index by P-MAX.
@@ -299,7 +299,7 @@ ordering. Contructs the 3 (tridiagonal) matrix arrays (upper, lower, diagonal) a
 	 (the fn (round index-voltage)))))
 
 (defun elements-with-holding-potentials () (loop for elt in (cell-elements) when (element-holding-potential elt) sum 1))
-  
+
 (defun element-holding-potential (element &optional (value nil value-supplied-p))
   "If VALUE (in mV) is supplied, then sets the 'HOLDING-POTENTIAL parameter of the circuit node(s) associated with ELEMENT and returns VALUE
 (converted to double-float). If VALUE is supplied, and NIL, then the 'HOLDING-POTENTIAL is cleared for the node. Otherwise, returns the current value
@@ -313,18 +313,18 @@ of the 'HOLDING-POTENTIAL parameter for the node, if that value has been set pre
 (defun set-holding-potentials-to-current-values ()
   "Set the holding potential for all somas and segments to their current voltage."
   (mapcar #'(lambda (elt) (element-holding-potential elt (element-value elt))) (cell-elements)))
-  
+
 (defun clear-holding-potentials ()
   "Clear holding potentials for all somas and segments."
   (element-holding-potential (cell-elements) nil))
 
 (proclaim '(inline node-aref-particle-voltage))
-(defun node-aref-particle-voltage (node-double-floats &optional initial-state node)			 
+(defun node-aref-particle-voltage (node-double-floats &optional initial-state node)
   (declare (optimize (safety 0) (speed 3) (space 1) (compilation-speed 0)))
   (if initial-state
       ;; Use V(t_n) for initial state.
       (the df
-	   (or 
+	   (or
 	    (get-a-value 'holding-potential (node-parameters node))
 	    (node-aref-voltage-n node-double-floats)))
       ;; Estimate voltage at time (t-prime_n+1/2) halfway between midpoints of last step and current step, or equivalently,
@@ -346,12 +346,12 @@ of the 'HOLDING-POTENTIAL parameter for the node, if that value has been set pre
   (flet ((FAST-FRACTIONAL-PART-FLET (number)
 	   ;; Returns second result of TRUNCATE, where NUMBER is double float.
 	   (declare (double-float number))
-	   (let ((df-integer-part (ext:truly-the fn (kernel:%unary-truncate number))))
+	   (let ((df-integer-part (the fn (truncate number))))
 	     (- number df-integer-part))))
     (when (node-has-v-dep-element node)
       (let ((voltage-n-prime (node-particle-voltage node initial-state)))
 	(declare (double-float voltage-n-prime))
-	(setf (node-prt-v-index node) (VOLTAGE-DOUBLE-TO-VOLTAGE-INDEX voltage-n-prime))	    
+	(setf (node-prt-v-index node) (VOLTAGE-DOUBLE-TO-VOLTAGE-INDEX voltage-n-prime))
 	(when *interpolate-particle-arrays*
 	  (setf (node-prt-v-index-rem node) (coerce (fast-fractional-part-flet voltage-n-prime) 'single-float))))))
   nil)
@@ -423,7 +423,7 @@ NIL, will remove any assigned constant current from ELEMENT."
       (segment (if (member element (soma-segments (cell-soma (element-cell element))))
 		   (cell-type-v-leak-soma cell-type)
 		   (d-flt (cell-type-v-leak-dendrite cell-type)))))))
-	  
+
 (defun init-node-voltages-slots-and-matrix ()
   ;; Starts the circuit off by voltage clamping all the nodes to the defined resting potential, for example, the leak battery, and
   ;; setup voltage array indexes for the appropriate nodes. Calls (init-all-nodes t) to clear tri-diag matrix, and initialize all
@@ -443,12 +443,12 @@ NIL, will remove any assigned constant current from ELEMENT."
 		      (set-node-voltage-double (segment-node-2 seg) (or (element-holding-potential seg) v-leak-soma)))
 		(set-node-voltage-double (soma-node (cell-soma cell))
 					 (or (element-holding-potential (cell-soma cell)) v-leak-soma)))))
-  
+
   (loop for electrode in (electrodes) do
 	(set-node-voltage-double (segment-node-2 electrode) ; v-leak-dendrite
 				 (or (element-holding-potential electrode)
 				     (d-flt (segment-v-leak electrode)))))
-				  
+
   ;; If *USE-NODE-VOLTAGE-INITIALIZATIONS* is T, set node voltages specified in *NODE-VOLTAGE-INITIALIZATIONS*.
   (when *use-node-voltage-initializations*
     (dolist (pair *node-voltage-initializations*)
@@ -460,7 +460,7 @@ NIL, will remove any assigned constant current from ELEMENT."
     (let ((nd (aref *all-node-array* index)))
       (start-node nd)))			; Set appropriatly the "past" voltages and derivatives.
 					; [node-voltage-n, node-voltage-n-1 nd <- node-voltage-n+1 nd].
-      
+
   (init-all-nodes t))
 
 #|
@@ -485,7 +485,7 @@ NIL, will remove any assigned constant current from ELEMENT."
 		    ; matrix-float
 		    *diag-double*) (the fn (node-index nd)))
 	    (node-jacobian nd)
-  
+
 	    (aref (the (SIMPLE-ARRAY DOUBLE-FLOAT (*))
 		    ; matrix-float
 		    *rhs-double*) (the fn (node-index nd)))
@@ -508,7 +508,7 @@ NIL, will remove any assigned constant current from ELEMENT."
 	    (the df (- (+ v-at-half-step-double v-at-half-step-double)
 		       (node-voltage-n node))))))
   nil)
-  
+
 
 (defun eval-all-nodes ()
   ;; Sets the RHS for the core-nodes, solves the matrix, updates the voltage estimate with the new delta-V's.
@@ -554,4 +554,3 @@ NIL, will remove any assigned constant current from ELEMENT."
       0.0d0
       (/ (- (node-voltage-n+1 nd) (node-voltage-n nd))
 	 (*delta-t[n]*))))
-

@@ -11,9 +11,7 @@
 ;;; Bugs and Fixes
 ;;;   *** doesn't jimmy the pathname object
 
-(in-package "FS")
-
-(provide "ATTRIBUTES")
+(in-package fs)
 
 (export '(parse-attribute-list pathname-attribute-list))
 
@@ -57,7 +55,7 @@
     (let ((attr nil)
 	  (*package* (find-package "KEYWORD"))
 	  (left (search "-*-" line :start2 start :end2 end)))
-      
+
       (if (not (null left))
 	  (let ((right (search "-*-" line :start2 (+ left 3) :end2 end)))
 	    (if (not (null right))
@@ -66,7 +64,7 @@
 		     (j 0))
 		    ((>= j right))
 		  (setq j (or (search ";" line :start2 i :end2 right) right))
-		  
+
 		  ;; i and j now delimit a group
 		  (let ((i0 (search ":" line :start2 i :end2 j))	; find the :
 			(name :MODE))		; default to :MODE

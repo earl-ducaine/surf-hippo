@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Compuation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -38,7 +38,7 @@ where \"filename\" is either the current value of *SIMULATION-NAME*, when *ADD-S
 current value of *TIME-STAMP*, in either case postpended with TRAILER. Any repeated \"/\" will be replaced with a single \"/\"."
   (replace-repeated-character-w-single
    (concatenate-strings (string pathname-directory) "/"
-			(if *ADD-SIMULATION-TO-FILENAMES* *simulation-name* (format nil "~a" *time-stamp*))		    
+			(if *ADD-SIMULATION-TO-FILENAMES* *simulation-name* (format nil "~a" *time-stamp*))
 			(string trailer) "." (string extension))
    "/"))
 
@@ -66,7 +66,7 @@ current simulation time. SIM-OUTPUT also calls (without arguments) any functions
 (defun print-numerical-details ()
   "Print out a number of numerical details relevant to the last or current simulation."
   (format t "Numerical Details:~%")
-  (case *INTEGRATION-TIME-REFERENCE* 
+  (case *INTEGRATION-TIME-REFERENCE*
     (:LIST				; *use-time-list*
      (format t "Shadowed time steps~%"))
     (:fixed				; *use-fixed-step*
@@ -84,7 +84,7 @@ current simulation time. SIM-OUTPUT also calls (without arguments) any functions
 	   (when explicit-elements (format t "~A explicit element~:p" (length explicit-elements)))
 	   (format t "~%")))
      (format t " *ABSOLUTE-VOLTAGE-ERROR* = ~A, *PICK-TIME-STEP-FUDGE* = ~A~%" *absolute-voltage-error* *pick-time-step-fudge*)
-     
+
      (cond-every
       (*debug-max-dvdts* (statistics-on-list *MAX-DV-DIFF-NODES*))
       (*calculate-particle-error*
@@ -124,7 +124,7 @@ current simulation time. SIM-OUTPUT also calls (without arguments) any functions
     (when (or complete (not *kill-extra-messages*))
       (format t "~d ms simulation~A (~D/~D time points/iterations)~%"
 	      (round *user-stop-time*)
-	      (not (>= *simulation-max-time* *user-stop-time*)) " [Time reached: ~,1f ms]" 
+	      (not (>= *simulation-max-time* *user-stop-time*)) " [Time reached: ~,1f ms]"
 	      *total-num-time-points* *total-num-iterations*)
       (when (or complete *print-numerical-details*) (print-numerical-details))
       (format t "~&")
@@ -145,7 +145,7 @@ current simulation time. SIM-OUTPUT also calls (without arguments) any functions
       (when (or complete *print-analysis*) (print-analysis)))))
 
 (defun print-cell-element-elements (element)
-  (concatenate-string-list 
+  (concatenate-string-list
    (no-nils (mapcar (lambda (model-type)
 		      (let ((num-elts (length (cell-element-elements element model-type))))
 			(when (and (> num-elts 0) (not (or (eq model-type 'cell) (eq model-type 'segment) (eq model-type 'soma))))
@@ -169,7 +169,7 @@ current simulation time. SIM-OUTPUT also calls (without arguments) any functions
 	     (approved-file-output-variable-list
 	      (if (or selected-element-names-and-slots select-each-element)
 		  (let ((*automatic-run* (or *automatic-run* (not select-each-element))))
-		    (choose-list-values-from-keys	
+		    (choose-list-values-from-keys
 		     (mapcar (lambda (var-info-list) (list (format nil "~a" (nth 0 var-info-list)) var-info-list)) *FILE-OUTPUT-VARIABLE-LIST*)
 		     nil
 		     :punt-if-only-one-entry nil
@@ -215,7 +215,7 @@ current simulation time. SIM-OUTPUT also calls (without arguments) any functions
 
 (defun approved-file-output-variable-list-menu (select-each-element element-names-and-slots)
   (let ((*automatic-run* (or *automatic-run* (not select-each-element))))
-    (choose-list-values-from-keys	
+    (choose-list-values-from-keys
      (mapcar (lambda (var-info-list) (list (format nil "~a" (nth 0 var-info-list)) var-info-list)) *FILE-OUTPUT-VARIABLE-LIST*)
      (parse-*FILE-OUTPUT-VARIABLE-LIST*-for-menu-entries element-names-and-slots)
      :punt-if-only-one-entry nil :label "Choose Plotted Data To Dump To File")))
@@ -230,7 +230,7 @@ current simulation time. SIM-OUTPUT also calls (without arguments) any functions
        (format t "|#~%")))
    ;; VAR-INFO-LIST has the following format: (var-symb circuit-element data-slot)
    (mapcar (lambda (var-info-list) (write-lisp-list-to-stream (nth 0 var-info-list) (element-data (nth 1 var-info-list) (nth 2 var-info-list)) stream 10 1))
-	   approved-file-output-variable-list) 
+	   approved-file-output-variable-list)
    ;; Now write out the time list.
    (write-lisp-list-to-stream time-symbol (CURRENT-SIM-PLOT-TIME-LIST) stream 10 1)
    ;; Now write out an archive variable name function.
@@ -256,7 +256,7 @@ current simulation time. SIM-OUTPUT also calls (without arguments) any functions
 #|
 (defun write-element-data (element filename &key data-type model-type state-index (output-format :lisp) suppress-comments extra-comment filename-extension)
   "Given ELEMENT or ELEMENTs of type MODEL-TYPE, write the plot data list in OUTPUT-FORMAT to FILENAME, according to
-ELEMENT-DATA. Remaining arguments are as for STORE-XY-DATA." 
+ELEMENT-DATA. Remaining arguments are as for STORE-XY-DATA."
     (loop for elt in (elements element model-type)
 	  with data do (setq data (element-data elt data-type model-type state-index))
 	  when data collect (list (CURRENT-SIM-PLOT-TIME-LIST) data) into xy-lists and collect (massage-element-plot-label elt) into labels
@@ -324,7 +324,7 @@ GET-SURF-DATA-DIRECTORY function), with file extension \"dat\"."
 	    (after-simulation-print-circuit stream)
 	    (format stream "|#~%~%")
 	    ;; VAR-INFO-LIST has the following format: (var-symb circuit-element data-slot)
-	    (write-lisp-list-to-stream '*synapse-waveforms *synapse-waveforms stream)) 
+	    (write-lisp-list-to-stream '*synapse-waveforms *synapse-waveforms stream))
 	  (format t "File ~a written~%" data-filename))
 	(setq *last-simulation-file-path* *simulation-name*))))
 |#
@@ -334,8 +334,8 @@ GET-SURF-DATA-DIRECTORY function), with file extension \"dat\"."
 	 (info-filename (get-surf-filename pathname-directory "info"))
 	 (new-file (not (probe-file info-filename)))
 	 (*print-pretty* nil))
-    (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-    (when (probe-file (ext:unix-namestring pathname-directory nil))
+    (unix-mkdir (namestring pathname-directory nil) #o777)
+    (when (probe-file (namestring pathname-directory nil))
       (with-open-stream (*standard-output* (open info-filename :direction :output :if-exists :append :if-does-not-exist :create))
 	(when new-file (format t ";;; -*- Package: SURF; Mode: LISP -*-~%~%"))
 	(format t "#|~%~%")
@@ -353,8 +353,8 @@ GET-SURF-DATA-DIRECTORY function), with file extension \"dat\"."
 	 (info-filename (get-surf-filename pathname-directory "info"))
 	 (new-file (not (probe-file info-filename)))
 	 (*print-pretty* nil))
-    (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-    (when (probe-file (ext:unix-namestring pathname-directory nil))
+    (unix-mkdir (namestring pathname-directory nil) #o777)
+    (when (probe-file (namestring pathname-directory nil))
       (with-open-stream (*standard-output* (open info-filename :direction :output :if-exists :append :if-does-not-exist :create))
 	(when new-file (format t ";;; -*- Package: SURF; Mode: LISP -*-~%~%"))
 	(format t "#|~%~%")
@@ -370,8 +370,8 @@ GET-SURF-DATA-DIRECTORY function), with file extension \"dat\"."
 	 (filename (if filename
 		       (format nil "~a/~a" pathname-directory filename)
 		       (get-surf-filename pathname-directory "results"))))
-    (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-    (when (probe-file (ext:unix-namestring pathname-directory nil)) 
+    (unix-mkdir (namestring pathname-directory nil) #o777)
+    (when (probe-file (namestring pathname-directory nil))
       (unless (probe-file filename)
 	(with-open-stream (*standard-output* (open filename :direction :output :if-does-not-exist :create))
 	  (format t ";;; -*- Package: SURF; Mode: LISP -*-~%~%")
@@ -389,8 +389,8 @@ GET-SURF-DATA-DIRECTORY function), with file extension \"dat\"."
 	 (filename (if filename
 		     (format nil "~a/~a" pathname-directory filename)
 		     (get-surf-filename pathname-directory "results"))))
-    (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-    (when (probe-file (ext:unix-namestring pathname-directory nil))
+    (mkdir (namestring pathname-directory nil) #o777)
+    (when (probe-file (namestring pathname-directory nil))
       (unless (probe-file filename)
 	(with-open-stream (*standard-output* (open filename :direction :output :if-does-not-exist :create))
 	 (format t ";;; -*- Package: SURF; Mode: LISP -*-~%~%")
@@ -399,7 +399,7 @@ GET-SURF-DATA-DIRECTORY function), with file extension \"dat\"."
       (with-open-stream (*standard-output* (open filename :direction :output :if-exists :append))
        (format t "#|~%~%~a~%~%|#~%~%" comment))
       (format t "File ~a written~%" filename))))
-    
+
 (defun dump-all-circuit-elements-file ()
   (let ((*automatic-run* t)) (dump-elements-file (loop for model in (models) nconc (copy-list (things-in-circuit (model-name model)))))))
 
@@ -408,8 +408,8 @@ GET-SURF-DATA-DIRECTORY function), with file extension \"dat\"."
   (let* ((pathname-directory (get-surf-data-directory))
 	 (elements-filename (get-surf-filename pathname-directory "vars"))
 	 (*print-pretty* nil))
-    (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-    (when (probe-file (ext:unix-namestring pathname-directory nil))
+    (mkdir (namestring pathname-directory nil) #o777)
+    (when (probe-file (namestring pathname-directory nil))
       (with-open-stream (*standard-output* (open elements-filename :direction :output :if-exists :append :if-does-not-exist :create))
 	(format t ";;; -*- Package: SURF; Mode: LISP -*-~%~%")
 	(format t "#|~%")
@@ -421,7 +421,7 @@ GET-SURF-DATA-DIRECTORY function), with file extension \"dat\"."
       (format t "File ~a written~%" elements-filename)
       (setq *last-simulation-file-path* *simulation-name*)
       nil)))
-  
+
 (defun dump-elements-file (&optional elements-or-select-each-element)
   "Write a loadable file with TYPE-DEF forms for selected (loaded) elements which are element types, and CREATE forms for selected
 elements such as channels, synapses, or sources. Selected elements are determined by the ELEMENT-OR-SELECT-EACH-ELEMENTS argument
@@ -449,8 +449,8 @@ loaded elements."
 		   (loop for elt being the hash-value of (model-hash-table mod)
 			 when (model-document-routine mod) collect (list mod elt)))))))
     (when mod-elts
-      (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
-      (when (probe-file (ext:unix-namestring pathname-directory nil))
+      (mkdir (namestring pathname-directory nil) #o777)
+      (when (probe-file (namestring pathname-directory nil))
 	(with-open-stream (*standard-output* (open elements-filename :direction :output :if-exists :append :if-does-not-exist :create))
 	  (format t ";;; -*- Package: SURF; Mode: LISP -*-~%~%")
 	  (format t "#|~%")
@@ -466,7 +466,7 @@ loaded elements."
 (defun dump-object-to-file (object &optional filename-comp)
   (let* ((pathname-directory (get-surf-data-directory))
 	 (data-filename (get-surf-filename pathname-directory "dat" filename-comp)))
-    (when (unix:unix-mkdir (ext:unix-namestring pathname-directory nil) #o777)
+    (when (mkdir (namestring pathname-directory nil) #o777)
       (with-open-stream (stream (open data-filename :direction :output :if-exists :supersede))
 	(write object :stream stream)))))
 
@@ -484,14 +484,14 @@ loaded elements."
     (typecase value
       (cons (write-lisp-sym-list-to-stream sym (symbol-value sym) stream values-per-line indent))
       (atom (format stream "~%(setq ~s ~s)~%" sym value)))))
-  
+
 (defun write-lisp-sym-list-to-stream (name list stream &optional (values-per-line 10) (indent 0) (include-defvar t))
   (dotimes (i indent) (format stream " "))
   (when include-defvar (format stream "(defvar ~s)~%" name))	; avoid warnings.
   (dotimes (i indent) (format stream " "))
   (format stream "(setq ~s ~%" name)
   (formatted-list-dump list stream nil values-per-line (1+ indent))
-  (format stream "~%") 
+  (format stream "~%")
   (dotimes (i indent) (format stream " "))
   (format stream " )~%~%"))
 
@@ -505,18 +505,18 @@ loaded elements."
 
 (defun format-thing-list-count (thing-list name &optional period-not-comma (correction 0))
   (let ((number-things-in-circuit (+ correction (loop for thing in thing-list when (element-in-circuit thing) sum 1))))
-    (when (> number-things-in-circuit 0) 
+    (when (> number-things-in-circuit 0)
       (format t (concatenate-strings "~D " name "~:P" (if period-not-comma ".~%" ", ")) number-things-in-circuit))))
 
 (defun format-hash-table-count (table name &optional period-not-comma (correction 0))
   (let ((number-things-in-circuit (+ correction (loop for entry being the hash-value of table when (element-in-circuit entry) sum 1))))
-    (when (> number-things-in-circuit 0) 
+    (when (> number-things-in-circuit 0)
       (format t (concatenate-strings "~D " name "~:P" (if period-not-comma ".~%" ", ")) number-things-in-circuit))))
 
 (defun format-type-symbol-count (type-symbol &optional period-not-comma)
   (let ((name (nice-symbol-string type-symbol))
 	(number-things-in-circuit (num-type-instances-in-circuit (element-type type-symbol))))
-    (when (> number-things-in-circuit 0) 
+    (when (> number-things-in-circuit 0)
       (format t (concatenate-strings "~D " name "~:P" (if period-not-comma ".~%" ", ")) number-things-in-circuit))))
 
 ;; There are some things which should be printed out about the circuit only after the simulation.
@@ -625,7 +625,7 @@ loaded elements."
 		(cell-type-name destination-cell-type)
 		(s-flt total-gbar))
 	(format t "Total gbar of synapse type ~a (-> cell type ~a): ~,2euS~%"
-		(synapse-type-name synapse-type) 
+		(synapse-type-name synapse-type)
 		(cell-type-name destination-cell-type)
 		(s-flt total-gbar))))))
 
@@ -634,7 +634,7 @@ LG Correct print-total-connectivity 28.08.2016
 
 (defun print-total-connectivity ()
   (let ((cell-types (cell-types)))
-    (mapcar (lambda (destination-cell-type) 
+    (mapcar (lambda (destination-cell-type)
 	      (mapcar (lambda (source-cell-type)
 			(mapcar (lambda (synapse-type)
 				  (print-connectivity source-cell-type destination-cell-type synapse-type))
@@ -646,7 +646,7 @@ LG Correct print-total-connectivity 28.08.2016
 
 (defun print-total-connectivity ()
   (let ((cell-types (cell-types)))
-    (mapcar (lambda (destination-cell-type) 
+    (mapcar (lambda (destination-cell-type)
 	      (mapcar (lambda (source-cell-type)
 			(mapcar (lambda (synapse-type)
 				  (print-connectivity source-cell-type destination-cell-type synapse-type))
@@ -824,10 +824,3 @@ The level of detail is given by the optional DESCRIPTION-LEVEL [default *SIMULAT
   (loop for mod in (models)
 	when (and (model-print-routine mod) (equal model-name (model-name mod)))
 	do (return (loop for elt being the hash-value of (model-hash-table mod) do (funcall (model-print-routine mod) elt)))))
-
-
-
-
-
-
-

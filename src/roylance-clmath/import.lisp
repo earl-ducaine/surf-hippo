@@ -21,7 +21,7 @@
 ;;;   (import-file filename &optional host)
 ;;;     would eliminate need for stripping the host
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
 (export '(IMPORT-FILE))
 

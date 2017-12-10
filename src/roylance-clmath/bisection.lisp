@@ -10,19 +10,13 @@
 ;;; Bugs and Fixes
 ;;;   put in better termination criteria
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
-;; lbg 9-6-95
-#|
-(eval-when (compile load eval)
-  (require "MODULES"))
-|#
 
-#+lucid
-(proclaim '(restrictive-ftype (function ((function (float) float) float float) float)
-			      bisection-search))
-(proclaim '(ftype             (function ((function (float) float) float float) float)
-			      bisection-search))
+
+(proclaim '(ftype
+	    (function ((function (float) float) float float) float)
+	    bisection-search))
 
 (export '(bisection-search))
 

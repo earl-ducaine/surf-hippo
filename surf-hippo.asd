@@ -42,10 +42,11 @@
 ;;    always practicle.)
 
 (asdf:defsystem :surf-hippo
-  :depends-on (:clx ;; :zpb-ttf
-	       :cl-vectors ;; :cl-paths-ttf
-	       :cl-aa :cl-fad
-	       :cl-store :trivial-features :cl-aa-misc :alexandria :cl-ppcre :org.xoanonos.gui.garnet)
+  :depends-on (clx ;; :zpb-ttf
+	       cl-vectors ;; :cl-paths-ttf
+	       cl-aa cl-fad
+	       cl-store trivial-features cl-aa-misc alexandria cl-ppcre
+	       org.xoanonos.gui.garnet com.gigamonkeys.pathnames)
   :components
   ((:module init-files
    	    :pathname "./"
@@ -248,20 +249,16 @@
    	    :depends-on (parameters)
    	    :components
    	    (
-;;	     (:file "x")
 	     (:file "defs")
 	     (:file "new-macros")
+	     (:file "i-windows-fix")
 	     (:file "new-defs-hack")
-	     (:file "gem-hack")
-	     (:file "virtual-aggregates-hack")
-	     (:file "make-ps-file-hack")
 	     (:file "virtual-aggregate-w-aggregadgets-fix")
 	     (:file "register-fns")
 	     (:file "garnet-pathnames")
 	     (:file "utils")
 	     (:file "opal-hack")))
    ))
-
 
    ;; (:file "x")
    ;; (:file "defs")

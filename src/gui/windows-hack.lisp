@@ -1,39 +1,38 @@
 ;;; -*- Mode: LISP; Syntax: Common-Lisp; Package: WINDOWS-HACK; Base: 10 -*-
 
-#|
 
-====================================================================================================
-			       The Surf-Hippo Neuron Simulator System
-====================================================================================================
 
-This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
-Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
-Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-
-Permission to use, copy, modify, and distribute this software and its documentation for any purpose
-and without fee is hereby granted, provided that this software is cited in derived published work,
-and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
-Project makes no representations about the suitability of this software for any purpose. It is
-provided "as is" without express or implied warranty.
-
-If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
-on the mailing list.
-
-Copyright (c) 1989 - 2003, Lyle J. Graham
-
-|#
-
+;; The Surf-Hippo Neuron Simulator System
+;;
+;; This code was written as part of the Surf-Hippo Project, originally at
+;; the Center for Biological Information Processing, Department of Brain
+;; and Cognitive Sciences, Massachusetts Institute of Technology, and
+;; currently at the Neurophysiology of Visual Computation Laboratory,
+;; CNRS.
+;;
+;; Permission to use, copy, modify, and distribute this software and its
+;; documentation for any purpose and without fee is hereby granted,
+;; provided that this software is cited in derived published work, and
+;; the copyright notice appears in all copies and in supporting
+;; documentation. The Surf-Hippo Project makes no representations about
+;; the suitability of this software for any purpose. It is provided "as
+;; is" without express or implied warranty.
+;;
+;; If you are using this code or any part of Surf-Hippo, please contact
+;; surf-hippo@ai.mit.edu to be put on the mailing list.
+;;
+;; Copyright (c) 1989 - 2003, Lyle J. Graham
+;;
 ;; GUI Source file: windows-hack.lisp
-
 
 (in-package :windows-hack)
 
+;;; Contains various window and miscellaneous utilities that are
+;;; required by the MENU-HACK and PLOT-HACK systems, all of which
+;;; depend on the Garnet GUI toolset from CMU.
 
-;;; Contains various window and miscellaneous utilities that are required by the MENU-HACK and
-;;; PLOT-HACK systems, all of which depend on the Garnet GUI toolset from CMU.
-
-;; Output windows :MODE slot refers to the general sort of output that goes to the window. These
-;; include -
+;; Output windows :MODE slot refers to the general sort of output that
+;; goes to the window. These include -
 ;;
 ;; :standard-plot
 ;; :histogram
@@ -201,8 +200,14 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 
 ;;; Empirical screen dimensions in pixels - opal globals are off (because of OLVM?).
-(defvar *screen-width* 1 "Slightly adjusted value from OPAL:*SCREEN-WIDTH*.") ; opal:*screen-width* gives 1152
-(defvar *screen-height* 1 "Slightly adjusted value from OPAL:*SCREEN-height*.") ; opal:*screen-height* gives 900
+;; opal:*screen-width* gives 1152
+;; (defvar *screen-width* 1
+;;   "Slightly adjusted value from OPAL:*SCREEN-WIDTH*.")
+
+;; opal:*screen-height* gives 900
+;; (defvar *screen-height* 1
+;;   "Slightly adjusted value from OPAL:*SCREEN-height*.")
+
 (defvar *window-manager-title-border-height* 18)	; Approximate height of border added by window manager
 
 
@@ -735,14 +740,21 @@ INITIALIZE-GRAPHICS-WINDOW. Initialized by INITIALIZE-WINDOW-SYSTEM-VARIABLES.")
 ;; 		(search display-machine (machine-instance))))))
 
 (defun GET-win-TITLE-STRING (base-title)
-  ;; Starting with a base title string, tacks on the current value of *GLOBAL-WINDOW-TITLE-SUFFIX* and, if appropriate, the *DISPLAYED-HOST-NAME*.
-  (let ((base-title (if (and (sequencep *global-window-title-suffix*) (> (length *global-window-title-suffix*) 0))
-		      (format nil "~A: ~A" base-title *global-window-title-suffix*)
-		      base-title)))
+  ;; Starting with a base title string, tacks on the current value of
+  ;; *GLOBAL-WINDOW-TITLE-SUFFIX* and, if appropriate, the
+  ;; *DISPLAYED-HOST-NAME*.
+  (let ((base-title
+	 (if (and (sequencep *global-window-title-suffix*)
+		  (> (length *global-window-title-suffix*) 0))
+	     (format nil "~A: ~A" base-title *global-window-title-suffix*)
+	     base-title)))
     (if (or *always-add-host-name-to-windows*
-	    (and *add-host-name-to-windows* (not (HOST-IS-DISPLAY-SERVER))))
-      (format nil "(~A) ~A" *displayed-host-name* base-title)
-      base-title)))
+	    (and *displayed-host-name*
+		 (not (string= *displayed-host-name* ""))
+		 *add-host-name-to-windows*
+		 (not (host-is-display-server))))
+	(format nil "(~A) ~A" *displayed-host-name* base-title)
+	base-title)))
 
 (defun strip-displayed-host-name-from-title (title)
   (let* ((host-name-string (format nil "(~A) " *displayed-host-name*))

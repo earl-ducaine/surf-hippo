@@ -11,28 +11,13 @@
 ;;;   Horner should use terms and termlists
 ;;;   poly and poly-expand should be flushed
 
-(in-package "USER")
-
-(eval-when (compile load eval)
-  nil)
-
-
-;; lbg 9-6-95
-#|
-(eval-when (compile load eval)
-  (require "MODULES")
-  nil)
-|#
+(in-package :roylance-clmath)
 
 (export '(horner-polynomial))
 
-#|
-(module-provide "HORNER")
-|#
 
-
 ;;;; Polynomial Expansion
-  
+
 ;;; The simple version
 
 (defun poly-expand (var coefs)

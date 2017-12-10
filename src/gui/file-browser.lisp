@@ -27,22 +27,24 @@
 
 ;; Schemata defined in the DO-GO procedure which are referenced by other functions
 
-(defun PATHNAME-TO-STRING-FN (pathname)
+(defun pathname-to-string-fn (pathname)
   (if pathname
-    (namestring pathname)
-;      (let ((file (file-namestring pathname)))
-;	(if (opal::lite-directory-p (namestring pathname))
-;	  ; (string= file "")   ; then pathname is a directory.
-;	                        ; So strip off the "/", get the directory name,
-;	                        ; and restore the "/".
-;	    (let ((directory (string-right-trim "/" (namestring pathname))))
-;	      (concatenate 'string (file-namestring directory) "/"))
-;	    file))  ; else we already got the file name.
+      (namestring pathname)
+      ;;      (let ((file (file-namestring pathname)))
+      ;;	(if (opal::lite-directory-p (namestring pathname))
+      ;;	  ; (string= file "")   ; then pathname is a directory.
+      ;;	                        ; So strip off the "/", get the directory name,
+      ;;	                        ; and restore the "/".
+      ;;	    (let ((directory (string-right-trim "/" (namestring pathname))))
+      ;;	      (concatenate 'string (file-namestring directory) "/"))
+      ;;	    file))  ; else we already got the file name.
       ""))
 
 (defun test-for-file-extensions (path &optional allowed-extensions no-extension-ok)
-  ;; If PATH is NIL, return NIL, else if EXTENSIONS is either NIL or PATH is a directory, return T. Otherwise, when EXTENSIONS is
-  ;; a list of strings, if any matches the extension of PATH, then return T, otherwise return nil.
+  ;; If PATH is NIL, return NIL, else if EXTENSIONS is either NIL or
+  ;; PATH is a directory, return T. Otherwise, when EXTENSIONS is a
+  ;; list of strings, if any matches the extension of PATH, then
+  ;; return T, otherwise return nil.
   (declare (optimize (safety 1) (speed 3) (space 1)))
   (when path
     (or (and (t-or-nil-p allowed-extensions) allowed-extensions)
@@ -55,37 +57,43 @@
 		    no-extension-ok
 		    (if (consp allowed-extensions)
 			(loop for extension in allowed-extensions
-			      when (string= (the simple-base-string extension) (the simple-base-string pathname-type))
-			      do (return t)
-			      when (> (length (the simple-base-string extension)) 1) do (setq good-extension-found t)
-			      finally (return (not good-extension-found)))
+			   when (string= (the simple-base-string extension) (the simple-base-string pathname-type))
+			   do (return t)
+			   when (> (length (the simple-base-string extension)) 1) do (setq good-extension-found t)
+			   finally (return (not good-extension-found)))
 			allowed-extensions))))))))
 
-(defun DIRECTORY-FN (namestring &optional allowed-extensions no-extension-ok only-directories)
-  ;; NAMESTRING may be either a path or a pathname. If a directory, then return a list of all subdirectories and files that pass
-  (declare (optimize (safety 0) (speed 3) (space 1)))
+;;; NAMESTRING may be either a path or a pathname. If a directory,
+;;; then return a list of all subdirectories and files that pass
+(defun DIRECTORY-FN (namestring &optional allowed-extensions no-extension-ok
+				  only-directories)
   (let* ((temp-namestring (namestring namestring))
-	 (namestring (if (and (opal:directory-p temp-namestring) (not (string= "/" (the simple-base-string (string-tail temp-namestring 1)))))
-		       (format nil "~a/" temp-namestring) ; Add trailing "/" to directories.
-		       temp-namestring))
-	 (dir-list (loop for path in (directory namestring :follow-links nil ; :sort t
-						:all nil :check-for-subdirs t)
-			 when (if only-directories
-				  (opal:directory-p (pathname-to-string-fn path))
-				  (test-for-file-extensions path allowed-extensions no-extension-ok))
-			 collect path)))
+	 (namestring (if  (com.gigamonkeys.pathnames:directory-p temp-namestring)
+			  temp-namestring
+			  (format nil "~a/" temp-namestring)))
+	 ;; Add trailing "/" to directories.
+	 (dir-list (loop for path in (directory namestring)
+		      when (if only-directories
+			       (com.gigamonkeys.pathnames:directory-p  (pathname-to-string-fn path))
+			       (test-for-file-extensions path allowed-extensions no-extension-ok))
+		      collect path)))
     (unless (or (null dir-list) (equal (car dir-list) namestring))
       dir-list)))
 
 (defvar *browser-allowed-extensions* '(""))
 
-(defun browser-directory-fn (namestring) (DIRECTORY-FN namestring *browser-allowed-extensions*))
-(defun browser-only-directory-fn (namestring) (DIRECTORY-FN namestring *browser-allowed-extensions* nil t))
+(defun browser-directory-fn (namestring)
+  (directory-fn namestring *browser-allowed-extensions*))
+
+(defun browser-only-directory-fn (namestring)
+  (directory-fn namestring *browser-allowed-extensions* nil t))
 
 (defun quit-with-file (sm-item &optional allowed-extensions)
-  ;; Only quit if SM-ITEM points to a file, with the ALLOWED-EXTENSIONS according to TEST-FOR-FILE-EXTENSIONS.
+  ;; Only quit if SM-ITEM points to a file, with the
+  ;; allowed-extensions according to test-for-file-extensions.
   (let ((file (file-namestring sm-item)))
-    (cond ((or (not file) (string= file "")) ; then pathname is a directory.
+    ;; then pathname is a directory.
+    (cond ((or (not file) (string= file ""))
 	   nil)
 	  ((test-for-file-extensions sm-item allowed-extensions)
 	   (setq *browser-file* sm-item)
@@ -94,7 +102,7 @@
 
 (defun quit-with-directory (sm-item)
   ;; Only quit if SM-ITEM points to a directory.
-  (when (opal:directory-p (PATHNAME-TO-STRING-FN sm-item))
+  (when (com.gigamonkeys.pathnames:directory-p (pathname-to-string-fn sm-item))
     (setq *browser-file* sm-item)
     (inter:interaction-complete)
     sm-item))
@@ -143,50 +151,50 @@
 
 (defun get-browser-CONTROL-PANEL ()
   (create-instance nil opal:aggregadget
-		   (:constant :left :top)
-		   (:left 30)
-		   (:top 10)
-		   (:parts
-		    `((:QUIT-BUTTON ,garnet-gadgets:text-button-panel
-		       (:left ,(o-formula (+ 150 (the fn (gvl :parent :left)))))
-		       (:top ,(o-formula (gvl :parent :top)))
-		       (:text-offset 3) (:shadow-offset 5) (:gray-width 3) (:final-feedback-p NIL)
-		       (:items ("Cancel"))
-		       (:selection-function ,#'selection-function-interaction-complete))
-		      (:prev ,garnet-gadgets:text-button-panel
-		       (:visible ,(o-formula (not (string= "" (get-new-top-level-namestring-from-items (gvl :parent :window :file-browser :items))))) )
-		       (:left ,(o-formula (gvl :parent :left)))
-		       (:top ,(o-formula (gvl :parent :top)))
-		       (:shadow-offset 5) (:gray-width 3) (:text-offset 3) (:final-feedback-p NIL)
-		       (:items ("Previous Directory"))
-		       (:selection-function ,#'file-browser-previous-selection-function))))))
+    (:constant :left :top)
+    (:left 30)
+    (:top 10)
+    (:parts
+     `((:QUIT-BUTTON ,garnet-gadgets:text-button-panel
+		     (:left ,(o-formula (+ 150 (the fn (gvl :parent :left)))))
+		     (:top ,(o-formula (gvl :parent :top)))
+		     (:text-offset 3) (:shadow-offset 5) (:gray-width 3) (:final-feedback-p NIL)
+		     (:items ("Cancel"))
+		     (:selection-function ,#'selection-function-interaction-complete))
+       (:prev ,garnet-gadgets:text-button-panel
+	      (:visible ,(o-formula (not (string= "" (get-new-top-level-namestring-from-items (gvl :parent :window :file-browser :items))))) )
+	      (:left ,(o-formula (gvl :parent :left)))
+	      (:top ,(o-formula (gvl :parent :top)))
+	      (:shadow-offset 5) (:gray-width 3) (:text-offset 3) (:final-feedback-p NIL)
+	      (:items ("Previous Directory"))
+	      (:selection-function ,#'file-browser-previous-selection-function))))))
 
 (defun get-FILE-BROWSER (&optional directory-search)
   (create-instance nil gg:browser-gadget
-		   ; (:constant T :except :num-menus)
-		   (:menu-items-generating-function (o-formula (if (gvl :directory-search)
-								   #'browser-only-DIRECTORY-FN
-								   #'browser-DIRECTORY-FN)))
-		   (:left 10) (:top 50)
-		   ;; Need at least 4 rows to accomodate the sliders, I guess.
-		   (:num-rows (o-formula (max 4 (min (length (car (gvl :all-items))) 10))))
-		   (:num-menus 1)
-		   (:additional-selection-p t)
-		   (:directory-search directory-search)
-		   (:additional-selection-function (o-formula (if (gvl :directory-search)
-								  #'directory-browser-additional-selection-function
-								  #'file-browser-additional-selection-function)))
-		   (:item-to-string-function #'PATHNAME-TO-STRING-FN)
-		   (:menu-function #'file-browser-menu-function)))
+					; (:constant T :except :num-menus)
+    (:menu-items-generating-function (o-formula (if (gvl :directory-search)
+						    #'browser-only-DIRECTORY-FN
+						    #'browser-DIRECTORY-FN)))
+    (:left 10) (:top 50)
+    ;; Need at least 4 rows to accomodate the sliders, I guess.
+    (:num-rows (o-formula (max 4 (min (length (car (gvl :all-items))) 10))))
+    (:num-menus 1)
+    (:additional-selection-p t)
+    (:directory-search directory-search)
+    (:additional-selection-function (o-formula (if (gvl :directory-search)
+						   #'directory-browser-additional-selection-function
+						   #'file-browser-additional-selection-function)))
+    (:item-to-string-function #'PATHNAME-TO-STRING-FN)
+    (:menu-function #'file-browser-menu-function)))
 
 (defun get-file-browser-status (control-panel)
   (create-instance nil opal:text
-		   (:constant T :except :visible)
-		   (:left 30)
-		   (:top (o-formula (+ 10 (the fn (opal:gv-bottom CONTROL-PANEL)))))
-		   (:string "Fetching directory information...")
-		   (:font (create-instance NIL opal:font (:face :italic)))
-		   (:visible NIL)))
+    (:constant T :except :visible)
+    (:left 30)
+    (:top (o-formula (+ 10 (the fn (opal:gv-bottom CONTROL-PANEL)))))
+    (:string "Fetching directory information...")
+    (:font (create-instance NIL opal:font (:face :italic)))
+    (:visible NIL)))
 
 (defvar *file-browser-left* 500)
 (defvar *file-browser-top* 10)
@@ -248,8 +256,8 @@
 
 
 (export '(PATHNAME-TO-STRING-FN
-;	  *browser-allowed-extensions*
-;	  browser-DIRECTORY-FN
+					;	  *browser-allowed-extensions*
+					;	  browser-DIRECTORY-FN
 	  *BROWSER-FILE*
 	  directory-browser
 	  file-browser))

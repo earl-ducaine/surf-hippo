@@ -13,16 +13,11 @@
 ;;; Bugs and fixes
 ;;;   Algorithm D doesn't work?
 
-(eval-when (compile load eval)
-  nil)
+(in-package :roylance-clmath)
 
-(export '(factor totient))
-
-
 ;;;; Primes
 
 ;;; return a list of primes up to but not including n
-;;;
 (defun primes-to (n)
   (declare (fixnum n))
   (do ((i 2 (1+ i))
@@ -37,18 +32,15 @@
 	  (return nil))
       )))
 
-
 ;;;; Integer Square Roots
-
 (defun ceil-sqrt (n)
   (let ((f-sqrt (isqrt n)))
     (if (= n (expt f-sqrt 2))
 	f-sqrt
 	(1+ f-sqrt))))
 
-
-;;;; Simple factoring
-
+;;; Simple factoring
+;;;
 ;;; the efficiency of this algorithm does not improve rapidly.
 ;;; (factor-build 4) gets about all that is convenient to get.
 ;;;   efficiency of factor-build 3 (  30) = 0.267
@@ -285,11 +277,11 @@
 	 (temp 0))
 	((>=  i r))
       (declare (fixnum i temp))
-      
+
       (setf (aref Ms i)				; increment to K counters
 	    (* (aref m i)
 	       (/ (* 2 kstep) (aref m i))))
-      
+
       (setq temp (mod mcs (aref m i)))
       (setf (aref k i)
 	    (if (< temp (- kstep 1))

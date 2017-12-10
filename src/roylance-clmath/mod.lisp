@@ -20,7 +20,7 @@
 ;;;   split off the prime stuff
 ;;;   move random bignum elsewhere?
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
 ;;;; Greatest Common Divisor Algorithms
 

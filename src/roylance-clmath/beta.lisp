@@ -19,15 +19,7 @@
 ;;; Bugs and fixes
 ;;;   betai has a bug:  returns complex numbers.
 
-(in-package "USER")
-
-;; lbg 9-6-95
-#|
-(eval-when (compile load eval)
-  (require "MODULES")
-  (user:module-require "GAMMA-FUNCTION"))
-|#
-
+(in-package :roylance-clmath)
 
 ;;;; Beta Function
 
@@ -46,7 +38,6 @@
 (defun beta-function (m n)			;m,n>0
   (exp (log-beta-function m n)))
 
-
 ;;;; Incomplete Beta Function
 
 ;;; The incomplete beta function is B[x](a,b)

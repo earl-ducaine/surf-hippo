@@ -21,7 +21,7 @@
 ;;;      then do it sparsely
 ;;;   ROW-COL (inner product) and COL-ROW (outer product) matrix multiplies don't exist
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
 (export '(matrix-element-type			; types
 	   matrix-array

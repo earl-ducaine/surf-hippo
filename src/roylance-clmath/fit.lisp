@@ -10,15 +10,7 @@
 ;;; Bugs and Fixes
 ;;;   only linear regression fit now
 
-(in-package "USER")
-
-;; lbg 9-6-95
-#|
-
-(eval-when (compile load eval)
-  (require "MODULES")
-  (user:module-require "OPTIMIZE-REGRESSION"))
-|#
+(in-package :roylance-clmath)
 
 ;;;; Quick Fit
 

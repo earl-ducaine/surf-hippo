@@ -118,7 +118,10 @@
 (defun init-surf (&optional kill-the-hippo)
   ;; If there is a customs.lisp file in the *SURF-USER-DIR* directory,
   ;; then load it.
-  (let ((surf-user-custom (str *surf-user-dir* "custom.lisp")))
+  (let* ((*surf-user-dir* (if (pathnamep surf::*surf-user-dir*)
+			      (namestring surf::*surf-user-dir*)
+			      surf::*surf-user-dir*))
+	 (surf-user-custom (str *surf-user-dir* "custom.lisp")))
     (when (probep surf-user-custom)
       (load surf-user-custom)))
   (wh::create-path surf::*circuit-directory*)

@@ -1,5 +1,9 @@
 ;;; -*- Mode: LISP; Syntax: Common-lisp; Package: USER -*-
 
+(in-package :roylance-clmath)
+
+
+
 ;;;; Probability and Statistics
 
 ;;; Binomial Distribution

@@ -19,41 +19,26 @@
 ;;;  that this notice is not removed.
 
 ;;; Bugs and fixes
-;;;   
+;;;
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
-(eval-when (compile load eval)
-  nil)
-;; lbg 9-6-95
-#|
-(eval-when (compile load eval)
-  (require "MODULES"))
-
-(eval-when (compile eval)
-  (module-require "HORNER"))
-  
-(module-provide "ERROR-FUNCTION")
-|#
-
-;;;; Error Function
-
+;;; Error Function
+;;;
 ;;; NBS 7.1.1
 ;;;   erf(z) = (2 / (sqrt pi)) (integral (t= 0 z) (exp -t**2))
-
+;;;
 ;;; NBS 7.1.9
 ;;;   erf(-x) = - erf(x)
-
+;;;
 ;;; NBS 7.1.5
 ;;;   erf z = (2 / (sqrt pi)) (sigma (n = 0 inf) (-1)**n z**(2n+1) / (n! (2n+1)))
-
+;;;
 ;;; NBS 7.1.6
 ;;;   erf z = (2 / (sqrt pi)) (exp -z**2)
 ;;;           * (sigma (n = 0 inf) 2**n z**(2n+1) / (1 * 3 * ... (2n+1)))
 
-
 ;;;; Error Function
-
 ;;; derived from NBS 7.1.25
 #+ignore
 (defun erfc (X)					; 0 <= X
@@ -62,7 +47,7 @@
       (let ((z (/ 1.0 (1+ (* 0.47047 X)))))
 	(declare (float z))
 	(- 1.0 (* (EXP (- (* X X)))
-		  (POLY Z 
+		  (POLY Z
 			0.0			; eps < 2.5e-5
 			0.3480242
 			-.0958798
@@ -78,7 +63,7 @@
       (let ((z (/ 1.0 (1+ (* 0.3275911e0 x)))))
 	(declare (float z))
 	(* (exp (- (* x x)))
-	   (poly z 
+	   (poly z
 		 +0.000000000e0
 		 +0.254829592e0
 		 -0.284496736e0

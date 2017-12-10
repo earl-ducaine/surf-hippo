@@ -4,7 +4,9 @@
 
 
 (defpackage :roylance-clmath
-  (:use common-lisp))
+  (:use common-lisp)
+  (:nicknames rc)
+  (:export erf))
 
 (defpackage :surf-hippo-ext
   (:use common-lisp)

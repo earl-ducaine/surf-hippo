@@ -7,38 +7,38 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
 (in-package "GEM")
 
-(defun x-draw-line (window x1 y1 x2 y2 function line-style &optional drawable)
-;;  (declare (optimize (safety 0) (speed 3) (space 0)))
-  (let* ((display-info (g-value window :display-info))
-	 (root-window  (opal::display-info-root-window display-info)))
-    ;; Provide the actual drawable of the window if you want to bypass drawing
-    ;; into the buffer.  This is used by the gesture-interactor to draw lines
-    ;; directly into the window, not the buffer.
-    (unless drawable
-      (setf drawable (the-drawable window)))
-    (setf function (get function :x-draw-function))
-    (if line-style
-	(let* ((line-style-gc (opal::display-info-line-style-gc display-info))
-	       (xlib-gc-line (opal::opal-gc-gcontext line-style-gc)))
-	  (set-line-style line-style line-style-gc xlib-gc-line 
-			  root-window function)
-	  (xlib:draw-line drawable xlib-gc-line x1 y1 x2 y2)))))
+;; (defun x-draw-line (window x1 y1 x2 y2 function line-style &optional drawable)
+;; ;;  (declare (optimize (safety 0) (speed 3) (space 0)))
+;;   (let* ((display-info (g-value window :display-info))
+;; 	 (root-window  (opal::display-info-root-window display-info)))
+;;     ;; Provide the actual drawable of the window if you want to bypass drawing
+;;     ;; into the buffer.  This is used by the gesture-interactor to draw lines
+;;     ;; directly into the window, not the buffer.
+;;     (unless drawable
+;;       (setf drawable (the-drawable window)))
+;;     (setf function (get function :x-draw-function))
+;;     (if line-style
+;; 	(let* ((line-style-gc (opal::display-info-line-style-gc display-info))
+;; 	       (xlib-gc-line (opal::opal-gc-gcontext line-style-gc)))
+;; 	  (set-line-style line-style line-style-gc xlib-gc-line
+;; 			  root-window function)
+;; 	  (xlib:draw-line drawable xlib-gc-line x1 y1 x2 y2)))))
 
 
 ;;(proclaim '(inline x-draw-line-fast))
@@ -58,7 +58,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 			drawable-display)
 
   nil)
-	    
+
 
 ;;(proclaim '(inline x-draw-lines-fast))
 ;; Used for virtual polylines.
@@ -109,7 +109,3 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 		     :x x :y y :width width :height height
 		     :exposures-p NIL)))
 |#
-
-
-
-

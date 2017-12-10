@@ -16,28 +16,12 @@
 ;;;   BEWARE!  This code uses the modulus m rather
 ;;;     than the parameter k.  (m = k**2)
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
-(eval-when (compile load eval)
-  nil)
-
-;; lbg 9-6-95
-#|
-(eval-when (compile load eval)
-  (require "MODULES")
-  (module-require "HORNER")
-  nil)
-
-(module-provide "ELLIPTIC-FUNCTIONS")
-|#
-
 ;;;; ELLIPTIC INTEGRAL K(M)
-
 ;;; (integral 0 pi/2 (1 - m*sin^2(theta))^-0.5 theta)
-
 ;;; k'(m) = k(1-m)
-
-;;; 0 <= M < 1 
+;;; 0 <= M < 1
 
 (defun elliptic-integral-k (m)
   (elliptic-integral-kC (- 1.0 (float m))))

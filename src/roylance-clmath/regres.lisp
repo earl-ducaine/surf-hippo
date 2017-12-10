@@ -35,15 +35,7 @@
 ;;;     calling the function all the time
 ;;;     pass that array in as an argument
 
-(in-package "USER")
-;; lbg 9-6-95
-#|
-
-(eval-when (compile load eval)
-  (require "MODULES")
-  (user:module-require "MATRIX"))
-
-|#
+(in-package :roylance-clmath)
 
 ;;;; Multiple Linear Regression
 

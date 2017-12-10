@@ -9,17 +9,17 @@
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
 Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
 Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
-                                                                                 
+
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this software is cited in derived published work,
 and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
 Project makes no representations about the suitability of this software for any purpose. It is
 provided "as is" without express or implied warranty.
-                                                                                 
+
 If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
 on the mailing list.
-                                                                                 
-Copyright (c) 1989 - 2003, Lyle J. Graham                                                                                              
+
+Copyright (c) 1989 - 2003, Lyle J. Graham
 
 |#
 
@@ -60,7 +60,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
     )))
 
 
-  
+
 (defmacro merge-bbox (dest-bbox source-bbox)
   `(when (bbox-valid-p ,source-bbox)
     (if (bbox-valid-p ,dest-bbox)
@@ -98,7 +98,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	(setf (bbox-x2 ,bbox) (the fixnum (+ (the fixnum left) (the fixnum (g-value ,object :width )))))
 	(setf (bbox-y2 ,bbox) (the fixnum (+ (the fixnum top) (the fixnum (g-value ,object :height)))))
 	(setf (bbox-valid-p ,bbox) T)))
- 
+
 ;;; Returns true if they intersect (ignores the valid bit!)
 (defmacro bbox-intersect-p (bb1 bb2)
  `(and (<= (the fixnum (bbox-x1 ,bb1)) (the fixnum (bbox-x2 ,bb2)))   ;; 1 not right of 2
@@ -108,25 +108,25 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 
 ;; Erases this bbox from this window (or its buffer). Ignores valid bit.
-#-GARNET-V3.0
-(defun erase-bbox (bb drawable buffer buffer-gc)
-  (declare ; (optimize (safety 0) (speed 3) (space 1))
-   )
-  (if buffer
-      (let ((background (xlib:gcontext-background buffer-gc)))
-        (xlib:with-gcontext (buffer-gc :function opal::*copy*
-				       :foreground background)
-	  (xlib:draw-rectangle buffer buffer-gc
-			       (bbox-x1 bb)
-			       (bbox-y1 bb)
-			       (the fixnum (- (the fixnum (bbox-x2 bb)) (the fixnum (bbox-x1 bb))))
-			       (the fixnum (- (the fixnum (bbox-y2 bb)) (the fixnum (bbox-y1 bb))))
-			       t)))
-      (xlib:clear-area drawable
-		       :x (bbox-x1 bb)
-		       :y (bbox-y1 bb)
-		       :width (the fixnum (- (the fixnum (bbox-x2 bb)) (the fixnum (bbox-x1 bb))))
-		       :height (the fixnum (- (the fixnum (bbox-y2 bb)) (the fixnum (bbox-y1 bb)))))))
+;; #-GARNET-V3.0
+;; (defun erase-bbox (bb drawable buffer buffer-gc)
+;;   (declare ; (optimize (safety 0) (speed 3) (space 1))
+;;    )
+;;   (if buffer
+;;       (let ((background (xlib:gcontext-background buffer-gc)))
+;;         (xlib:with-gcontext (buffer-gc :function opal::*copy*
+;; 				       :foreground background)
+;; 	  (xlib:draw-rectangle buffer buffer-gc
+;; 			       (bbox-x1 bb)
+;; 			       (bbox-y1 bb)
+;; 			       (the fixnum (- (the fixnum (bbox-x2 bb)) (the fixnum (bbox-x1 bb))))
+;; 			       (the fixnum (- (the fixnum (bbox-y2 bb)) (the fixnum (bbox-y1 bb))))
+;; 			       t)))
+;;       (xlib:clear-area drawable
+;; 		       :x (bbox-x1 bb)
+;; 		       :y (bbox-y1 bb)
+;; 		       :width (the fixnum (- (the fixnum (bbox-x2 bb)) (the fixnum (bbox-x1 bb))))
+;; 		       :height (the fixnum (- (the fixnum (bbox-y2 bb)) (the fixnum (bbox-y1 bb)))))))
 
 ;; Takes a bbox and a clip mask, and goes through and sets the fields properly
 ;; within the clip mask.  Ignores valid bit.
@@ -158,4 +158,3 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
         (xlib:draw-lines drawable xlib-gc-line point-list)))))
 
 |#
-

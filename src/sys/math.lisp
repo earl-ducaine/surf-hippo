@@ -3,7 +3,7 @@
 #|
 
 ====================================================================================================
-			       The Surf-Hippo Neuron Simulator System
+The Surf-Hippo Neuron Simulator System
 ====================================================================================================
 
 This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
@@ -25,7 +25,7 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 
 
 ;;; SYS Source file: math.lisp
-(in-package "SURF-HIPPO")
+(in-package :surf-hippo)
 
 ;; Some miscellaneous math functions - there may be others scattered through the source files (e.g.
 ;; misc.lisp, analysis.lisp, and others. also see gui/math.lisp).
@@ -156,20 +156,16 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
 	(+ rem divisor)
 	rem)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun gaussian (x mean variance)
   (declare (optimize (safety 1) (speed 3) (space 1))
 	   (single-float x mean variance))
   "All arguments must be single floats. Returns a single float."
   ;;  (format t "x ~A, mean ~A, variance ~A~%" x mean variance)
   (the (single-float 0.0 *)
-    (without-floating-underflow-traps
-     (let ((x-shifted (- x mean)))
-       (* (/ 1.0 (sqrt (the (single-float 0.0 *) (* (+ pi-single pi-single) variance))))
-	  (exp-w-limits (the (single-float * 0.0) (- (/ (square x-shifted) (+ variance variance))))))))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+       (without-floating-underflow-traps
+	   (let ((x-shifted (- x mean)))
+	     (* (/ 1.0 (sqrt (the (single-float 0.0 *) (* (+ pi-single pi-single) variance))))
+		(exp-w-limits (the (single-float * 0.0) (- (/ (square x-shifted) (+ variance variance))))))))))
 
 (proclaim '(inline nonlinearity))
 (defun nonlinearity (input &optional nonlinearity (parameter 0.0))
@@ -220,13 +216,13 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (if (> number1 number2) number1 number2))
 
 ;;; These are for avoiding over or underflows in calls to exp.
-(defconstant exp-upper-arg (float (floor (log most-positive-single-float))))
+(defconstant exp-upper-arg
+  (float (floor (log most-positive-single-float))))
+
 (defconstant exp-lower-arg -30.0)	; empirical
-(proclaim '(single-float exp-upper-arg exp-lower-arg))
 
 (defconstant exp-upper-arg-double (float (floor (log most-positive-double-float)) 0.0d0))
 (defconstant exp-lower-arg-double -300.0d0) ; empirical
-(proclaim '(double-float exp-upper-arg-double exp-lower-arg-double))
 
 (defconstant exp-upper (exp exp-upper-arg))
 (defconstant exp-lower (exp exp-lower-arg))
@@ -320,16 +316,16 @@ Copyright (c) 1989 - 2003, Lyle J. Graham
   (declare (optimize (safety 1) (speed 3) (space 1))
 	   (type (simple-array single-float (3 3)) a b c))
   (loop for i fixnum from 0 to 2 do
-	(loop for j fixnum from 0 to 2 do
-	      (setf (aref c i j)
-		    (loop for k fixnum from 0 to 2 sum (* (aref a i k) (aref b k j)) into result single-float
-			  finally (return result))))))
+       (loop for j fixnum from 0 to 2 do
+	    (setf (aref c i j)
+		  (loop for k fixnum from 0 to 2 sum (* (aref a i k) (aref b k j)) into result single-float
+		     finally (return result))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun permute (l)
-    (if (null l) ; I don't like this. I suspect that there is a more
-	'(nil)   ; natural way to make the function return '(nil) for nil.
+  (if (null l) ; I don't like this. I suspect that there is a more
+      '(nil)   ; natural way to make the function return '(nil) for nil.
       (mapcan #'(lambda (e-arg)
 		  (mapcar #'(lambda (p) (cons e-arg p))
 			  (permute (remove e-arg l))))
@@ -368,12 +364,12 @@ Yo
 
 --
 ------------------------------------------------------------------------------
-          _
-          V                    Johan Peeters
- -------------------           Alcatel Broadband Systems
- |  A L C A T E L  |           Excelsiorlaan 44-46 - 1930 Zaventem - Belgium
- -------------------           Phone: +32 2 718 7119 - Fax: +32 2 718 7000
-  	 BBS		       Email: peeterjo@bsg.bel.alcatel.be
+_
+V                    Johan Peeters
+-------------------           Alcatel Broadband Systems
+|  A L C A T E L  |           Excelsiorlaan 44-46 - 1930 Zaventem - Belgium
+-------------------           Phone: +32 2 718 7119 - Fax: +32 2 718 7000
+BBS		       Email: peeterjo@bsg.bel.alcatel.be
 
 ------------------------------------------------------------------------------
 
@@ -393,12 +389,12 @@ Yo
   ;; 2d array whose values are comprised of the sin of the product of the x and y indices.
   (float-2dlist-to-array
    (loop for x from -2.0 to 2.0 collect
-	    (loop for y from -2.0 to 2.0 collect
-		  (sin (* x y))))))
+	(loop for y from -2.0 to 2.0 collect
+	     (sin (* x y))))))
 
 (defvar xy-2d-array
   ;; 2d array whose values are comprised of the product of the x and y indices, referenced to the center.
   (float-2dlist-to-array
    (loop for x from -20.0 to 20.0 collect
-	 (loop for y from -20.0 to 20.0 collect
-	       (* x y)))))
+	(loop for y from -20.0 to 20.0 collect
+	     (* x y)))))

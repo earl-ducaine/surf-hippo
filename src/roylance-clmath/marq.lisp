@@ -30,12 +30,8 @@
 ;;;   eps and tau should be vectors
 
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
-(eval-when (compile load eval)
-  nil)
-
-
 ;;;; Marquardt Algorithm
 
 ;;; Marquardt is a combination of steepest descent and Gauss-Newton

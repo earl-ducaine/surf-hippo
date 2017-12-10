@@ -148,33 +148,43 @@ It now seems that the Lisp code is significantly faster than the display (X?) ro
 
 |#
 
-(define-method :update opal:aggregate (agg update-info line-style-gc filling-style-gc bbox-1 bbox-2 &optional (total-p NIL))
-  ;; Update child aggregates only if SH::COLORIZED-ANIMATION-COMPONENT-P is T. This test is only serious when
-  ;; REPLAY-COLORIZED-SIMULATION resets *IGNORE-COLORIZED-ANIMATION-COMPONENT-P* to NIL.
-  ; (declare (optimize (speed 3) (safety 0)))
-  (let ((dirty-p (update-info-dirty-p update-info))
-	(agg-bbox (update-info-old-bbox update-info)))
-    (when (or dirty-p
-	      total-p
-	      (and (bbox-valid-p agg-bbox)
-		   (bbox-intersects-either-p agg-bbox bbox-1 bbox-2)))
-      (let (child-update-info child-bbox)
-	(setf (bbox-valid-p agg-bbox) NIL);; clear the old one!
-	(dovalues (child agg :components :local t)
-		  (if (g-value child :visible)
-		    (progn
-		      (setq child-bbox (update-info-old-bbox (setq child-update-info (g-local-value child :update-info))))
-		      (if (is-a-p child opal:aggregate)
-			(when (sh::colorized-animation-component-p child )
-			  (update child child-update-info line-style-gc filling-style-gc bbox-1 bbox-2 total-p))
-			(update child child-update-info bbox-1 bbox-2 total-p))
-		      (merge-bbox agg-bbox child-bbox));; and set the new one!
-		    ;; else if the child's dirty bit is set, recursively visit the child and all its children and turn off their
-		    ;; dirty bits
-		    (let ((child-update-info (g-local-value child :update-info)))
-		      (when (update-info-dirty-p child-update-info)
-			(clear-dirty-bits child child-update-info)))))
-	(if dirty-p (setf (update-info-dirty-p update-info) NIL))))))
+;; (define-method :update opal:aggregate
+;;   (agg update-info line-style-gc filling-style-gc bbox-1 bbox-2
+;;        &optional (total-p NIL))
+;;   ;; Update child aggregates only if
+;;   ;; SH::COLORIZED-ANIMATION-COMPONENT-P is T. This test is only
+;;   ;; serious when REPLAY-COLORIZED-SIMULATION resets
+;;   ;; *IGNORE-COLORIZED-ANIMATION-COMPONENT-P* to NIL.
+;; 					; (declare (optimize (speed 3) (safety 0)))
+;;   (let ((dirty-p (update-info-dirty-p update-info))
+;; 	(agg-bbox (update-info-old-bbox update-info)))
+;;     (when (or dirty-p
+;; 	      total-p
+;; 	      (and (bbox-valid-p agg-bbox)
+;; 		   (bbox-intersects-either-p agg-bbox bbox-1 bbox-2)))
+;;       (let (child-update-info child-bbox)
+;; 	(setf (bbox-valid-p agg-bbox) NIL);; clear the old one!
+;; 	(dovalues (child agg :components :local t)
+;; 		  (if (g-value child :visible)
+;; 		      (progn
+;; 			(setq child-bbox
+;; 			      (update-info-old-bbox
+;; 			       (setq child-update-info
+;; 				     (g-local-value child :update-info))))
+;; 			(if (is-a-p child opal:aggregate)
+;; 			    (when (sh::colorized-animation-component-p child )
+;; 			      (update child child-update-info line-style-gc
+;; 				      filling-style-gc bbox-1 bbox-2 total-p))
+;; 			    (update child child-update-info bbox-1 bbox-2 total-p))
+;; 			(merge-bbox agg-bbox child-bbox));; and set the
+;; 		      ;; new one!  else if the child's dirty bit is set,
+;; 		      ;; recursively visit the child and all its
+;; 		      ;; children and turn off their dirty bits
+;; 		      (let ((child-update-info
+;; 			     (g-local-value child :update-info)))
+;; 			(when (update-info-dirty-p child-update-info)
+;; 			  (clear-dirty-bits child child-update-info)))))
+;; 	(if dirty-p (setf (update-info-dirty-p update-info) NIL))))))
 
 (defmacro bit-setter (object bit-position value)
   (cond ((eq value T)
@@ -452,18 +462,18 @@ It now seems that the Lisp code is significantly faster than the display (X?) ro
 		(aref update-vals opal::*circle-draw-function*)
 		lstyle fstyle))))
 
-(define-method :draw opal:line (gob a-window)
-  (declare (optimize (safety 0) (speed 3) (space 0)))
-  (let* ((update-vals  (g-local-value gob :update-slots-values))
-	 (lstyle (aref (the (simple-array * (*)) update-vals) *line-lstyle*)))
-    (if lstyle
-	(gem:draw-line a-window
-		       (the fixnum (aref (the (simple-array * (*)) update-vals) *line-x1*))
-		       (the fixnum (aref (the (simple-array * (*)) update-vals) *line-y1*))
-		       (the fixnum  (aref (the (simple-array * (*)) update-vals) *line-x2*))
-		       (the fixnum (aref (the (simple-array * (*)) update-vals) *line-y2*))
-		       (aref (the (simple-array * (*)) update-vals) *line-draw-function*)
-		       lstyle))))
+;; (define-method :draw opal:line (gob a-window)
+;;   (declare (optimize (safety 0) (speed 3) (space 0)))
+;;   (let* ((update-vals  (g-local-value gob :update-slots-values))
+;; 	 (lstyle (aref  *line-lstyle*))
+;;     (if lstyle
+;; 	(gem:draw-line a-window
+;; 		       (the fixnum (aref (the (simple-array * (*)) update-vals) *line-x1*))
+;; 		       (the fixnum (aref (the (simple-array * (*)) update-vals) *line-y1*))
+;; 		       (the fixnum  (aref (the (simple-array * (*)) update-vals) *line-x2*))
+;; 		       (the fixnum (aref (the (simple-array * (*)) update-vals) *line-y2*))
+;; 		       (aref (the (simple-array * (*)) update-vals) *line-draw-function*)
+;; 		       lstyle))))
 
 (defmacro do-in-clip-rect ((m n agg rect) &body body)
   `(let* ((agg* ,agg)

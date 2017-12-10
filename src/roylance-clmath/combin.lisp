@@ -16,19 +16,11 @@
 ;;; Bugs and Fixes
 ;;;
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
-;; lbg 9-6-95
-#|
-(eval-when (compile load eval)
-  (require "MODULES")
-  (module-require "GAMMA-FUNCTION")
-  )
-|#
+(export '(factorial choose catalan-number bell-number))
 
-(EXPORT '(FACTORIAL CHOOSE CATALAN-NUMBER BELL-NUMBER))
 
-
 ;;;; Factorial Function
 
 ;;; The number of ways to arrange n objects
@@ -47,7 +39,6 @@
     (declare (fixnum i))
     ))
 
-
 ;;;; The Logarithm of the Factorial
 
 ;;; A table to hold precomputed values

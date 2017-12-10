@@ -55,43 +55,48 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
    :label (if vars "Global Variable Menu" "User-Defined Global Variables Menu")))
 
 (defun main-menu ()
-  ;; Sets up all the parameters for the current run. Returns with either a circuit loaded and ready to go, or NIL to *quit*. Note
-  ;; that this function is called even with an automatic run since it does some of the circuit setup.
-  (let (dummy1 dummy2 dummy3 dummy4 dummy5 dummy6 dummy8 dummy9 dummy10 dummy7 dummy11 dummy12 dummy13 dummy14 dummy15 help-string)
+  ;; Sets up all the parameters for the current run. Returns with
+  ;; either a circuit loaded and ready to go, or NIL to *quit*. Note
+  ;; that this function is called even with an automatic run since it
+  ;; does some of the circuit setup.
+  (let (dummy1 dummy2 dummy3 dummy4 dummy5 dummy6 dummy8 dummy9
+	       dummy10 dummy7 dummy11 dummy12 dummy13 dummy14 dummy15
+	       help-string)
     (loop while t do
 	 (setq dummy1 nil dummy2 nil dummy3 nil dummy4 nil dummy5 nil dummy6 nil dummy7 nil
 	       dummy8 (and *circuit-loaded* (no-input-p))
 	       dummy12 nil dummy14 nil dummy15 nil)
-	  (CHOOSE-VARIABLE-VALUES
-	   `(,(when *circuit-loaded* `(dummy10 "Run simulation" :boolean))
-	      (dummy1 ,(format nil "Overall parameters") :boolean)
-	      (dummy6 ,(format nil "Load circuit or files") :boolean)
+	 (CHOOSE-VARIABLE-VALUES
+	  `(,(when *circuit-loaded* `(dummy10 "Run simulation" :boolean))
+	     (dummy1 ,(format nil "Overall parameters") :boolean)
+	     (dummy6 ,(format nil "Load circuit or files") :boolean)
 	     ,(when *circuit-loaded* `(dummy2 "Histology" :boolean))
 	     (dummy3 "Edit circuit elements" :boolean)
 	     ,(when (are-there-sources) '(*modify-stimulus* "Edit clamp stimulus" :boolean))
 	     (dummy7 "Information management" :boolean)
-	     (dummy5 ,(concatenate-strings "Edit plot parameters"
-					   (when *archive-variable-list* (format nil ",~%plot loaded archive data"))
-					   (when (or *HIDE-plot-WINDOWS* *overlay-plots*) (format nil "~%"))
-					   (cond ((and *HIDE-plot-WINDOWS* *overlay-plots*) "(plots hidden, overlay set)")
-						 (*HIDE-plot-WINDOWS* "(plots hidden)")
-						 (*overlay-plots* "(plot overlay set)"))) :boolean)
+	     (dummy5 ,(concatenate-strings
+		       "Edit plot parameters"
+		       (when *archive-variable-list* (format nil ",~%plot loaded archive data"))
+		       (when (or *HIDE-plot-WINDOWS* *overlay-plots*) (format nil "~%"))
+		       (cond ((and *HIDE-plot-WINDOWS* *overlay-plots*) "(plots hidden, overlay set)")
+			     (*HIDE-plot-WINDOWS* "(plots hidden)")
+			     (*overlay-plots* "(plot overlay set)"))) :boolean)
 	     ,(when (are-there-light-synapses) '(dummy14 "Edit light inputs" :boolean))
 	     ,(when (get-new-surf-variable-symbols t) `(dummy15 "Edit user-defined globals" :boolean))
 	     (dummy12 "Surf-Hippo help" :boolean))
-	   :image (create-instance nil *main-menu-image*) :text (main-menu-text help-string) :label "Surf-Hippo Main Menu")
-	  (setq help-string nil)
-	  unless (or *automatic-run* *modify-stimulus* dummy1 dummy2 dummy3 dummy5 dummy6 dummy7 dummy10 dummy12 dummy14 dummy15)
-	  do (return nil)
-	  when dummy12 do
-	  (setq help-string (format nil "~%** Read the User Manual in ~A. **~%** Type \"h\" over output windows for help. **~%" (concatenate-strings *surf-home* "doc/")))
-	  (format t "~A~%~%" help-string)
-	  when dummy15 do (global-variable-menu)
-	  when dummy7 do (quick-info-menu)
-	  when (and (not dummy12) (not *circuit-loaded*)) do (setq dummy10 nil)
-	  ;; If we want to run the simulation (assuming the circuit is loaded) then don't run these menus.
-	  unless dummy10 do
-	  (setq dummy11 nil)
+	  :image (create-instance nil *main-menu-image*) :text (main-menu-text help-string) :label "Surf-Hippo Main Menu")
+	 (setq help-string nil)
+       unless (or *automatic-run* *modify-stimulus* dummy1 dummy2 dummy3 dummy5 dummy6 dummy7 dummy10 dummy12 dummy14 dummy15)
+       do (return nil)
+       when dummy12 do
+	 (setq help-string (format nil "~%** Read the User Manual in ~A. **~%** Type \"h\" over output windows for help. **~%" (concatenate-strings *surf-home* "doc/")))
+	 (format t "~A~%~%" help-string)
+       when dummy15 do (global-variable-menu)
+       when dummy7 do (quick-info-menu)
+       when (and (not dummy12) (not *circuit-loaded*)) do (setq dummy10 nil)
+       ;; If we want to run the simulation (assuming the circuit is loaded) then don't run these menus.
+       unless dummy10 do
+	 (setq dummy11 nil)
 	 (cond-every (dummy1 (overall-parameter-menu))
 		     (dummy6 (load-circuit-or-files-menu))
 		     (dummy3 (Edit-circuit-elements-menu))
@@ -100,20 +105,20 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
 		     (dummy2 (drawing-menu)))
        ;; Another chance to edit sources, since sources can be added from histology windows.
 	 #|
-	  (when (and nil
-		     (not *modify-stimulus*) ; dummy8
-		     (no-nils (mapcar 'source-stimulus-p (sources))))
-	    (choose-variable-values '((*modify-stimulus* "Edit clamp stimulus" :boolean)) :label "More ??...."))
+	 (when (and nil
+	 (not *modify-stimulus*) ; dummy8
+	 (no-nils (mapcar 'source-stimulus-p (sources))))
+	 (choose-variable-values '((*modify-stimulus* "Edit clamp stimulus" :boolean)) :label "More ??...."))
 	 |#
-	  do
-	  (when dummy10 (setq *modify-stimulus* nil))
-	  ;; Set up the circuit sources.
-	  (when *modify-stimulus*
-	    (EDIT-SOURCE-STIMULI)
-	    (setq *modify-stimulus* nil))
-	  ;; Propagate parameters to the circuit elements. The optional T arg is to consider *RECHECK-CIRCUIT-ELEMENTS-PARAMETERS* .
-	  (when (or dummy1 dummy3) (set-circuit-elements-parameters t))
-	  when (or *automatic-run* (and *circuit-loaded* dummy10)) do (return t))))
+       do
+	 (when dummy10 (setq *modify-stimulus* nil))
+       ;; Set up the circuit sources.
+	 (when *modify-stimulus*
+	   (EDIT-SOURCE-STIMULI)
+	   (setq *modify-stimulus* nil))
+       ;; Propagate parameters to the circuit elements. The optional T arg is to consider *RECHECK-CIRCUIT-ELEMENTS-PARAMETERS* .
+	 (when (or dummy1 dummy3) (set-circuit-elements-parameters t))
+       when (or *automatic-run* (and *circuit-loaded* dummy10)) do (return t))))
 
 (defun overall-parameter-menu ()
   ;; Set up the overall simulation parameters. Loads circuit.
@@ -933,50 +938,61 @@ variables which are bound to numbers, symbols, strings or lists that contain onl
   (let ((dummy1 (cond (*use-time-list* :use_step_list)
 		      (*use-fixed-step* :use_fixed_step)
 		      (t :variable_time_step)))
-	(dummy2 (if *eval-all-synapses-every-step* :Evaluate_synapses_@_every_step :Enable_synapse_evaluation_skip)))
+	(dummy2 (if *eval-all-synapses-every-step*
+		    :Evaluate_synapses_@_every_step
+		    :Enable_synapse_evaluation_skip)))
     (loop do
-	  (choose-variable-values
-	   `(				; (dummy1 "Choose method to determine time step:" :choose (:variable_time_step :use_fixed_step :use_step_list))
-	     (*INTEGRATION-TIME-REFERENCE* :choose (:VARIABLE :FIXED :LIST))
-	     ("Parameters for Variable (LTE-based) Time Step" :comment)
-	     (*absolute-voltage-error*	; "Absolute voltage error [mV] for LTE-based time step:"
-	      :number)
-	     (*CONSIDER-PARTICLE-ERROR*	; "Estimate particle state error for LTE-based time step"
-	      :boolean)
-	     (*absolute-particle-error*	; "Absolute particle error [state]:"
-	      :number)
-	     (*PUNT-LTE-WHEN-MIN-STEP-REACHED* ; "Ignore LTE estimate if below minimum step"
-	       :boolean)
-	     (*user-min-step* "Minimum time step [ms] for variable step:" :number)
-	     (*user-max-step* "Maximum time step [ms] for variable step:" :number)
-	     (*pick-time-step-fudge* "Fudge factor for LTE-based time step (> 0 and <= 1):" :number)
-	     (*INCLUDE-VSOURCE-NODES-IN-NODE-ERROR-EST*  :boolean)
-	     (*enable-user-breakpoint-list* :boolean)
-	     ("Parameters for Fixed Time Step" :comment)
-	     (*user-step*		; "Fixed time step [ms]:"
-	      :number)
-	     ("Parameters for Using Time Step List" :comment)
-	     (*auto-refresh-last-sim-reverse-time-list* "Update time step reference list using last simulation" :boolean)
-	     ;; ("Synapse evaluation parameters" :comment)
-	     ;; (*use-constant-element-matrix-contribution* "Enable element evaluation step skipping" :boolean)
-	     ;; (dummy2 "Synapses evaluation criteria:"
-	     ;; :choose (:Evaluate_synapses_@_every_step :Enable_synapse_evaluation_skip))
-	     ;; (*eval-all-synapses-every-step* "Evaluate the synapses at every iteration/time step" :boolean)
-	     ;; (*synapse-evaluation-step* "When skipping enabled, step for synapse evaluations [ms]" :float)
-	     ("Concentration Integrator Params (Integration method set from conc-int menus)" :comment)
-
-	     (*CONSIDER-conc-int-ERROR* ,(concatenate 'string
-						      (format nil "Estimate concentration integrator error for LTE-based time step~%")
-						      (format nil "(only when integrators evaluated in inner loop)"))
-	      :boolean)
-	     (*absolute-conc-int-error* :number)
-	     (*eval-conc-ints-in-inner-loop* :boolean)
-	     ("General Parameters" :comment)
-	     (*save-data-step* :integer)
-	     (*print-numerical-details* :boolean))
-	   :text (unless (<= *pick-time-step-fudge* 1.0) (format nil "Time step fudge factor must be <= 1.0!"))
-	   :label "Numerical Integration Parameters")
-	  until (and (< 0 *pick-time-step-fudge*) (<= *pick-time-step-fudge* 1.0)))
+       ;; No longer used:
+       ;; (dummy1 "Choose method to determine time step:" :choose (:variable_time_step :use_fixed_step :use_step_list))
+       ;;
+       ;; ("Synapse evaluation parameters" :comment)
+       ;; (*use-constant-element-matrix-contribution* "Enable element evaluation step skipping" :boolean)
+       ;; (dummy2 "Synapses evaluation criteria:"
+       ;; :choose (:Evaluate_synapses_@_every_step :Enable_synapse_evaluation_skip))
+       ;; (*eval-all-synapses-every-step* "Evaluate the synapses at every iteration/time step" :boolean)
+       ;; (*synapse-evaluation-step* "When skipping enabled, step for synapse evaluations [ms]" :float)
+       ;;
+       ;; List of list.  Each list represents a variable we want:
+       ;;   *absolute-voltage-error*	         Absolute voltage error [mV]
+       ;;                                        for LTE-based time step:
+       ;;
+       ;;   *absolute-particle-error*            Estimate particle state error
+       ;;                                        for LTE-based time step"
+       ;;
+       ;;   *punt-lte-when-min-step-reached*     Ignore LTE estimate if
+       ;;                                        *below minimum step"
+       ;;
+       ;;   *user-step*		                 Fixed time step [ms]:
+	 (choose-variable-values
+	  `((*integration-time-reference* :choose (:variable :fixed :list))
+	    ("Parameters for Variable (LTE-based) Time Step" :comment)
+	    (*absolute-voltage-error* :number)
+	    (*consider-particle-error* :boolean)
+	    (*absolute-particle-error* :number)
+	    (*punt-lte-when-min-step-reached* :boolean)
+	    (*user-min-step* "Minimum time step [ms] for variable step:" :number)
+	    (*user-max-step* "Maximum time step [ms] for variable step:" :number)
+	    (*pick-time-step-fudge* "Fudge factor for LTE-based time step (> 0 and <= 1):" :number)
+	    (*include-vsource-nodes-in-node-error-est*  :boolean)
+	    (*enable-user-breakpoint-list* :boolean)
+	    ("Parameters for Fixed Time Step" :comment)
+	    (*user-step* :number)
+	    ("Parameters for Using Time Step List" :comment)
+	    (*auto-refresh-last-sim-reverse-time-list* "Update time step reference list using last simulation" :boolean)
+	    ("Concentration Integrator Params (Integration method set from conc-int menus)" :comment)
+	    (*consider-conc-int-error* ,(concatenate 'string
+						     (format nil "estimate concentration integrator error for lte-based time step~%")
+						     (format nil "(only when integrators evaluated in inner loop)"))
+				       :boolean)
+	    (*absolute-conc-int-error* :number)
+	    (*eval-conc-ints-in-inner-loop* :boolean)
+	    ("General Parameters" :comment)
+	    (*save-data-step* :integer)
+	    (*print-numerical-details* :boolean))
+	  :text (unless (<= *pick-time-step-fudge* 1.0)
+		  (format nil "Time step fudge factor must be <= 1.0!"))
+	  :label "Numerical Integration Parameters")
+       until (and (< 0 *pick-time-step-fudge*) (<= *pick-time-step-fudge* 1.0)))
     (case dummy2 (:Evaluate_synapses_@_every_step
 		  (setq *eval-all-synapses-every-step* t)))))
 

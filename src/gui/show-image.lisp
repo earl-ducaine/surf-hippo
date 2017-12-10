@@ -88,7 +88,7 @@
 			  (t (or (gvl :IMAGE-top)
 				 (- (/ (gvl :window :height) 2)
 				    (/ (gvl :height) 2))))))))
-	(opal:add-component  (gv win :aggregate) bitmap-object :where :back)
+	(opal:add-component (gv win :aggregate) bitmap-object :where :back)
 	(s-value win :bitmap bitmap-object)
 	(s-value win :visible t)
 	(s-value win :left (round (case left

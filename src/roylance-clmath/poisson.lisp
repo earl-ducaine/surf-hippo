@@ -23,22 +23,13 @@
 ;;;  that this notice is not removed.
 
 ;;; Bugs and Fixes
-;;;   
 
-;; lbg 9-6-95
-#|
-|
-(eval-when (compile load eval)
-  (require "MODULES"))
 
-(eval-when (compile load eval)
-  (module-require "COMBINATORICS"))	; factorial
-|#
-
-
 ;;;; Poisson Distribution
 
 ;;; LAM and TIME are always multiplied together
+
+(in-package :roylance-clmath)
 
 (defun poisson-density (n lambda)
   (cond ((> lambda 0.0)

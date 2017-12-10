@@ -2,18 +2,23 @@
 
 ;; The Surf-Hippo Neuron Simulator System
 ;;
-;; This code was written as part of the Surf-Hippo Project, originally at the Center for Biological
-;; Information Processing, Department of Brain and Cognitive Sciences, Massachusetts Institute of
-;; Technology, and currently at the Neurophysiology of Visual Computation Laboratory, CNRS.
+;; This code was written as part of the Surf-Hippo Project, originally
+;; at the Center for Biological Information Processing, Department of
+;; Brain and Cognitive Sciences, Massachusetts Institute of
+;; Technology, and currently at the Neurophysiology of Visual
+;; Computation Laboratory, CNRS.
 ;;
-;; Permission to use, copy, modify, and distribute this software and its documentation for any purpose
-;; and without fee is hereby granted, provided that this software is cited in derived published work,
-;; and the copyright notice appears in all copies and in supporting documentation. The Surf-Hippo
-;; Project makes no representations about the suitability of this software for any purpose. It is
-;; provided "as is" without express or implied warranty.
+;; Permission to use, copy, modify, and distribute this software and
+;; its documentation for any purpose and without fee is hereby
+;; granted, provided that this software is cited in derived published
+;; work, and the copyright notice appears in all copies and in
+;; supporting documentation. The Surf-Hippo Project makes no
+;; representations about the suitability of this software for any
+;; purpose. It is provided "as is" without express or implied
+;; warranty.
 ;;
-;; If you are using this code or any part of Surf-Hippo, please contact surf-hippo@ai.mit.edu to be put
-;; on the mailing list.
+;; If you are using this code or any part of Surf-Hippo, please
+;; contact surf-hippo@ai.mit.edu to be put on the mailing list.
 ;;
 ;; Copyright (c) 1989 - 2003, Lyle J. Graham
 
@@ -101,34 +106,48 @@
 
 (s-value gg::MOTIF-RADIO-BUTTON-PANEL :strings (o-formula (mapcar #'(lambda (item-obj) (gadget-button-string-function item-obj)) (gvl :item-objs))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; For setting the final width of a menu - added to the width
+(defvar *menu-width-fudge* 30)
 
-(defvar *menu-width-fudge* 30)		; For setting the final width of a menu - added to the width
-					; taken up by the various menu interactors plus the width of the OK button.
-
+;; taken up by the various menu interactors plus the width of the OK button.
 (defvar *menu-height-fudge* 30)
 
-(defvar *menu-comment-font* (opal:get-standard-font :fixed ;; :sans-serif scrolling gadget needs fixed font
-						    :bold-italic :medium))
-(defvar *menu-text-font* (opal:get-standard-font :fixed ;; :sans-serif scrolling gadget needs fixed font
+;; :sans-serif scrolling gadget needs fixed font
+(defvar *menu-comment-font*
+  (opal:get-standard-font :fixed
+			  :bold-italic :medium))
+
+;; :sans-serif scrolling gadget needs fixed font
+(defvar *menu-text-font* (opal:get-standard-font :fixed
 						 :bold :medium))
-(defparameter *menu-font* (create-instance nil opal:font (:face :bold)))
-(defparameter *menu-button-font* (opal:get-standard-font :fixed ;; :sans-serif scrolling gadget needs fixed font
-							 :bold :medium))
-(defparameter *color-menu-button-font* (opal:get-standard-font :fixed ;; :sans-serif scrolling gadget needs fixed font
-							       :roman :small))
+
+(defparameter *menu-font*
+  (create-instance nil opal:font (:face :bold)))
+
+;; :sans-serif scrolling gadget needs fixed font
+(defparameter *menu-button-font*
+  (opal:get-standard-font :fixed
+			  :bold :medium))
+
+;; :sans-serif scrolling gadget needs fixed font
+(defparameter *color-menu-button-font*
+  (opal:get-standard-font
+   :fixed
+   :roman :small))
 
 ;; These will let us expose menus wherever the last menu was placed.
 (defvar *menu-top* nil)
 (defvar *menu-left* nil)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(create-instance '*menu-win* basic-graphics-window (:visible nil) (:title "SH Menu") (:mode :menu)
-		 ;; Add these :left and :top formulae so that the first menu will be centered on the screen, and all others will
-		 ;; track the (updated) values of *MENU-LEFT* and *MENU-TOP*.
-		 (:left (o-formula (or *menu-left* (round (/ (- *screen-width* (gvl :width)) 2)))))
-		 (:top (o-formula (or *menu-top* (round (/ (- *screen-height* (gvl :height)) 2))))))
+(create-instance '*menu-win* basic-graphics-window
+  (:visible nil)
+  (:title "SH Menu")
+  (:mode :menu)
+  ;; Add these :left and :top formulae so that the first menu will be
+  ;; centered on the screen, and all others will track the (updated)
+  ;; values of *MENU-LEFT* and *MENU-TOP*.
+  (:left (o-formula (or *menu-left* (round (/ (- gem:*screen-width* (gvl :width)) 2)))))
+  (:top (o-formula (or *menu-top* (round (/ (- gem:*screen-height* (gvl :height)) 2))))))
 
 (create-instance '*ss-win-w-bars* gg:scrolling-window-with-bars (:visible nil)
 		 (:title "SH Menu") (:icon-title (o-formula (gvl :title)))
@@ -136,17 +155,23 @@
 		 ;; (:top (o-formula (or *menu-top* (round (/ (- *screen-height* (gvl :height)) 2)))))
 		 (:h-scroll-bar-p nil) (:scr-trill-p nil) (:mode :menu))
 
-;; Access the :value slot to initialize the formula in the slot and establish dependencies (Garnet Manual p.300).
+;; Access the :value slot to initialize the formula in the slot and
+;; establish dependencies (Garnet Manual p.300).
 (gv *ss-win-w-bars* :value)
 
-(create-instance '*motif-ss-win-w-bars* gg:motif-scrolling-window-with-bars (:visible nil)
-		 (:title "SH Menu") (:icon-title (o-formula (gvl :title)))
-		 (:background-color (when *motif-gui-p* OPAL:MOTIF-green))
-		 ; (:left (o-formula (or *menu-left* (round (/ (- *screen-width* (gvl :width)) 2)))))
-		 ; (:top (o-formula (or *menu-top* (round (/ (- *screen-height* (gvl :height)) 2)))))
-		 (:h-scroll-bar-p nil) (:scr-trill-p nil) (:mode :menu))
+(create-instance '*motif-ss-win-w-bars* gg:motif-scrolling-window-with-bars
+  (:visible nil)
+  (:title "SH Menu")
+  (:icon-title (o-formula (gvl :title)))
+  (:background-color (when *motif-gui-p* OPAL:MOTIF-green))
+  ;; (:left (o-formula (or *menu-left* (round (/ (- *screen-width* (gvl :width)) 2)))))
+  ;; (:top (o-formula (or *menu-top* (round (/ (- *screen-height* (gvl :height)) 2)))))
+  (:h-scroll-bar-p nil)
+  (:scr-trill-p nil)
+  (:mode :menu))
 
-;; Access the :value slot to initialize the formula in the slot and establish dependencies (Garnet Manual p.300).
+;; Access the :value slot to initialize the formula in the slot and
+;; establish dependencies (Garnet Manual p.300).
 (gv *motif-ss-win-w-bars* :value)
 
 (defun get-menu-window (height label)
@@ -1254,98 +1279,163 @@
 
 |#
 
-(defun choose-variable-values (var-lists &key (label "Choose Variables") title text (max-height (* 0.9 *screen-height*))
-			       image (image-top :bottom) (image-left :right))
-  ;; This partly mimics the Symbolics function of the same name. When the OK button is pressed, this function returns
-  ;; NIL. VAR-LISTS is a single list or a list of lists, each being a variable setting parameter lists (VAR-LIST) with
-  ;; the following minimum format:
-  ;;
-  ;;      (GLOBAL-VARIABLE TYPE-KEYWORD)
-  ;;
-  ;; NIL entries in VAR-LISTS will be ignored. If there is a string in a VAR-LIST,
-  ;;
-  ;;      (GLOBAL-VARIABLE "Comment string" TYPE-KEYWORD)
-  ;;
-  ;; then this string will appear as a comment in the menu line. Otherwise, the GLOBAL-VARIABLE symbol will be printed.
-  ;;
-  ;; The TYPE-KEYWORD can be :NUMBER :FLOAT :INTEGER :FIXNUM :COMMENT :BOOLEAN :CHOOSE :X-CHOOSE :STRING :SYMBOL
-  ;;
-  ;; If TYPE-KEYWORD = :STRING, then the GLOBAL-VARIABLE will be reinitialized to its print-name string.
-  ;; If TYPE-KEYWORD = :SYMBOL, then the GLOBAL-VARIABLE will be reinitialized to a symbol based on its print-name.
-  ;; :COMMENT just takes a single comment string.
-  ;;
-  ;; If TYPE-KEYWORD = :CHOOSE or :X-CHOOSE, then the variable setting parameter list format is:
-  ;;
-  ;;     (GLOBAL-VARIABLE "Comment string" :CHOOSE (first-choice second-choice ...))
-  ;;
-  ;; where FIRST-CHOICE, SECOND-CHOICE, etc. may be strings or keyword symbols. :X-CHOOSE allows multiple selections from a list,
-  ;; while :CHOOSE allows only one chosen value. The keyword :TOGGLE-P allows selected button(s) to be deselected by repressing
-  ;; that button.
-  ;;
-  ;; The GLOBAL-VARIABLE symbol *must* be a variable that has been declared special, that is a global variable. If necessary, there
-  ;; are a set of pre-defined DUMMYx variables [x from 0 to 100] that may be used.  For example, a temporary value in a function may
-  ;; be passed to a menu by localling binding a DUMMYx variable [e.g. with LET], and then using the symbol in a variable setting
-  ;; parameter list.
-  ;;
-  ;; The GLOBAL-VARIABLE symbol may also be declared locally special, thus (declare (special foo)).
-  ;;
-  ;; For example, VAR-LISTS could be:
-  ;;
-  ;; '((*user-stop-time* "Length of simulation [ms]" :number)
-  ;;   (*modify-plot-parameters "Modify plot parameters" :boolean)
-  ;;   (*traces-per-plot* :integer)
-  ;;   (dummy12 "Plot upside down" :boolean)
-  ;;   (dummy4 "Current or voltage clamp" :choose ("Current clamp" "Voltage clamp"))
-  ;;
-  ;; Note that literal lists (constants) may be used as the VAR-LISTS argument, since we don't try to modify it.
-  ;;
-  (declare (optimize (safety 1) (speed 3) (space 0)))
+;;; This partly mimics the Symbolics function of the same name. When
+;;; the OK button is pressed, this function returns NIL. VAR-LISTS is
+;;; a single list or a list of lists, each being a variable setting
+;;; parameter lists (VAR-LIST) with the following minimum format:
+;;;
+;;;      (GLOBAL-VARIABLE TYPE-KEYWORD)
+;;;
+;;; NIL entries in VAR-LISTS will be ignored. If there is a string in
+;;; a VAR-LIST,
+;;;
+;;;      (GLOBAL-VARIABLE "Comment string" TYPE-KEYWORD)
+;;;
+;;; then this string will appear as a comment in the menu
+;;; line. Otherwise, the GLOBAL-VARIABLE symbol will be printed.
+;;;
+;;; The TYPE-KEYWORD can be :NUMBER :FLOAT :INTEGER :FIXNUM :COMMENT
+;;; :BOOLEAN :CHOOSE :X-CHOOSE :STRING :SYMBOL
+;;;
+;;; If TYPE-KEYWORD = :STRING,
+;;;     then the GLOBAL-VARIABLE will be reinitialized to its print-name string.
+;;;
+;;; If TYPE-KEYWORD = :SYMBOL,
+;;;     then the GLOBAL-VARIABLE will be reinitialized to a symbol based on its print-name.
+;;;
+;;; :COMMENT just takes a single comment string.
+;;;
+;;; If TYPE-KEYWORD = :CHOOSE or :X-CHOOSE, then the variable setting
+;;; parameter list format is:
+;;;
+;;;     (GLOBAL-VARIABLE "Comment string" :CHOOSE (first-choice second-choice ...))
+;;;
+;;; where FIRST-CHOICE, SECOND-CHOICE, etc. may be strings or keyword
+;;; symbols. :X-CHOOSE allows multiple selections from a list, while
+;;; :CHOOSE allows only one chosen value. The keyword :TOGGLE-P
+;;; allows selected button(s) to be deselected by repressing that
+;;; button.
+;;;
+;;; The GLOBAL-VARIABLE symbol *must* be a variable that has been
+;;; declared special, that is a global variable. If necessary, there
+;;; are a set of pre-defined DUMMYx variables [x from 0 to 100] that
+;;; may be used.  For example, a temporary value in a function may be
+;;; passed to a menu by localling binding a DUMMYx variable
+;;; [e.g. with LET], and then using the symbol in a variable setting
+;;; parameter list.
+;;;
+;;; The GLOBAL-VARIABLE symbol may also be declared locally special,
+;;; thus (declare (special foo)).
+;;;
+;;; For example, VAR-LISTS could be:
+;;;
+;;; '((*user-stop-time* "Length of simulation [ms]" :number)
+;;;   (*modify-plot-parameters "Modify plot parameters" :boolean)
+;;;   (*traces-per-plot* :integer)
+;;;   (dummy12 "Plot upside down" :boolean)
+;;;   (dummy4 "Current or voltage clamp" :choose ("Current clamp" "Voltage clamp"))
+;;;
+;;; Note that literal lists (constants) may be used as the VAR-LISTS
+;;; argument, since we don't try to modify it.
+(defun choose-variable-values
+    (var-lists
+     &key
+       (label "Choose Variables")
+       title
+       text
+       (max-height (* 0.9 gem::*screen-height*))
+       image
+       (image-top :bottom)
+       (image-left :right))
   (when (and (not *automatic-run*) var-lists)
     (let* ((max-height (round max-height))
 	   (var-lists (no-nils var-lists))
 	   (top 10) (width 0) win top-agg
 	   (label-length (the (UNSIGNED-BYTE 32) (length label))))
-      (multiple-value-bind (menu-entries top width) ;; Create menu entries here because srolling windows are handled a bit differently than interactor-windows
+      ;; Create menu entries here because srolling windows are handled
+      ;; a bit differently than interactor-windows
+      (multiple-value-bind (menu-entries top width)
 	  (choose-variable-values-menu-entries var-lists top width)
-	(declare (fixnum top width max-height))
-	(setq width (max (the fn (+ width *menu-width-fudge* (gv (ok-button) :width))) ; Allow some room for the OK button.
-			 (the fn (+ (* *window-manager-char-width* (the (UNSIGNED-BYTE 32) label-length))
-				    ;; 2 mouseable boxes in window title bar
-				    (+ *window-manager-mouse-box-width* *window-manager-mouse-box-width*)))))
-	(setq win (cond ((> top max-height)
-			 (let ((swin (create-instance nil (if *motif-gui-p* *motif-ss-win-w-bars* *ss-win-w-bars*)
-				       (:visible t) (:width width) (:height max-height) (:title (or title label)) (:icon-title "SH Menu")
-				       (:background-color (when *motif-gui-p* OPAL:MOTIF-green))
-						      (:total-height top) (:total-width (o-formula (gv :self :width))))))
-			   (when (and *motif-gui-p* *use-motif-gui-background*)
-			     (opal:add-component (gv swin :inner-aggregate) (create-instance nil gg:motif-background)))
-			   (when image (show-image image :win swin :image-left image-left :image-top image-top :update nil))
-			   (fix-window-size swin)
-			   (opal:update swin t)
-			   (setq top-agg (gv swin :inner-aggregate))
-			   (create-instance NIL destroy-window-Interactor (:Window (gv swin :outer-window)))
-			   swin))
-			(t (let ((win (get-regular-menu-window top width label title)))
-			     (setq top-agg (gv win :aggregate))
-			     win))))
-	(mapcar #'(lambda (menu-entry) (opal:add-component top-agg menu-entry)) menu-entries)
+	;; (declare (fixnum top width max-height)) Allow some room for
+	;; the OK button.
+	(setq width (max (+ width
+			    *menu-width-fudge*
+			    (gv (ok-button) :width))
+			 (+ (* *window-manager-char-width*
+			       label-length)
+			    ;; 2 mouseable boxes in window title bar
+			    (+ *window-manager-mouse-box-width*
+			       *window-manager-mouse-box-width*))))
+	(setq win
+	      (cond
+		((> top max-height)
+		 (let ((swin
+			(create-instance
+			    nil
+			    (if *motif-gui-p* *motif-ss-win-w-bars*
+				*ss-win-w-bars*)
+			  (:visible t)
+			  (:width width)
+			  (:height max-height)
+			  (:title (or title label))
+			  (:icon-title "SH Menu")
+			  (:background-color (when *motif-gui-p*
+					       OPAL:MOTIF-green))
+			  (:total-height top)
+			  (:total-width (o-formula (gv :self :width))))))
+		   (opal::update swin)
+		   (when (and *motif-gui-p*
+			      *use-motif-gui-background*)
+		     (opal:add-component
+		      (gv swin :inner-aggregate)
+		      (create-instance nil gg:motif-background)))
+		   (when image
+		     (show-image image
+				 :win swin
+				 :image-left image-left
+				 :image-top image-top
+				 :update nil))
+		   (fix-window-size swin)
+		   (opal:update swin t)
+		   (setq top-agg (gv swin :inner-aggregate))
+		   (create-instance NIL destroy-window-Interactor
+		     (:Window (gv swin :outer-window)))
+		   swin))
+		(t
+		 (let ((win (get-regular-menu-window top width label title)))
+		   (setq top-agg (gv win :aggregate))
+		   win))))
+	(mapcar #'(lambda (menu-entry)
+		    (opal:add-component top-agg menu-entry))
+		menu-entries)
 	(let ((menu-text-height (when text (add-menu-text text top-agg win))))
-	  (when image (show-image image :win win :image-left image-left :image-top image-top :update nil :VERTICAL-SIDE-BORDER (+ (or menu-text-height 0) -15))))
+	  (when image
+	    (opal:update win t)
+	    (show-image image
+			:win win
+			:image-left image-left
+			:image-top image-top
+			:update nil
+			:VERTICAL-SIDE-BORDER (+ (or menu-text-height 0)
+						 -15))))
 	(loop for comp in (gv top-agg :components) do
-	      (kr::recompute-formula comp :left)
-	      (kr::recompute-formula comp :text-width))	; Make sure to center all :comment lines. Don't know why this is not handled automatically by the :left o-formulae!
+	     (kr::recompute-formula comp :left)
+	   ;; Make sure to center all :comment lines. Don't know why
+	   ;; this is not handled automatically by the :left
+	   ;; o-formulae!
+	     (kr::recompute-formula comp :text-width))
 	(add-ok-button win top-agg)
 	(fix-window-size win)
 	(resurrect-opal-win win :raise t :visible t :show t :update t :deiconify t)
 	(menu-wrap-up win top-agg)))))
 
-
 (defun choose-variable-values-menu-entries (var-lists top width)
-  (let ((menu-entries (loop for var-list in (no-nils (if (consp (car var-lists)) var-lists (list var-lists)))
-			    collect (let ((menu-entry (get-menu-entry var-list top)))
-				      (setq top (the fn (+ top (vertical-space-for-menu-entry menu-entry)))
-					    width (max width (gv menu-entry :width)))
-				      menu-entry))))
+  (let ((menu-entries
+	 (loop for var-list in (no-nils (if (consp (car var-lists)) var-lists (list var-lists)))
+	    collect (let ((menu-entry (get-menu-entry var-list top)))
+		      (setq top (the fn (+ top (vertical-space-for-menu-entry menu-entry)))
+			    width (max width (gv menu-entry :width)))
+		      menu-entry))))
     (values menu-entries top width)))
 
 (defun remove-and-free-buttons (top-agg)
@@ -1365,24 +1455,25 @@
   (when (opal-obj-exists win) (opal:destroy win))
   nil)
 
-(create-instance 'edit-text opal:aggregadget
-		 (:string "")
-		 (:parts
-                  `((:label ,opal:cursor-multi-text ; opal:multifont-text
-                     (:string ,(o-formula (gvl :parent :string)))
-                     (:left ,(o-formula (the fn (gvl :parent :left))))
-                     (:top ,(o-formula (the fn (gvl :parent :top))))
-                     (:font ,(o-formula (or (gvl :parent :font)
-					    (gvl :window :plot-axis-font)
-					    (gvl :window :font)
-                                            (opal:get-standard-font :serif :bold-italic :large)))))))
-		 (:interactors
-		  `((:text-inter ,inter:text-interactor
-		     (:window ,(o-formula (gv-local :self :operates-on :window)))
-		     (:feedback-obj nil)
-		     (:start-where ,(o-formula (list :in (gvl :operates-on :label))))
-		     (:abort-event :CONTROL-\g)
-		     (:stop-event (:leftdown))))))
+(create-instance
+    'edit-text opal:aggregadget
+  (:string "")
+  (:parts
+   `((:label ,opal:cursor-multi-text ; opal:multifont-text
+	     (:string ,(o-formula (gvl :parent :string)))
+	     (:left ,(o-formula (the fn (gvl :parent :left))))
+	     (:top ,(o-formula (the fn (gvl :parent :top))))
+	     (:font ,(o-formula (or (gvl :parent :font)
+				    (gvl :window :plot-axis-font)
+				    (gvl :window :font)
+				    (opal:get-standard-font :serif :bold-italic :large)))))))
+  (:interactors
+   `((:text-inter ,inter:text-interactor
+		  (:window ,(o-formula (gv-local :self :operates-on :window)))
+		  (:feedback-obj nil)
+		  (:start-where ,(o-formula (list :in (gvl :operates-on :label))))
+		  (:abort-event :CONTROL-\g)
+		  (:stop-event (:leftdown))))))
 
 (defun simple-text-menu (label &optional title (string "") (height 400) (width 400) (comment "Edit stuff above"))
   (let* ((win (get-regular-menu-window height width label title))

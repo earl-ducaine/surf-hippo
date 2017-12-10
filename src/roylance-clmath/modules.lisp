@@ -26,7 +26,7 @@
 ;;;       compiled before system-b's spec-date
 ;;;       -> system-a must be recompiled.
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
 (export '(
 	  module-pathname-get

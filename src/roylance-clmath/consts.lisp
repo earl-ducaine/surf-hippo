@@ -11,10 +11,8 @@
 ;;;   Better treatment of physical constants
 ;;;     in TX:/tx/glr/funct/sym/unit.lisp
 
-(eval-when (compile load eval)
-  nil)
+(in-package :roylance-clmath)
 
-
 ;;;; Physical Units
 
 ;;; base units of Si:
@@ -53,7 +51,7 @@
 
 In: DEFCON VELOCITY-OF-LIGHT
   (DEFCON VELOCITY-OF-LIGHT C 2.997925e+8 METERS ...)
---> PROGN 
+--> PROGN
 ==>
   (DECLARE (SPECIAL VELOCITY-OF-LIGHT) (FLOAT VELOCITY-OF-LIGHT))
 Error: Misplaced declaration.

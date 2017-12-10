@@ -202,9 +202,7 @@
   (declare (optimize (safety 0) (speed 3) (space 1)))
   (s-flt (* angle-in-degrees radians/degree)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(proclaim '(inline square))
 (defun square (x)
   (declare (single-float x))
   (* x x))

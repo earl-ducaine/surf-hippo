@@ -11,7 +11,7 @@
 ;;; Bugs and Fixes
 ;;;   *** doesn't jimmy the pathname object
 
-(in-package fs)
+(in-package :fs)
 
 (export '(parse-attribute-list pathname-attribute-list))
 

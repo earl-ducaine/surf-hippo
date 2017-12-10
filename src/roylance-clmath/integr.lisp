@@ -15,14 +15,12 @@
 ;;; Bugs and Fixes
 ;;;   Formulas should be computed instead of given
 
-(eval-when (compile load eval)
-  nil)
+(in-package :roylance-clmath)
 
 #+ignore
 (DECLARE (FLOAT (INTEGRATE-TRAPEZOIDAL T FLOAT FLOAT FIXNUM)
 		(INTEGRATE-SIMPSON     T FLOAT FLOAT FIXNUM)))
 
-
 ;;;; Trapezoidal Rule
 
 ;;; NBS 25.4.2
@@ -33,7 +31,7 @@
   (DECLARE (FLOAT X0 XM SUM H STEP STEPS)
 	   (FIXNUM M))
   (DO ((SUM   0.0)
-       (H     (/ (- XM X0) (float M)))  
+       (H     (/ (- XM X0) (float M)))
        (STEP  1.0 (1+ STEP))
        (STEPS (float M)))
       ((>= STEP STEPS)
@@ -42,7 +40,6 @@
 		 (* 0.5 (FUNCALL F XM)))))
     (SETQ SUM (+ SUM (FUNCALL F (+ X0 (* STEP H)))))))
 
-
 ;;;; Simpson's Rule
 
 ;;; NBS 25.4.6

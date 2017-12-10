@@ -28,8 +28,7 @@
 ;;;   flush (go ... )
 ;;;   zero base arrays
 
-(eval-when (compile load eval)
-  nil)
+(in-package :roylance-clmath)
 
 
 ;;; Correspondence among References

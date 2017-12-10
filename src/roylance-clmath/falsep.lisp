@@ -12,13 +12,11 @@
 ;;;     false position searches die if y1 = y2
 ;;;     should start searching for other x's to try
 
-(in-package "USER")
+(in-package :roylance-clmath)
 
-
 ;;;; False Position Search
 
 ;;; find x such that 0 = f(x)
-;;;
 (defun false-position-search (fcn s1 s2 eps)
   (do ((x1 s1)  (y1 (funcall fcn s1))
        (x2 s2)  (y2 (funcall fcn s2))
@@ -35,7 +33,6 @@
 	   (setq x2 xn) (setq y2 yn)))))
 
 ;;; find an x such that x = f(x)
-;;;
 (defun false-position-converge (fcn s1 s2 eps)
   (do ((x1 s1)  (y1 (- (funcall fcn s1) s1))
        (x2 s2)  (y2 (- (funcall fcn s2) s2))
@@ -52,7 +49,6 @@
 	   (setq x2 xn) (setq y2 yn)))))
 
 ;;; find an x such that x = f(x)
-;;;
 (defun converge (fcn x eps)
   (let* ((x1               x )
 	 (y1 (funcall fcn x1))

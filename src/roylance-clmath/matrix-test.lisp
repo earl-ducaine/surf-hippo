@@ -1,6 +1,6 @@
 ;;; -*- Mode: LISP; Syntax: Common-lisp; Package: USER -*-
 
-(in-package 'user)
+(in-package :roylance-clmath)
 
 (defun matrix-random-matrix (n &optional (m n))
   (declare (fixnum n m))

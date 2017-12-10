@@ -19,16 +19,7 @@
 ;;; Bugs and fixes
 ;;;   gamma-incomplete chokes on large x
 
-(in-package :user)
-
-
-;; lbg 9-6-95
-#|
-|
-(eval-when (compile eval)
-  (require "MODULES")
-  (module-require "HORNER"))
-|#
+(in-package :roylance-clmath)
 
 ;;;; NBS Approximation to the Gamma Function
 

@@ -7,19 +7,15 @@
 ;;;  This file may be distributed noncommercially provided
 ;;;  that this notice is not removed.
 
+(in-package :roylance-clmath)
+
 ;;; Bugs and Fixes
-;;;   
 
-(eval-when (compile load eval)
-  nil)
-
-
 ;;;; Fibonacci -- The Slow Recursive Way
 
 ;;; f(0) = 0
 ;;; f(1) = 1
 ;;; f(n) = f(n-1) + f(n-2)
-;;;
 (defun fib-slow (n)
   (cond ((= n 0) 0)
 	((= n 1) 1)
@@ -60,7 +56,7 @@
 		   (fibn+k   fk fk+1 fk fk+1)
 		   (fibn+k+1 fk fk+1 fk fk+1)
 		   m fm fm+1))))
-		   
+
 (defun fib (n)
   (fib-iter n 1 1 1 0 0 1))
 
@@ -71,4 +67,3 @@
   (* (/ 1 (sqrt 5))
      (- (expt (/ (+ 1 (sqrt 5)) 2) n)
 	(expt (/ (- 1 (sqrt 5)) 2) n))))
-
